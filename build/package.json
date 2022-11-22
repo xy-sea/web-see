@@ -1,0 +1,23 @@
+{
+  "name": "output",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack ./webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "core-js": "^3.19.1",
+    "path": "^0.12.7",
+    "path-to-regexp": "^6.2.0",
+    "ua-parser-js": "^1.0.32"
+  },
+  "devDependencies": {
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.0"
+  }
+}
