@@ -5,6 +5,7 @@
     <jy-button type="primary" @click="send">fetch请求</jy-button>
     <br />
     <jy-button type="primary" @click="promiseErr">promise错误</jy-button>
+    <jy-button type="primary" @click="resource">加载资源报错</jy-button>
     <!-- <jy-button type="primary" @click="record">js报错</jy-button> -->
     <!-- <jy-button secondary type="primary" @click="play">播放</jy-button> -->
   </div>
@@ -18,6 +19,12 @@ export default {
   },
   mounted() {},
   methods: {
+    resource() {
+      let script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = 'https://www.test.com/index.js';
+      document.body.appendChild(script);
+    },
     promiseErr() {
       new Promise((resolve) => {
         JSON.parse('');

@@ -35,7 +35,11 @@ const HandleEvents = {
    */
   handleError(errorEvent) {
     const target = errorEvent.target;
+
+    // 资源加载报错 验证ok ✔
     if (target.localName) {
+      console.log('target', target);
+
       // 资源加载错误 提取有用数据
       const data = resourceTransform(errorEvent.target);
       breadcrumb.push({

@@ -15,6 +15,7 @@
     "raven-js": "^3.27.2",
     "rrweb": "^2.0.0-alpha.3",
     "rrweb-player": "^1.0.0-alpha.3",
+    "ua-parser-js": "^1.0.32",
     "vue": "^2.6.14",
     "vue-router": "^3.5.1",
     "vuex": "^3.6.2"
