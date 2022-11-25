@@ -50,16 +50,14 @@ export function parseUrlToObj(url) {
 }
 
 export function setSilentFlag(paramOptions = {}) {
+  // 默认会监控xhr，为true时，当silentXhr为true时将不再监控
   setFlag(EVENTTYPES.XHR, !!paramOptions.silentXhr);
   setFlag(EVENTTYPES.FETCH, !!paramOptions.silentFetch);
-  setFlag(EVENTTYPES.DOM, !!paramOptions.silentDom);
+  setFlag(EVENTTYPES.CLICK, !!paramOptions.silentClick);
   setFlag(EVENTTYPES.HISTORY, !!paramOptions.silentHistory);
   setFlag(EVENTTYPES.ERROR, !!paramOptions.silentError);
   setFlag(EVENTTYPES.HASHCHANGE, !!paramOptions.silentHashchange);
   setFlag(EVENTTYPES.UNHANDLEDREJECTION, !!paramOptions.silentUnhandledrejection);
-  setFlag(EVENTTYPES.VUE, !!paramOptions.silentVue);
-  // mini Route ???
-  setFlag(EVENTTYPES.MINI_ROUTE, !!paramOptions.silentMiniRoute);
 }
 /**
  * 解析error的stack，并返回args、column、line、func、url:
@@ -115,7 +113,6 @@ export function extractErrorStack(ex, level) {
     } else if ((parts = gecko.exec(lines[i]))) {
       const isEval = parts[3] && parts[3].indexOf(' > eval') > -1;
       if (isEval && (submatch = geckoEval.exec(parts[3]))) {
-        // throw out eval line/coluqqqqqqqqqqqqqqqqqqqqqqqqqqqqmn and use top-most line number
         parts[3] = submatch[1];
         parts[4] = submatch[2];
         parts[5] = null; // no column when eval

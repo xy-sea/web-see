@@ -1,5 +1,5 @@
-import { ERRORTYPES, globalVar } from '../shared';
-import { getLocationHref, getTimestamp, Severity, fromHttpStatus, SpanStatus, interceptStr } from '../utils';
+import { EVENTTYPES, STATUS_CODE, globalVar } from '../shared';
+import { getLocationHref, getTimestamp, fromHttpStatus, SpanStatus, interceptStr } from '../utils';
 import { getRealPath } from './errorId';
 
 // 处理接口的状态
@@ -15,11 +15,9 @@ export function httpTransform(data) {
   }
   message = message === SpanStatus.Ok ? message : `${message} ${getRealPath(data.url)}`;
   return {
-    type: ERRORTYPES.FETCH_ERROR,
     url: getLocationHref(),
     time,
     elapsedTime,
-    level: Severity.Low,
     message,
     name,
     request: {
@@ -41,10 +39,10 @@ const resourceMap = {
 };
 export function resourceTransform(target) {
   return {
-    type: ERRORTYPES.RESOURCE_ERROR,
+    type: EVENTTYPES.RESOURCE,
     url: getLocationHref(),
     message: '资源地址: ' + (interceptStr(target.src, 120) || interceptStr(target.href, 120)),
-    level: Severity.Low,
+    status: STATUS_CODE.ERROR,
     time: getTimestamp(),
     name: `${resourceMap[target.localName] || target.localName}加载失败`
   };

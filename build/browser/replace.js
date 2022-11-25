@@ -1,5 +1,5 @@
 import { _global, on, getTimestamp, replaceOld, throttle, getLocationHref, isExistProperty, variableTypeDetection, supportsHistory } from '../utils';
-import { transportData, options, setTraceId, triggerHandlers, subscribeEvent } from '../core';
+import { transportData, options, triggerHandlers, subscribeEvent } from '../core';
 import { EMethods } from '../types';
 import { EVENTTYPES, HTTPTYPE, HTTP_CODE } from '../shared';
 
@@ -57,12 +57,6 @@ function xhrReplace() {
   replaceOld(originalXhrProto, 'send', (originalSend) => {
     return function (...args) {
       const { method, url } = this.mito_xhr;
-      // 请求头添加uuid，默认不添加
-      setTraceId(url, (headerFieldName, traceId) => {
-        this.mito_xhr.traceId = traceId;
-        // 设置 HTTP 请求头部
-        this.setRequestHeader(headerFieldName, traceId);
-      });
       // 拦截用户页面的ajax请求，并在ajax请求发送前执行该hook
       options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, this);
       // 监听loadend事件，接口成功或失败都会执行
@@ -106,11 +100,6 @@ function fetchReplace() {
       const headers = new Headers(config.headers || {});
       Object.assign(headers, {
         setRequestHeader: headers.set
-      });
-      // 请求头添加uuid，默认不添加
-      setTraceId(url, (headerFieldName, traceId) => {
-        handlerData.traceId = traceId;
-        headers.set(headerFieldName, traceId);
       });
       options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, headers);
       config = Object.assign(Object.assign({}, config), { headers });

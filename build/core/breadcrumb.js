@@ -1,5 +1,5 @@
-import { BREADCRUMBTYPES, BREADCRUMBCATEGORYS } from '../shared';
-import { validateOption, getTimestamp, slientConsoleScope, _support } from '../utils';
+import { EVENTTYPES, BREADCRUMBTYPES } from '../shared';
+import { validateOption, getTimestamp, _support } from '../utils';
 export class Breadcrumb {
   constructor() {
     this.maxBreadcrumbs = 20;
@@ -8,19 +8,11 @@ export class Breadcrumb {
   }
   /**
    * 添加用户行为栈
-   *
-   * ../param {BreadcrumbPushData} data
-   * ../memberof Breadcrumb
    */
   push(data) {
     if (typeof this.beforePushBreadcrumb === 'function') {
-      let result = null;
-      // 如果用户输入console，并且logger是打开的会造成无限递归，
-      // 应该加入一个开关，执行这个函数前，把监听console的行为关掉
-      const beforePushBreadcrumb = this.beforePushBreadcrumb;
-      slientConsoleScope(() => {
-        result = beforePushBreadcrumb(this, data);
-      });
+      // 执行用户自定义的hook
+      let result = this.beforePushBreadcrumb(this, data);
       if (!result) return;
       this.immediatePush(result);
       return;
@@ -33,9 +25,7 @@ export class Breadcrumb {
       this.shift();
     }
     this.stack.push(data);
-    // make sure xhr fetch is behind button click
     this.stack.sort((a, b) => a.time - b.time);
-
     console.log('this.stack', this.stack);
   }
   shift() {
@@ -49,33 +39,32 @@ export class Breadcrumb {
   }
   getCategory(type) {
     switch (type) {
-      case BREADCRUMBTYPES.XHR:
-      case BREADCRUMBTYPES.FETCH:
-        return BREADCRUMBCATEGORYS.HTTP;
-      case BREADCRUMBTYPES.CLICK:
-      case BREADCRUMBTYPES.ROUTE:
-      case BREADCRUMBTYPES.TAP:
-      case BREADCRUMBTYPES.TOUCHMOVE:
-        return BREADCRUMBCATEGORYS.USER;
-      case BREADCRUMBTYPES.CUSTOMER:
-      case BREADCRUMBTYPES.CONSOLE:
-        return BREADCRUMBCATEGORYS.DEBUG;
-      case BREADCRUMBTYPES.APP_ON_LAUNCH:
-      case BREADCRUMBTYPES.APP_ON_SHOW:
-      case BREADCRUMBTYPES.APP_ON_HIDE:
-      case BREADCRUMBTYPES.PAGE_ON_SHOW:
-      case BREADCRUMBTYPES.PAGE_ON_HIDE:
-      case BREADCRUMBTYPES.PAGE_ON_SHARE_APP_MESSAGE:
-      case BREADCRUMBTYPES.PAGE_ON_SHARE_TIMELINE:
-      case BREADCRUMBTYPES.PAGE_ON_TAB_ITEM_TAP:
-        return BREADCRUMBCATEGORYS.LIFECYCLE;
-      case BREADCRUMBTYPES.UNHANDLEDREJECTION:
-      case BREADCRUMBTYPES.CODE_ERROR:
-      case BREADCRUMBTYPES.RESOURCE:
-      case BREADCRUMBTYPES.VUE:
-      case BREADCRUMBTYPES.REACT:
+      // 接口请求
+      case EVENTTYPES.XHR:
+      case EVENTTYPES.FETCH:
+        return BREADCRUMBTYPES.HTTP;
+
+      // 用户点击
+      case EVENTTYPES.CLICK:
+        return BREADCRUMBTYPES.CLICK;
+
+      // 路由变化
+      case EVENTTYPES.HISTORY:
+      case EVENTTYPES.HASHCHANGE:
+        return BREADCRUMBTYPES.ROUTE;
+
+      // 加载资源
+      case EVENTTYPES.RESOURCE:
+        return BREADCRUMBTYPES.RESOURCE;
+
+      // Js代码报错
+      case EVENTTYPES.UNHANDLEDREJECTION:
+      case EVENTTYPES.ERROR:
+        return BREADCRUMBTYPES.CODEERROR;
+
+      // 用户自定义
       default:
-        return BREADCRUMBCATEGORYS.EXCEPTION;
+        return BREADCRUMBTYPES.CUSTOM;
     }
   }
   bindOptions(options = {}) {

@@ -1,20 +1,20 @@
 import { HandleEvents } from './handleEvents';
-import { htmlElementAsString, Severity } from '../utils';
-import { EVENTTYPES, BREADCRUMBTYPES } from '../shared';
+import { htmlElementAsString, getTimestamp } from '../utils';
+import { EVENTTYPES } from '../shared';
 import { breadcrumb } from '../core';
 import { addReplaceHandler } from './replace';
 export function setupReplace() {
   // 验证ok ✔
   addReplaceHandler({
     callback: (data) => {
-      HandleEvents.handleHttp(data, BREADCRUMBTYPES.XHR);
+      HandleEvents.handleHttp(data, EVENTTYPES.XHR);
     },
     type: EVENTTYPES.XHR
   });
   // 验证ok ✔
   addReplaceHandler({
     callback: (data) => {
-      HandleEvents.handleHttp(data, BREADCRUMBTYPES.FETCH);
+      HandleEvents.handleHttp(data, EVENTTYPES.FETCH);
     },
     type: EVENTTYPES.FETCH
   });
@@ -45,14 +45,14 @@ export function setupReplace() {
       const htmlString = htmlElementAsString(data.data.activeElement);
       if (htmlString) {
         breadcrumb.push({
-          type: BREADCRUMBTYPES.CLICK,
-          category: breadcrumb.getCategory(BREADCRUMBTYPES.CLICK),
+          type: EVENTTYPES.CLICK,
+          category: breadcrumb.getCategory(EVENTTYPES.CLICK),
           data: htmlString,
-          level: Severity.Info
+          time: getTimestamp()
         });
       }
     },
-    type: EVENTTYPES.DOM
+    type: EVENTTYPES.CLICK
   });
   // 验证ok ✔
   addReplaceHandler({

@@ -6,26 +6,26 @@
 function fromString(level) {
   switch (level) {
     case 'debug':
-      return Severity.Debug
+      return Severity.Debug;
     case 'info':
     case 'log':
     case 'assert':
-      return Severity.Info
+      return Severity.Info;
     case 'warn':
     case 'warning':
-      return Severity.Warning
+      return Severity.Warning;
     case Severity.Low:
     case Severity.Normal:
     case Severity.High:
     case Severity.Critical:
     case 'error':
-      return Severity.Error
+      return Severity.Error;
     default:
-      return Severity.Else
+      return Severity.Else;
   }
 }
 
-/** 等级程度枚举 */
+/** 错误类型 */
 export const Severity = {
   Else: 'else',
   Error: 'error',
@@ -37,4 +37,4 @@ export const Severity = {
   High: 'high',
   Critical: 'critical',
   fromString: fromString
-}
+};

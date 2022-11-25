@@ -1,6 +1,7 @@
-import { BREADCRUMBTYPES, ERRORTYPES, ERROR_TYPE_RE, HTTP_CODE } from '../shared';
-import { transportData, breadcrumb, resourceTransform, httpTransform, options } from '../core';
-import { getLocationHref, getTimestamp, isError, parseUrlToObj, extractErrorStack, unknownToString, Severity } from '../utils';
+import ErrorStackParser from 'error-stack-parser';
+import { EVENTTYPES, ERRORTYPES, ERROR_TYPE_RE, HTTP_CODE, STATUS_CODE } from '../shared';
+import { transportData, breadcrumb, resourceTransform, httpTransform } from '../core';
+import { getLocationHref, getTimestamp, parseUrlToObj, unknownToString, Severity } from '../utils';
 const HandleEvents = {
   /**
    * 处理xhr、fetch回调
@@ -9,25 +10,20 @@ const HandleEvents = {
     const isError = data.status === 0 || data.status === HTTP_CODE.BAD_REQUEST || data.status > HTTP_CODE.UNAUTHORIZED;
     // httpTransform 处理接口的状态
     const result = httpTransform(data);
+    // 添加用户行为
     breadcrumb.push({
+      // type：事件类型
       type,
-      // 用户行为类别
+      // category：用户行为类别
       category: breadcrumb.getCategory(type),
       data: Object.assign({}, result),
-      // 等级程度枚举
-      level: Severity.Info,
+      // 状态，两种情况：error\ok
+      status: isError ? STATUS_CODE.ERROR : STATUS_CODE.OK,
       time: data.time
     });
     if (isError) {
-      breadcrumb.push({
-        type,
-        category: breadcrumb.getCategory(BREADCRUMBTYPES.CODE_ERROR),
-        data: Object.assign({}, result),
-        level: Severity.Error,
-        time: data.time
-      });
-      // 接口上报直接上报
-      transportData.send(result);
+      // 上报接口错误
+      transportData.send({ ...result, type, status: STATUS_CODE.ERROR });
     }
   },
   /**
@@ -38,35 +34,37 @@ const HandleEvents = {
 
     // 资源加载报错 验证ok ✔
     if (target.localName) {
-      console.log('target', target);
-
       // 资源加载错误 提取有用数据
-      const data = resourceTransform(errorEvent.target);
+      const data = resourceTransform(target);
       breadcrumb.push({
-        type: BREADCRUMBTYPES.RESOURCE,
-        // category 用户行为类型
-        category: breadcrumb.getCategory(BREADCRUMBTYPES.RESOURCE),
+        type: EVENTTYPES.RESOURCE,
+        // 用户行为类型 Resource
+        category: breadcrumb.getCategory(EVENTTYPES.RESOURCE),
         data,
-        level: Severity.Error
+        status: STATUS_CODE.ERROR,
+        time: getTimestamp()
       });
       return transportData.send(data);
     }
-    // code error
-    const { message, filename, lineno, colno, error } = errorEvent;
-    let result;
-    if (error && isError(error)) {
-      result = extractErrorStack(error, Severity.Normal);
-    }
-    // 处理SyntaxError，stack没有lineno、colno
-    result || (result = HandleEvents.handleNotErrorInstance(message, filename, lineno, colno));
-    result.type = ERRORTYPES.JAVASCRIPT_ERROR;
+
+    // js代码报错
+    let stackFrame = ErrorStackParser.parse(errorEvent.error)[0];
+    let { fileName, columnNumber, lineNumber } = stackFrame;
+    let errorData = {
+      message: errorEvent.message,
+      fileName,
+      line: lineNumber,
+      column: columnNumber
+    };
     breadcrumb.push({
-      type: BREADCRUMBTYPES.CODE_ERROR,
-      category: breadcrumb.getCategory(BREADCRUMBTYPES.CODE_ERROR),
-      data: Object.assign({}, result),
-      level: Severity.Error
+      type: EVENTTYPES.ERROR,
+      // 用户行为类型 Resource
+      category: breadcrumb.getCategory(EVENTTYPES.ERROR),
+      data: errorData,
+      time: getTimestamp(),
+      status: STATUS_CODE.ERROR
     });
-    transportData.send(result);
+    transportData.send(errorData);
   },
   handleNotErrorInstance(message, filename, lineno, colno) {
     let name = ERRORTYPES.UNKNOWN;
@@ -99,55 +97,50 @@ const HandleEvents = {
     const { relative: parsedFrom } = parseUrlToObj(from);
     const { relative: parsedTo } = parseUrlToObj(to);
     breadcrumb.push({
-      type: BREADCRUMBTYPES.ROUTE,
-      category: breadcrumb.getCategory(BREADCRUMBTYPES.ROUTE),
+      type: EVENTTYPES.HISTORY,
+      category: breadcrumb.getCategory(EVENTTYPES.HISTORY),
       data: {
         from: parsedFrom ? parsedFrom : '/',
         to: parsedTo ? parsedTo : '/'
       },
-      level: Severity.Info
+      time: getTimestamp(),
+      status: STATUS_CODE.OK
     });
-    // 自定义的onRouteChange
-    const { onRouteChange } = options;
-    if (onRouteChange) {
-      onRouteChange(from, to);
-    }
   },
   handleHashchange(data) {
     const { oldURL, newURL } = data;
     const { relative: from } = parseUrlToObj(oldURL);
     const { relative: to } = parseUrlToObj(newURL);
     breadcrumb.push({
-      type: BREADCRUMBTYPES.ROUTE,
-      category: breadcrumb.getCategory(BREADCRUMBTYPES.ROUTE),
+      type: EVENTTYPES.HASHCHANGE,
+      category: breadcrumb.getCategory(EVENTTYPES.HASHCHANGE),
       data: {
         from,
         to
       },
-      level: Severity.Info
+      time: getTimestamp(),
+      status: STATUS_CODE.OK
     });
-    const { onRouteChange } = options;
-    if (onRouteChange) {
-      onRouteChange(from, to);
-    }
   },
   handleUnhandleRejection(ev) {
+    let stackFrame = ErrorStackParser.parse(ev.reason)[0];
+    let { fileName, columnNumber, lineNumber } = stackFrame;
     let data = {
-      type: ERRORTYPES.PROMISE_ERROR,
+      type: EVENTTYPES.UNHANDLEDREJECTION,
       message: unknownToString(ev.reason),
       url: getLocationHref(),
       name: ev.type,
-      time: getTimestamp(),
-      level: Severity.Low
+      fileName,
+      line: lineNumber,
+      column: columnNumber
     };
-    if (isError(ev.reason)) {
-      data = Object.assign(Object.assign({}, data), extractErrorStack(ev.reason, Severity.Low));
-    }
+
     breadcrumb.push({
-      type: BREADCRUMBTYPES.UNHANDLEDREJECTION,
-      category: breadcrumb.getCategory(BREADCRUMBTYPES.UNHANDLEDREJECTION),
+      type: EVENTTYPES.UNHANDLEDREJECTION,
+      category: breadcrumb.getCategory(EVENTTYPES.UNHANDLEDREJECTION),
       data: Object.assign({}, data),
-      level: Severity.Error
+      time: getTimestamp(),
+      status: STATUS_CODE.ERROR
     });
     transportData.send(data);
   }
