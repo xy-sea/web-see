@@ -14,10 +14,6 @@ export const ERRORTYPES = {
   ROUTE_ERROR: 'ROUTE_ERROR'
 };
 
-export const CompositeEvents = {
-  ...ERRORTYPES
-};
-
 /**
  * 事件类型
  */
@@ -37,17 +33,6 @@ export const STATUS_CODE = {
 };
 
 /**
- * 用户行为整合类型
- */
-export const BREADCRUMBCATEGORYS = {
-  HTTP: 'Http',
-  CLICK: 'Click',
-  RESOURCE: 'Resource_Error',
-  CODEERROR: 'Code_Error',
-  ROUTE: 'Route',
-  CUSTOM: 'Customer'
-};
-/**
  * 事件类型
  */
 export const EVENTTYPES = {
@@ -60,6 +45,8 @@ export const EVENTTYPES = {
   UNHANDLEDREJECTION: 'unhandledrejection',
   RESOURCE: 'resource',
   DOM: 'dom',
+  VUE: 'vue',
+  CUSTOM: 'customer',
 
   MITO: 'mito',
   MINI_PERFORMANCE: 'miniPerformance',

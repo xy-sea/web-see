@@ -1,7 +1,7 @@
 import ErrorStackParser from 'error-stack-parser';
 import { EVENTTYPES, ERRORTYPES, ERROR_TYPE_RE, HTTP_CODE, STATUS_CODE } from '../shared';
 import { transportData, breadcrumb, resourceTransform, httpTransform } from '../core';
-import { getLocationHref, getTimestamp, parseUrlToObj, unknownToString, Severity } from '../utils';
+import { getLocationHref, getTimestamp, parseUrlToObj, Severity, unknownToString } from '../utils';
 const HandleEvents = {
   /**
    * 处理xhr、fetch回调
@@ -26,45 +26,54 @@ const HandleEvents = {
       transportData.send({ ...result, type, status: STATUS_CODE.ERROR });
     }
   },
-  /**
-   * 处理window的error的监听回到
-   */
-  handleError(errorEvent) {
-    const target = errorEvent.target;
+  handleError(ev) {
+    try {
+      const target = ev.target;
+      // Vue.config.errorHandler捕获的报错 or 异步错误
+      if (!target || (ev.target && !ev.target.localName)) {
+        // errorHandler捕获的报错使用ev解析，异步错误使用ev.error解析
+        let stackFrame = ErrorStackParser.parse(!target ? ev : ev.error)[0];
+        let { fileName, columnNumber, lineNumber } = stackFrame;
+        let errorData = {
+          type: EVENTTYPES.ERROR,
+          status: STATUS_CODE.ERROR,
+          message: ev.message,
+          fileName,
+          line: lineNumber,
+          column: columnNumber
+        };
+        breadcrumb.push({
+          type: EVENTTYPES.ERROR,
+          // 用户行为类型
+          category: breadcrumb.getCategory(EVENTTYPES.ERROR),
+          data: errorData,
+          time: getTimestamp(),
+          status: STATUS_CODE.ERROR
+        });
+        return transportData.send(errorData);
+      }
 
-    // 资源加载报错 验证ok ✔
-    if (target.localName) {
-      // 资源加载错误 提取有用数据
-      const data = resourceTransform(target);
-      breadcrumb.push({
-        type: EVENTTYPES.RESOURCE,
-        // 用户行为类型 Resource
-        category: breadcrumb.getCategory(EVENTTYPES.RESOURCE),
-        data,
-        status: STATUS_CODE.ERROR,
-        time: getTimestamp()
-      });
-      return transportData.send(data);
+      // 资源加载报错 验证ok ✔
+      if (target.localName) {
+        // 资源加载错误 提取有用数据
+        const data = resourceTransform(target);
+        breadcrumb.push({
+          ...data,
+          type: EVENTTYPES.RESOURCE,
+          // 用户行为类型 Resource
+          category: breadcrumb.getCategory(EVENTTYPES.RESOURCE),
+          status: STATUS_CODE.ERROR,
+          time: getTimestamp()
+        });
+        return transportData.send({
+          ...data,
+          type: EVENTTYPES.RESOURCE,
+          status: STATUS_CODE.ERROR
+        });
+      }
+    } catch (er) {
+      console.error('错误代码解析异常:', er);
     }
-
-    // js代码报错
-    let stackFrame = ErrorStackParser.parse(errorEvent.error)[0];
-    let { fileName, columnNumber, lineNumber } = stackFrame;
-    let errorData = {
-      message: errorEvent.message,
-      fileName,
-      line: lineNumber,
-      column: columnNumber
-    };
-    breadcrumb.push({
-      type: EVENTTYPES.ERROR,
-      // 用户行为类型 Resource
-      category: breadcrumb.getCategory(EVENTTYPES.ERROR),
-      data: errorData,
-      time: getTimestamp(),
-      status: STATUS_CODE.ERROR
-    });
-    transportData.send(errorData);
   },
   handleNotErrorInstance(message, filename, lineno, colno) {
     let name = ERRORTYPES.UNKNOWN;
@@ -124,11 +133,14 @@ const HandleEvents = {
   },
   handleUnhandleRejection(ev) {
     let stackFrame = ErrorStackParser.parse(ev.reason)[0];
+    console.log('stackFrame', stackFrame);
+
     let { fileName, columnNumber, lineNumber } = stackFrame;
     let data = {
       type: EVENTTYPES.UNHANDLEDREJECTION,
+      status: STATUS_CODE.ERROR,
+      time: getTimestamp(),
       message: unknownToString(ev.reason),
-      url: getLocationHref(),
       name: ev.type,
       fileName,
       line: lineNumber,

@@ -17,23 +17,14 @@ import 'GildataDesign/lib/theme-chalk/index.css';
 //   immediately: true
 // });
 
-import { init } from '../build/browser/index';
+import webSee from '../build/browser/index';
 
-init({
+console.log('webSee', webSee);
+
+Vue.use(webSee, {
   dsn: 'http://test.com/error',
   apikey: '123-2223-123-123'
 });
-
-// window.addEventListener('error', (error) => {
-//   console.log('error', error);
-// });
-
-Vue.config.errorHandler = function (err, vm, info) {
-  console.log('err', err, vm, info);
-  setTimeout(() => {
-    throw err;
-  });
-};
 
 Vue.config.productionTip = false;
 Vue.use(GildataDesign);

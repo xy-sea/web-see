@@ -21,13 +21,7 @@ export const variableTypeDetection = {
   isProcess: isType('process'),
   isWindow: isType('Window')
 };
-/**
- * Checks whether given value's type is one of a few Error or Error-like
- * {../link isError}.
- *
- * ../param wat A value to be checked.
- * ../returns A boolean representing the result.
- */
+
 export function isError(wat) {
   switch (nativeToString.call(wat)) {
     case '[object Error]':
@@ -37,7 +31,7 @@ export function isError(wat) {
     case '[object DOMException]':
       return true;
     default:
-      return isInstanceOf(wat, Error);
+      return false;
   }
 }
 /**
@@ -50,31 +44,7 @@ export function isEmptyObject(obj) {
 export function isEmpty(wat) {
   return (variableTypeDetection.isString(wat) && wat.trim() === '') || wat === undefined || wat === null;
 }
-/**
- * Checks whether given value has a then function.
- * ../param wat A value to be checked.
- */
-// export function isThenable(wat: any): boolean {
-//   // tslint:disable:no-unsafe-any
-//   return Boolean(wat && wat.then && typeof wat.then === 'function')
-//   // tslint:enable:no-unsafe-any
-// }
-/**
- * Checks whether given value's type is an instance of provided constructor.
- * {../link isInstanceOf}.
- *
- * ../param wat A value to be checked.
- * ../param base A constructor to be used in a check.
- * ../returns A boolean representing the result.
- */
-export function isInstanceOf(wat, base) {
-  try {
-    // tslint:disable-next-line:no-unsafe-any
-    return wat instanceof base;
-  } catch (_e) {
-    return false;
-  }
-}
+
 export function isExistProperty(obj, key) {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }

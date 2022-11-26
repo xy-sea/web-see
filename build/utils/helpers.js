@@ -1,4 +1,4 @@
-import { globalVar, HTTP_CODE, ERRORTYPES } from '../shared';
+import { HTTP_CODE, ERRORTYPES } from '../shared';
 import { nativeToString, variableTypeDetection } from './is';
 export function getLocationHref() {
   if (typeof document === 'undefined' || document.location == null) return '';
@@ -62,34 +62,11 @@ export function getFunctionName(fn) {
   }
   return fn.name || defaultFunctionName;
 }
-// 函数防抖
 /**
- *
- * ../param fn 需要防抖的函数
- * ../param delay 防抖的时间间隔
- * ../param isImmediate 是否需要立即执行，默认为false，第一次是不执行的
- * ../returns 返回一个包含防抖功能的函数
- */
-// export const debounce = (fn: voidFun, delay: number, isImmediate = false): voidFun => {
-//   let timer = null
-//   return function (...args: any) {
-//     if (isImmediate) {
-//       fn.apply(this, args)
-//       isImmediate = false
-//       return
-//     }
-//     clearTimeout(timer)
-//     timer = setTimeout(() => {
-//       fn.apply(this, args)
-//     }, delay)
-//   }
-// }
-// 函数节流
-/**
- *
- * ../param fn 需要节流的函数
- * ../param delay 节流的时间间隔
- * ../returns 返回一个包含节流功能的函数
+ * 函数节流
+ * fn 需要节流的函数
+ * delay 节流的时间间隔
+ * 返回一个包含节流功能的函数
  */
 export const throttle = (fn, delay) => {
   let canRun = true;
@@ -102,13 +79,21 @@ export const throttle = (fn, delay) => {
     }, delay);
   };
 };
-/**
- * 获取当前的时间戳
- * ../returns 返回当前时间戳
- */
+
+// 获取当前的时间戳
 export function getTimestamp() {
   return Date.now();
 }
+
+// 获取当天的日期 2022-11-08
+export function getYMDHMS() {
+  const datetime = new Date();
+  const year = datetime.getFullYear(),
+    month = ('0' + (datetime.getMonth() + 1)).slice(-2),
+    date = ('0' + datetime.getDate()).slice(-2);
+  return `${year}-${month}-${date}`;
+}
+
 export function typeofAny(target, type) {
   return typeof target === type;
 }
@@ -126,11 +111,6 @@ export function toStringValidateOption(target, targetName, expectType) {
   if (toStringAny(target, expectType)) return true;
   typeof target !== 'undefined' && console.error(`${targetName}期望传入${expectType}类型，目前是${nativeToString.call(target)}类型`);
   return false;
-}
-export function slientConsoleScope(callback) {
-  globalVar.isLogAddBreadcrumb = false;
-  callback();
-  globalVar.isLogAddBreadcrumb = true;
 }
 export function generateUUID() {
   let d = new Date().getTime();

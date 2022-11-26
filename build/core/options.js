@@ -5,14 +5,12 @@ export class Options {
   constructor() {
     this.beforeAppAjaxSend = () => {};
     this.throttleDelayTime = 0;
-    this.maxDuplicateCount = 2;
   }
   bindOptions(options = {}) {
-    const { beforeAppAjaxSend, filterXhrUrlRegExp, throttleDelayTime, maxDuplicateCount } = options;
+    const { beforeAppAjaxSend, filterXhrUrlRegExp, throttleDelayTime } = options;
     validateOption(beforeAppAjaxSend, 'beforeAppAjaxSend', 'function') && (this.beforeAppAjaxSend = beforeAppAjaxSend);
     // browser hooks
     validateOption(throttleDelayTime, 'throttleDelayTime', 'number') && (this.throttleDelayTime = throttleDelayTime);
-    validateOption(maxDuplicateCount, 'maxDuplicateCount', 'number') && (this.maxDuplicateCount = maxDuplicateCount);
     toStringValidateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', '[object RegExp]') && (this.filterXhrUrlRegExp = filterXhrUrlRegExp);
   }
 }

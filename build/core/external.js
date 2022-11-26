@@ -1,44 +1,36 @@
-import { ERRORTYPES, BREADCRUMBTYPES } from '../shared'
-import {
-  isError,
-  extractErrorStack,
-  getLocationHref,
-  getTimestamp,
-  unknownToString,
-  isWxMiniEnv,
-  Severity,
-  getCurrentRoute
-} from '../utils'
-import { transportData } from './transportData'
-import { breadcrumb } from './breadcrumb'
+import ErrorStackParser from 'error-stack-parser';
+import { EVENTTYPES, STATUS_CODE } from '../shared';
+import { isError, getLocationHref, getTimestamp, unknownToString } from '../utils';
+import { transportData } from './transportData';
+import { breadcrumb } from './breadcrumb';
 /**
  *
  * 自定义上报事件
  * @export
- * @param {LogTypes} { message = 'emptyMsg', tag = '', level = Severity.Critical, ex = '' }
+ * @param {LogTypes} { message = 'emptyMsg', tag = '', ex = '' }
  */
-export function log({ message = 'emptyMsg', tag = '', level = Severity.Critical, ex = '', type = ERRORTYPES.LOG_ERROR }) {
-  let errorInfo = {}
-  if (isError(ex)) {
-    errorInfo = extractErrorStack(ex, level)
+export function log({ message = 'emptyMsg', tag = '', error = '', type = EVENTTYPES.CUSTOM }) {
+  let errorInfo = {};
+  if (isError(error)) {
+    let result = ErrorStackParser.parse(error.error || error.reason)[0];
+    errorInfo = { ...result, line: result.lineNumber, column: result.columnNumber };
   }
-  const error = Object.assign(
+  const data = Object.assign(
     {
       type,
-      level,
+      status: STATUS_CODE.ERROR,
       message: unknownToString(message),
-      name: 'MITO.log',
       customTag: unknownToString(tag),
-      time: getTimestamp(),
-      url: isWxMiniEnv ? getCurrentRoute() : getLocationHref()
+      url: getLocationHref(),
+      time: getTimestamp()
     },
     errorInfo
-  )
+  );
   breadcrumb.push({
-    type: BREADCRUMBTYPES.CUSTOMER,
-    category: breadcrumb.getCategory(BREADCRUMBTYPES.CUSTOMER),
+    type,
+    category: breadcrumb.getCategory(EVENTTYPES.CUSTOM),
     data: message,
-    level: Severity.fromString(level.toString())
-  })
-  transportData.send(error)
+    time: getTimestamp()
+  });
+  transportData.send(data);
 }

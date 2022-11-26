@@ -1,4 +1,4 @@
-import { _support, validateOption, isBrowserEnv, Queue, isEmpty } from '../utils';
+import { _support, validateOption, isBrowserEnv, Queue, isEmpty, getLocationHref, generateUUID, getYMDHMS } from '../utils';
 import { SDK_NAME, SDK_VERSION } from '../shared';
 import { breadcrumb } from './breadcrumb';
 import { EMethods } from '../types';
@@ -9,6 +9,7 @@ export class TransportData {
   apikey = ''; // 每个项目对应的唯一标识
   errorDsn = ''; // 监控上报接口的地址
   userId = ''; // 用户id
+  uuid = generateUUID(); // 每次页面加载的唯一标识
   beforeDataReport = null; // 上报数据前的hook
   getUserId = null; // 上报数据前的获取用的userId
   useImgUpload = false;
@@ -50,6 +51,7 @@ export class TransportData {
       sdkVersion: SDK_VERSION,
       sdkName: SDK_NAME
     };
+    // 每个项目对应一个apikey
     this.apikey && (result.apikey = this.apikey);
     return result;
   }
@@ -68,10 +70,14 @@ export class TransportData {
     return '';
   }
   // 添加公共信息
+  // 这里不要添加时间戳，比如接口报错，发生的时间和上报时间不一致
   getTransportData(data) {
     return {
-      data,
-      authInfo: this.getAuthInfo(), // 获取用户信息
+      ...data,
+      ...this.getAuthInfo(), // 获取用户信息
+      date: getYMDHMS(),
+      uuid: this.uuid,
+      page_url: getLocationHref(),
       breadcrumb: breadcrumb.getStack(), // 获取用户行为栈
       deviceInfo: _support.deviceInfo // 获取设备信息
     };
@@ -85,9 +91,10 @@ export class TransportData {
   }
 
   bindOptions(options = {}) {
-    const { dsn, beforeDataReport, apikey, getUserId, useImgUpload } = options;
+    const { dsn, apikey, beforeDataReport, userId, getUserId, useImgUpload } = options;
     validateOption(apikey, 'apikey', 'string') && (this.apikey = apikey);
     validateOption(dsn, 'dsn', 'string') && (this.errorDsn = dsn);
+    validateOption(userId, 'userId', 'string') && (this.userId = userId);
     validateOption(useImgUpload, 'useImgUpload', 'boolean') && (this.useImgUpload = useImgUpload);
     validateOption(beforeDataReport, 'beforeDataReport', 'function') && (this.beforeDataReport = beforeDataReport);
     validateOption(getUserId, 'getUserId', 'function') && (this.getUserId = getUserId);

@@ -1,6 +1,7 @@
 <template>
   <div class="home">
-    <jy-button type="primary">点击</jy-button>
+    <jy-button type="primary" @click="fn">js错误</jy-button>
+    <jy-button type="primary" @click="timeout">异步错误</jy-button>
     <jy-button type="primary" @click="xhr">xhr请求</jy-button>
     <jy-button type="primary" @click="send">fetch请求</jy-button>
     <br />
@@ -19,6 +20,17 @@ export default {
   },
   mounted() {},
   methods: {
+    timeout() {
+      setTimeout(() => {
+        JSON.parse('');
+      });
+    },
+    fn() {
+      let a = undefined;
+      if (a.length) {
+        console.log('1');
+      }
+    },
     resource() {
       let script = document.createElement('script');
       script.type = 'text/javascript';
@@ -32,13 +44,15 @@ export default {
       });
     },
     send() {
-      fetch('https://jsonplaceholder.typicode.com/posts/2').then((res) => {
+      // 正确的请求
+      // fetch('https://jsonplaceholder.typicode.com/posts/2').then((res) => {
+      fetch('https://jsonplaceholder.typicode.com/posts11/2').then((res) => {
         console.log('res', res);
       });
     },
     xhr() {
       let ajax = new XMLHttpRequest();
-      ajax.open('GET', 'https://jsonplaceholder.typicode.com/posts/2');
+      ajax.open('GET', 'https://jsonplaceholder.typicode.com/posts11/2');
       ajax.setRequestHeader('content-type', 'application/json');
       ajax.onreadystatechange = function () {
         if (ajax.readyState !== 4) return;

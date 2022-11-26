@@ -1,35 +1,39 @@
-import { _global } from './global'
+import { _global } from './global';
+// 利用浏览器空闲时间or微任务上报数据
 export class Queue {
   constructor() {
-    this.stack = []
-    this.isFlushing = false
-    if (!('Promise' in _global)) return
-    this.micro = Promise.resolve()
+    this.stack = [];
+    this.isFlushing = false;
   }
   addFn(fn) {
-    if (typeof fn !== 'function') return
-    if (!('Promise' in _global)) {
-      fn()
-      return
+    if (typeof fn !== 'function') return;
+    if (!('requestIdleCallback' in _global || 'Promise' in _global)) {
+      fn();
+      return;
     }
-    this.stack.push(fn)
+    this.stack.push(fn);
     if (!this.isFlushing) {
-      this.isFlushing = true
-      this.micro.then(() => this.flushStack())
+      this.isFlushing = true;
+      // 优先使用requestIdleCallback
+      if ('requestIdleCallback' in _global) {
+        requestIdleCallback(() => this.flushStack());
+      } else {
+        Promise.resolve().then(() => this.flushStack());
+      }
     }
   }
   clear() {
-    this.stack = []
+    this.stack = [];
   }
   getStack() {
-    return this.stack
+    return this.stack;
   }
   flushStack() {
-    const temp = this.stack.slice(0)
-    this.stack.length = 0
-    this.isFlushing = false
+    const temp = this.stack.slice(0);
+    this.stack = [];
+    this.isFlushing = false;
     for (let i = 0; i < temp.length; i++) {
-      temp[i]()
+      temp[i]();
     }
   }
 }

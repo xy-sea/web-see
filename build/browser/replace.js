@@ -24,7 +24,7 @@ function replace(type) {
     case EVENTTYPES.UNHANDLEDREJECTION:
       unhandledrejectionReplace();
       break;
-    case EVENTTYPES.DOM:
+    case EVENTTYPES.CLICK:
       domReplace();
       break;
     case EVENTTYPES.HASHCHANGE:
@@ -208,7 +208,7 @@ function domReplace() {
     _global.document,
     'click',
     function () {
-      clickThrottle(EVENTTYPES.DOM, {
+      clickThrottle(EVENTTYPES.CLICK, {
         category: 'click',
         data: this
       });
