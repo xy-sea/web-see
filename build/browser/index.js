@@ -30,10 +30,24 @@ function init(options = {}) {
   webInit(options);
 }
 
+/**
+ * react在ErrorBoundary中上报错误
+ * 例如：componentDidCatch(error, errorInfo) {
+ *        // error的错误信息和vue中errorHandler中的信息一致
+ *        webSee.errorBoundaryReport(error)
+ *      }
+ * */
+function errorBoundary(err) {
+  if (getFlag(EVENTTYPES.REACT)) return;
+  setFlag(EVENTTYPES.REACT, true);
+  HandleEvents.handleError(err);
+}
+
 export default {
   SDK_VERSION,
   SDK_NAME,
   init,
   install,
+  errorBoundary,
   log
 };

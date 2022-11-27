@@ -46,6 +46,7 @@ export const EVENTTYPES = {
   RESOURCE: 'resource',
   DOM: 'dom',
   VUE: 'vue',
+  REACT: 'react',
   CUSTOM: 'customer',
   PERFORMANCE: 'performance',
   RECORDSCREEN: 'recordScreen'
