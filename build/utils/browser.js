@@ -2,6 +2,30 @@
 
 import { EVENTTYPES } from '../shared';
 import { setFlag } from './global';
+
+export function getResource() {
+  if (performance.getEntriesByType) {
+    const entries = performance.getEntriesByType('resource');
+    // 过滤掉非静态资源的 fetch、 xmlhttprequest、beacon
+    let list = entries.filter((entry) => {
+      return ['fetch', 'xmlhttprequest', 'beacon'].indexOf(entry.initiatorType) === -1;
+    });
+
+    if (list.length) {
+      list = JSON.parse(JSON.stringify(list));
+      list.forEach((entry) => {
+        entry.isCache = isCache(entry);
+      });
+    }
+    return list;
+  }
+}
+
+// 判断资料是否来自缓存
+export function isCache(entry) {
+  return entry.transferSize === 0 || (entry.transferSize !== 0 && entry.encodedBodySize === 0);
+}
+
 /**
  * 返回包含id、class、innerTextde字符串的标签
  * @param target html节点
@@ -57,4 +81,6 @@ export function setSilentFlag(paramOptions = {}) {
   setFlag(EVENTTYPES.ERROR, !!paramOptions.silentError);
   setFlag(EVENTTYPES.HASHCHANGE, !!paramOptions.silentHashchange);
   setFlag(EVENTTYPES.UNHANDLEDREJECTION, !!paramOptions.silentUnhandledrejection);
+  setFlag(EVENTTYPES.PERFORMANCE, !!paramOptions.silentPerformance);
+  setFlag(EVENTTYPES.recordScreen, !!paramOptions.silentRecordScreen);
 }

@@ -1,7 +1,8 @@
 import ErrorStackParser from 'error-stack-parser';
-import { EVENTTYPES, ERRORTYPES, ERROR_TYPE_RE, HTTP_CODE, STATUS_CODE } from '../shared';
+import { onLCP, onFID, onCLS, onFCP, onTTFB } from 'web-vitals';
+import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../shared';
 import { transportData, breadcrumb, resourceTransform, httpTransform } from '../core';
-import { getLocationHref, getTimestamp, parseUrlToObj, Severity, unknownToString } from '../utils';
+import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global } from '../utils';
 const HandleEvents = {
   /**
    * 处理xhr、fetch回调
@@ -12,12 +13,9 @@ const HandleEvents = {
     const result = httpTransform(data);
     // 添加用户行为
     breadcrumb.push({
-      // type：事件类型
       type,
-      // category：用户行为类别
       category: breadcrumb.getCategory(type),
       data: Object.assign({}, result),
-      // 状态，两种情况：error\ok
       status: isError ? STATUS_CODE.ERROR : STATUS_CODE.OK,
       time: data.time
     });
@@ -75,31 +73,6 @@ const HandleEvents = {
       console.error('错误代码解析异常:', er);
     }
   },
-  handleNotErrorInstance(message, filename, lineno, colno) {
-    let name = ERRORTYPES.UNKNOWN;
-    const url = filename || getLocationHref();
-    let msg = message;
-    const matches = message.match(ERROR_TYPE_RE);
-    if (matches[1]) {
-      name = matches[1];
-      msg = matches[2];
-    }
-    const element = {
-      url,
-      func: ERRORTYPES.UNKNOWN_FUNCTION,
-      args: ERRORTYPES.UNKNOWN,
-      line: lineno,
-      col: colno
-    };
-    return {
-      url,
-      name,
-      message: msg,
-      level: Severity.Normal,
-      time: getTimestamp(),
-      stack: [element]
-    };
-  },
   handleHistory(data) {
     const { from, to } = data;
     // 定义parsedFrom变量，值为relative
@@ -133,14 +106,12 @@ const HandleEvents = {
   },
   handleUnhandleRejection(ev) {
     let stackFrame = ErrorStackParser.parse(ev.reason)[0];
-    console.log('stackFrame', stackFrame);
-
     let { fileName, columnNumber, lineNumber } = stackFrame;
     let data = {
       type: EVENTTYPES.UNHANDLEDREJECTION,
       status: STATUS_CODE.ERROR,
       time: getTimestamp(),
-      message: unknownToString(ev.reason),
+      message: unknownToString(ev.reason.message || ev.reason.stack),
       name: ev.type,
       fileName,
       line: lineNumber,
@@ -155,6 +126,70 @@ const HandleEvents = {
       status: STATUS_CODE.ERROR
     });
     transportData.send(data);
+  },
+  handlePerformance() {
+    onLCP((res) => {
+      fn(res);
+    });
+    onFID((res) => {
+      fn(res);
+    });
+    onCLS((res) => {
+      fn(res);
+    });
+    onFCP((res) => {
+      fn(res);
+    });
+    onTTFB((res) => {
+      fn(res);
+    });
+
+    function fn(res) {
+      // name指标名称、rating 评级、value数值
+      let { name, rating, value } = res;
+      transportData.send({
+        type: EVENTTYPES.PERFORMANCE,
+        status: STATUS_CODE.OK,
+        time: getTimestamp(),
+        name,
+        rating,
+        value
+      });
+    }
+
+    let observer = new PerformanceObserver((list) => {
+      for (const long of list.getEntries()) {
+        // 上报长任务详情
+        transportData.send({
+          type: EVENTTYPES.PERFORMANCE,
+          name: 'long_task',
+          longTask: long,
+          time: getTimestamp(),
+          status: STATUS_CODE.OK
+        });
+      }
+    });
+    observer.observe({ entryTypes: ['longtask'] });
+
+    on(_global, 'load', function () {
+      // 上报资源列表
+      transportData.send({
+        type: EVENTTYPES.PERFORMANCE,
+        name: 'resource_list',
+        time: getTimestamp(),
+        status: STATUS_CODE.OK,
+        resourceList: getResource()
+      });
+
+      // 上报内存情况
+      transportData.send({
+        type: EVENTTYPES.PERFORMANCE,
+        name: 'memory',
+        time: getTimestamp(),
+        status: STATUS_CODE.OK,
+        memory: performance.memory
+      });
+    });
   }
 };
 export { HandleEvents };

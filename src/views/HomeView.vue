@@ -1,14 +1,12 @@
 <template>
   <div class="home">
-    <jy-button type="primary" @click="fn">js错误</jy-button>
-    <jy-button type="primary" @click="timeout">异步错误</jy-button>
-    <jy-button type="primary" @click="xhr">xhr请求</jy-button>
-    <jy-button type="primary" @click="send">fetch请求</jy-button>
+    <button type="primary" @click="fn">js错误</button>
+    <button type="primary" @click="timeout">异步错误</button>
+    <button type="primary" @click="xhr">xhr请求</button>
+    <button type="primary" @click="send">fetch请求</button>
     <br />
-    <jy-button type="primary" @click="promiseErr">promise错误</jy-button>
-    <jy-button type="primary" @click="resource">加载资源报错</jy-button>
-    <!-- <jy-button type="primary" @click="record">js报错</jy-button> -->
-    <!-- <jy-button secondary type="primary" @click="play">播放</jy-button> -->
+    <button type="primary" @click="promiseErr">promise错误</button>
+    <button type="primary" @click="resource">加载资源报错</button>
   </div>
 </template>
 
@@ -18,7 +16,6 @@ export default {
   components: {
     // HelloWorld
   },
-  mounted() {},
   methods: {
     timeout() {
       setTimeout(() => {
@@ -34,7 +31,7 @@ export default {
     resource() {
       let script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'https://www.test.com/index.js';
+      script.src = 'https://www.***.com/index.js';
       document.body.appendChild(script);
     },
     promiseErr() {
@@ -75,5 +72,8 @@ export default {
 #replay {
   width: 500px;
   height: 500px;
+}
+.img {
+  width: 100px;
 }
 </style>

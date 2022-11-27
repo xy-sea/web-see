@@ -30,6 +30,12 @@ function replace(type) {
     case EVENTTYPES.HASHCHANGE:
       listenHashchange();
       break;
+    case EVENTTYPES.PERFORMANCE:
+      listenPerformance();
+      break;
+    case EVENTTYPES.RECORDSCREEN:
+      recordScreen();
+      break;
     default:
       break;
   }
@@ -227,4 +233,14 @@ function domReplace() {
   //   },
   //   true
   // )
+}
+function listenPerformance() {
+  // window添加load事件，在load事件中，获取performance性能数据
+  // on(_global, 'load', function () {
+  triggerHandlers(EVENTTYPES.PERFORMANCE);
+  // });
+}
+
+function recordScreen() {
+  
 }

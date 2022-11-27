@@ -38,7 +38,7 @@ const resourceMap = {
 export function resourceTransform(target) {
   return {
     time: getTimestamp(),
-    message: '资源地址: ' + (interceptStr(target.src, 120) || interceptStr(target.href, 120)),
-    name: `${resourceMap[target.localName] || target.localName}加载失败`
+    message: (interceptStr(target.src, 120) || interceptStr(target.href, 120)) + ' 资源加载失败',
+    name: `${resourceMap[target.localName] || target.localName}`
   };
 }

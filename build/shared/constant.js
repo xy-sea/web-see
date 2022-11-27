@@ -47,12 +47,8 @@ export const EVENTTYPES = {
   DOM: 'dom',
   VUE: 'vue',
   CUSTOM: 'customer',
-
-  MITO: 'mito',
-  MINI_PERFORMANCE: 'miniPerformance',
-  MINI_MEMORY_WARNING: 'miniMemoryWarning',
-  MINI_NETWORK_STATUS_CHANGE: 'miniNetworkStatusChange',
-  MINI_BATTERY_INFO: 'miniBatteryInfo'
+  PERFORMANCE: 'performance',
+  RECORDSCREEN: 'recordScreen'
 };
 export const HTTPTYPE = {
   XHR: 'xhr',
@@ -60,14 +56,9 @@ export const HTTPTYPE = {
 };
 
 export const HTTP_CODE = {
-  400: 'BAD_REQUEST',
-  401: 'UNAUTHORIZED',
-  500: 'INTERNAL_EXCEPTION',
   BAD_REQUEST: 400,
-  UNAUTHORIZED: 401,
-  INTERNAL_EXCEPTION: 500
+  UNAUTHORIZED: 401
 };
-export const ERROR_TYPE_RE = /^(?:[Uu]ncaught (?:exception: )?)?(?:((?:Eval|Internal|Range|Reference|Syntax|Type|URI|)Error): )?(.*)$/;
 
 // globalVar 作用是什么？
 const globalVar = {

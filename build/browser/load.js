@@ -61,4 +61,18 @@ export function setupReplace() {
     },
     type: EVENTTYPES.HASHCHANGE
   });
+  // 获取性能指标
+  addReplaceHandler({
+    callback: () => {
+      HandleEvents.handlePerformance();
+    },
+    type: EVENTTYPES.PERFORMANCE
+  });
+  // 录屏
+  addReplaceHandler({
+    callback: () => {
+      HandleEvents.handleScreen();
+    },
+    type: EVENTTYPES.RECORDSCREEN
+  });
 }

@@ -72,15 +72,18 @@ export class TransportData {
   // 添加公共信息
   // 这里不要添加时间戳，比如接口报错，发生的时间和上报时间不一致
   getTransportData(data) {
-    return {
+    let info = {
       ...data,
       ...this.getAuthInfo(), // 获取用户信息
       date: getYMDHMS(),
       uuid: this.uuid,
       page_url: getLocationHref(),
-      breadcrumb: breadcrumb.getStack(), // 获取用户行为栈
       deviceInfo: _support.deviceInfo // 获取设备信息
     };
+    if (data.type != 'performance') {
+      info.breadcrumb = breadcrumb.getStack(); // 获取用户行为栈
+    }
+    return info;
   }
   isSdkTransportUrl(targetUrl) {
     let isSdkDsn = false;

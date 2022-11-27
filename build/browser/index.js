@@ -17,7 +17,7 @@ function webInit(options = {}) {
 const install = function (Vue, options = {}) {
   if (getFlag(EVENTTYPES.VUE)) return;
   setFlag(EVENTTYPES.VUE, true);
-  // vue 添加errorHandler
+  // 添加errorHandler
   let handler = Vue.config.errorHandler;
   Vue.config.errorHandler = function (err, vm, info) {
     HandleEvents.handleError(err);
