@@ -1,8 +1,9 @@
 import ErrorStackParser from 'error-stack-parser';
+import { record } from 'rrweb';
 import { onLCP, onFID, onCLS, onFCP, onTTFB } from 'web-vitals';
 import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../shared';
 import { transportData, breadcrumb, resourceTransform, httpTransform } from '../core';
-import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global } from '../utils';
+import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global, _support, zip, generateUUID } from '../utils';
 const HandleEvents = {
   /**
    * 处理xhr、fetch回调
@@ -190,6 +191,46 @@ const HandleEvents = {
         memory: performance.memory
       });
     });
+  },
+  handleScreen() {
+    try {
+      console.log('record1111111111');
+      // 存储录屏信息
+      let events = [];
+      // 调用stopFn停止录像
+      // let stopFn = record({
+      record({
+        emit(event, isCheckout) {
+          if (isCheckout) {
+            console.log('isCheckout', isCheckout);
+            // 此段时间内发生错误，上报录屏信息
+            if (_support.hasError) {
+              console.log('hasError', _support.hasError);
+              // 重置hasError
+              _support.hasError = false;
+
+              transportData.send({
+                type: EVENTTYPES.RECORDSCREEN,
+                recordScreenId: _support.recordScreenId,
+                time: getTimestamp(),
+                status: STATUS_CODE.OK,
+                events: zip(events)
+              });
+            }
+            // 重置录屏
+            events = [];
+            // 重置录屏id
+            _support.recordScreenId = generateUUID();
+          }
+          events.push(event);
+        },
+        recordCanvas: true,
+        // 每5s重新制作快照
+        checkoutEveryNms: 10 * 1000
+      });
+    } catch (err) {
+      console.err('录屏报错:', err);
+    }
   }
 };
 export { HandleEvents };

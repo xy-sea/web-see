@@ -1,5 +1,5 @@
 import { _support, validateOption, isBrowserEnv, Queue, isEmpty, getLocationHref, generateUUID, getYMDHMS } from '../utils';
-import { SDK_NAME, SDK_VERSION } from '../shared';
+import { SDK_NAME, SDK_VERSION, ERROR_LIST, EVENTTYPES } from '../shared';
 import { breadcrumb } from './breadcrumb';
 import { EMethods } from '../types';
 /**
@@ -80,7 +80,9 @@ export class TransportData {
       page_url: getLocationHref(),
       deviceInfo: _support.deviceInfo // 获取设备信息
     };
-    if (data.type != 'performance') {
+
+    // 性能数据和录屏不需要附带用户行为
+    if (data.type != EVENTTYPES.PERFORMANCE && data.type != EVENTTYPES.RECORDSCREEN) {
       info.breadcrumb = breadcrumb.getStack(); // 获取用户行为栈
     }
     return info;
@@ -113,6 +115,16 @@ export class TransportData {
       console.error('dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
       return;
     }
+
+    // 开启录屏
+    if (_support.options.silentRecordScreen) {
+      if (ERROR_LIST.includes(data.type)) {
+        // 修改hasError
+        _support.hasError = true;
+        data.recordScreenId = _support.recordScreenId;
+      }
+    }
+
     const result = await this.beforePost(data);
     console.log('result', result);
     if (!result) return;

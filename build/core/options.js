@@ -5,12 +5,13 @@ export class Options {
   constructor() {
     this.beforeAppAjaxSend = () => {};
     this.throttleDelayTime = 0;
+    this.silentRecordScreen = false; // 是否开启录屏
   }
   bindOptions(options = {}) {
-    const { beforeAppAjaxSend, filterXhrUrlRegExp, throttleDelayTime } = options;
+    const { beforeAppAjaxSend, filterXhrUrlRegExp, throttleDelayTime, silentRecordScreen } = options;
     validateOption(beforeAppAjaxSend, 'beforeAppAjaxSend', 'function') && (this.beforeAppAjaxSend = beforeAppAjaxSend);
-    // browser hooks
     validateOption(throttleDelayTime, 'throttleDelayTime', 'number') && (this.throttleDelayTime = throttleDelayTime);
+    validateOption(silentRecordScreen, 'silentRecordScreen', 'boolean') && (this.silentRecordScreen = silentRecordScreen);
     toStringValidateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', '[object RegExp]') && (this.filterXhrUrlRegExp = filterXhrUrlRegExp);
   }
 }

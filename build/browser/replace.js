@@ -242,5 +242,5 @@ function listenPerformance() {
 }
 
 function recordScreen() {
-  
+  triggerHandlers(EVENTTYPES.RECORDSCREEN);
 }

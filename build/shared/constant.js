@@ -50,6 +50,10 @@ export const EVENTTYPES = {
   PERFORMANCE: 'performance',
   RECORDSCREEN: 'recordScreen'
 };
+
+// 错误事件集合
+export const ERROR_LIST = [EVENTTYPES.ERROR, EVENTTYPES.UNHANDLEDREJECTION, EVENTTYPES.RESOURCE, EVENTTYPES.FETCH, EVENTTYPES.XHR];
+
 export const HTTPTYPE = {
   XHR: 'xhr',
   FETCH: 'fetch'

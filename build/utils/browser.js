@@ -1,5 +1,6 @@
 /* eslint-disable */
-
+import pako from 'pako';
+import { Base64 } from 'js-base64';
 import { EVENTTYPES } from '../shared';
 import { setFlag } from './global';
 
@@ -72,6 +73,22 @@ export function parseUrlToObj(url) {
   };
 }
 
+// 压缩
+export function zip(data) {
+  if (!data) return data;
+  // 判断数据是否需要转为JSON
+  const dataJson = typeof data !== 'string' && typeof data !== 'number' ? JSON.stringify(data) : data;
+  // 使用Base64.encode处理字符编码，兼容中文
+  const str = Base64.encode(dataJson);
+  let binaryString = pako.gzip(str);
+  let arr = Array.from(binaryString);
+  let s = '';
+  arr.forEach((item) => {
+    s += String.fromCharCode(item);
+  });
+  return Base64.btoa(s);
+}
+
 export function setSilentFlag(paramOptions = {}) {
   // 默认会监控xhr，为true时，当silentXhr为true时将不再监控
   setFlag(EVENTTYPES.XHR, !!paramOptions.silentXhr);
@@ -82,5 +99,5 @@ export function setSilentFlag(paramOptions = {}) {
   setFlag(EVENTTYPES.HASHCHANGE, !!paramOptions.silentHashchange);
   setFlag(EVENTTYPES.UNHANDLEDREJECTION, !!paramOptions.silentUnhandledrejection);
   setFlag(EVENTTYPES.PERFORMANCE, !!paramOptions.silentPerformance);
-  setFlag(EVENTTYPES.recordScreen, !!paramOptions.silentRecordScreen);
+  setFlag(EVENTTYPES.RECORDSCREEN, !paramOptions.silentRecordScreen);
 }
