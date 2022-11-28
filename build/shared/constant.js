@@ -26,7 +26,9 @@ export const BREADCRUMBTYPES = {
   CUSTOM: 'Customer'
 };
 
-// 状态
+/**
+ * 状态
+ */
 export const STATUS_CODE = {
   ERROR: 'error',
   OK: 'ok'
@@ -52,9 +54,6 @@ export const EVENTTYPES = {
   RECORDSCREEN: 'recordScreen'
 };
 
-// 错误事件集合
-export const ERROR_LIST = [EVENTTYPES.ERROR, EVENTTYPES.UNHANDLEDREJECTION, EVENTTYPES.RESOURCE, EVENTTYPES.FETCH, EVENTTYPES.XHR];
-
 export const HTTPTYPE = {
   XHR: 'xhr',
   FETCH: 'fetch'
@@ -64,11 +63,3 @@ export const HTTP_CODE = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401
 };
-
-// globalVar 作用是什么？
-const globalVar = {
-  isLogAddBreadcrumb: true,
-  // 接口超时时长
-  crossOriginThreshold: 10000
-};
-export { globalVar };

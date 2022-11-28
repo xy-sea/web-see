@@ -1,6 +1,6 @@
-import { globalVar } from '../shared';
 import { fromHttpStatus, SpanStatus, interceptStr, getTimestamp } from '../utils';
 import { getRealPath } from './errorId';
+import { options } from './options';
 
 // 处理接口的状态
 export function httpTransform(data) {
@@ -9,7 +9,7 @@ export function httpTransform(data) {
   const { elapsedTime, time, method, type, status } = data;
   const name = `${type}--${method}`;
   if (status === 0) {
-    message = elapsedTime <= globalVar.crossOriginThreshold ? 'http请求失败，失败原因：跨域限制或域名不存在' : 'http请求失败，失败原因：超时';
+    message = elapsedTime <= options.overtime * 1000 ? 'http请求失败，失败原因：跨域限制或域名不存在' : 'http请求失败，失败原因：超时';
   } else {
     message = fromHttpStatus(status);
   }

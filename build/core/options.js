@@ -1,18 +1,25 @@
-import { toStringValidateOption, validateOption, _support, setSilentFlag } from '../utils';
+import { validateOption, _support, setSilentFlag } from '../utils';
+import { EVENTTYPES } from '../shared';
 import { breadcrumb } from './breadcrumb';
 import { transportData } from './transportData';
 export class Options {
   constructor() {
     this.beforeAppAjaxSend = () => {};
-    this.throttleDelayTime = 0;
+    this.throttleDelayTime = 0; // click事件的节流时长
+    this.overTime = 10; // 接口超时时长
     this.silentRecordScreen = false; // 是否开启录屏
+    this.recordScreentime = 10; // 录屏时长
+    this.recordScreenTypeList = [EVENTTYPES.ERROR, EVENTTYPES.UNHANDLEDREJECTION, EVENTTYPES.RESOURCE, EVENTTYPES.FETCH, EVENTTYPES.XHR]; // 录屏事件集合
   }
   bindOptions(options = {}) {
-    const { beforeAppAjaxSend, filterXhrUrlRegExp, throttleDelayTime, silentRecordScreen } = options;
+    const { beforeAppAjaxSend, filterXhrUrlRegExp, throttleDelayTime, silentRecordScreen, overTime, recordScreenTypeList, recordScreentime } = options;
     validateOption(beforeAppAjaxSend, 'beforeAppAjaxSend', 'function') && (this.beforeAppAjaxSend = beforeAppAjaxSend);
     validateOption(throttleDelayTime, 'throttleDelayTime', 'number') && (this.throttleDelayTime = throttleDelayTime);
+    validateOption(overTime, 'overTime', 'number') && (this.overTime = overTime);
+    validateOption(recordScreentime, 'recordScreentime', 'number') && (this.recordScreentime = recordScreentime);
     validateOption(silentRecordScreen, 'silentRecordScreen', 'boolean') && (this.silentRecordScreen = silentRecordScreen);
-    toStringValidateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', '[object RegExp]') && (this.filterXhrUrlRegExp = filterXhrUrlRegExp);
+    validateOption(recordScreenTypeList, 'recordScreenTypeList', 'array') && (this.recordScreenTypeList = recordScreenTypeList);
+    validateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', 'regexp') && (this.filterXhrUrlRegExp = filterXhrUrlRegExp);
   }
 }
 const options = _support.options || (_support.options = new Options());

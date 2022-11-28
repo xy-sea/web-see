@@ -18,12 +18,13 @@ import store from './store';
 
 import webSee from '../build/browser/index';
 
-console.log('webSee', webSee);
+// import webSee from '../build/dist/bundle.js';
 
 Vue.use(webSee, {
   dsn: 'http://test.com/error',
   apikey: '123-2223-123-123',
-  silentRecordScreen: true
+  silentRecordScreen: true,
+  userId: '123'
 });
 
 Vue.config.productionTip = false;

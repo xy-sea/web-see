@@ -93,8 +93,9 @@ export function getYMDHMS() {
   return `${year}-${month}-${date}`;
 }
 
-export function typeofAny(target, type) {
-  return typeof target === type;
+export function typeofAny(target) {
+  // return typeof target === type;
+  return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 export function toStringAny(target, type) {
   return nativeToString.call(target) === type;
@@ -102,15 +103,11 @@ export function toStringAny(target, type) {
 
 // 验证选项的类型
 export function validateOption(target, targetName, expectType) {
-  if (typeofAny(target, expectType)) return true;
-  typeof target !== 'undefined' && console.error(`${targetName}期望传入${expectType}类型，目前是${typeof target}类型`);
-  return false;
+  if (!target) return false;
+  if (typeofAny(target) === expectType) return true;
+  console.error(`${targetName}期望传入${expectType}类型，目前是${typeofAny(target)}类型`);
 }
-export function toStringValidateOption(target, targetName, expectType) {
-  if (toStringAny(target, expectType)) return true;
-  typeof target !== 'undefined' && console.error(`${targetName}期望传入${expectType}类型，目前是${nativeToString.call(target)}类型`);
-  return false;
-}
+
 export function generateUUID() {
   let d = new Date().getTime();
   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

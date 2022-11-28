@@ -1,20 +1,21 @@
 import { _support, validateOption, isBrowserEnv, Queue, isEmpty, getLocationHref, generateUUID, getYMDHMS } from '../utils';
-import { SDK_NAME, SDK_VERSION, ERROR_LIST, EVENTTYPES } from '../shared';
+import { SDK_NAME, SDK_VERSION, EVENTTYPES } from '../shared';
 import { breadcrumb } from './breadcrumb';
 import { EMethods } from '../types';
+import { options } from './options';
 /**
  * 用来上报数据，包含图片打点上报、xhr请求
  */
 export class TransportData {
-  apikey = ''; // 每个项目对应的唯一标识
-  errorDsn = ''; // 监控上报接口的地址
-  userId = ''; // 用户id
-  uuid = generateUUID(); // 每次页面加载的唯一标识
-  beforeDataReport = null; // 上报数据前的hook
-  getUserId = null; // 上报数据前的获取用的userId
-  useImgUpload = false;
   constructor() {
     this.queue = new Queue();
+    this.apikey = ''; // 每个项目对应的唯一标识
+    this.errorDsn = ''; // 监控上报接口的地址
+    this.userId = ''; // 用户id
+    this.uuid = generateUUID(); // 每次页面加载的唯一标识
+    this.beforeDataReport = null; // 上报数据前的hook
+    this.getUserId = null; // 上报数据前的获取用的userId
+    this.useImgUpload = false;
   }
   imgRequest(data, url) {
     const requestFun = () => {
@@ -118,7 +119,7 @@ export class TransportData {
 
     // 开启录屏
     if (_support.options.silentRecordScreen) {
-      if (ERROR_LIST.includes(data.type)) {
+      if (options.recordScreenTypeList.includes(data.type)) {
         // 修改hasError
         _support.hasError = true;
         data.recordScreenId = _support.recordScreenId;
