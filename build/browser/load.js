@@ -1,6 +1,6 @@
 import { HandleEvents } from './handleEvents';
 import { htmlElementAsString, getTimestamp } from '../utils';
-import { EVENTTYPES } from '../shared';
+import { EVENTTYPES, STATUS_CODE } from '../shared';
 import { breadcrumb } from '../core';
 import { addReplaceHandler } from './replace';
 export function setupReplace() {
@@ -46,6 +46,7 @@ export function setupReplace() {
       if (htmlString) {
         breadcrumb.push({
           type: EVENTTYPES.CLICK,
+          status: STATUS_CODE.OK,
           category: breadcrumb.getCategory(EVENTTYPES.CLICK),
           data: htmlString,
           time: getTimestamp()

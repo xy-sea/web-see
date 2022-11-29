@@ -2,7 +2,7 @@ import { EVENTTYPES, BREADCRUMBTYPES } from '../shared';
 import { validateOption, getTimestamp, _support } from '../utils';
 export class Breadcrumb {
   constructor() {
-    this.maxBreadcrumbs = 10;
+    this.maxBreadcrumbs = 20;
     this.beforePushBreadcrumb = null;
     this.stack = [];
   }

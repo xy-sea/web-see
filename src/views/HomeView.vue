@@ -16,7 +16,7 @@
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="message" label="报错信息" width="300"> </el-table-column>
-      <el-table-column prop="page_url" label="报错页面" width="200"> </el-table-column>
+      <el-table-column prop="page_url" label="报错页面"> </el-table-column>
       <el-table-column prop="time" label="报错时间" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.time ? format(scope.row.time) : scope.row.date }}</span>
@@ -35,19 +35,29 @@
           <span>{{ scope.row.deviceInfo.os }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="recordScreenId" label="还原错误代码" width="100">
+      <el-table-column fixed="right" prop="breadcrumb" label="用户行为记录" width="125">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.breadcrumb" type="primary" @click="revertBehavior(scope.row)">查看用户行为</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" prop="recordScreenId" label="还原错误代码" width="100">
         <template slot-scope="scope">
           <el-button v-if="scope.row.type == 'error' || scope.row.type == 'unhandledrejection'" type="primary" @click="revertCode(scope.row)">查看源码</el-button>
         </template>
       </el-table-column>
-      <el-table-column prop="recordScreenId" label="播放录屏" width="100">
+      <el-table-column fixed="right" prop="recordScreenId" label="播放录屏" width="100">
         <template slot-scope="scope">
           <el-button v-if="scope.row.recordScreenId" type="primary" @click="playRecord(scope.row.recordScreenId)">播放录屏</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="dialogTitle" :class="{ 'revert-disalog': fullscreen }" top="10vh" :fullscreen="fullscreen" :visible.sync="revertdialog" width="90%" :destroy-on-close="true" @opened="opened">
-      <div id="revert" ref="revert"></div>
+    <el-dialog :title="dialogTitle" :class="{ 'revert-disalog': fullscreen }" top="10vh" :fullscreen="fullscreen" :visible.sync="revertdialog" width="90%" :destroy-on-close="true">
+      <div id="revert" ref="revert" v-if="dialogTitle != '查看用户行为'"></div>
+      <el-timeline v-else>
+        <el-timeline-item v-for="(activity, index) in activities" :key="index" :icon="activity.icon" :color="activity.color" :timestamp="format(activity.time)">
+          {{ activity.content }}
+        </el-timeline-item>
+      </el-timeline>
     </el-dialog>
   </div>
 </template>
@@ -65,33 +75,8 @@ export default {
       fullscreen: true,
       revertdialog: false,
       dialogTitle: '',
-      tableData: [
-        // {
-        //   type: 'error',
-        //   status: 'error',
-        //   message: "Cannot read properties of undefined (reading 'length')",
-        //   fileName: 'http://10.105.108.93:3000/js/app.8c773fef.js',
-        //   line: 1,
-        //   column: 1509,
-        //   recordScreenId: '8a2d8510-747c-43da-abfa-4cf61fef5446',
-        //   userId: '123',
-        //   sdkVersion: '1.0.0',
-        //   sdkName: 'web-see',
-        //   apikey: 'abcd',
-        //   date: '2022-11-28',
-        //   uuid: '42fa00f5-aea2-44f0-bfcf-d59186d34714',
-        //   page_url: 'http://10.105.108.93:3000/#/',
-        //   deviceInfo: {
-        //     browser_version: '107.0.0.0',
-        //     browser: 'Chrome',
-        //     os_version: '10',
-        //     os: 'Windows',
-        //     ua: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36',
-        //     device: 'Unknow',
-        //     device_type: 'Pc'
-        //   }
-        // }
-      ]
+      activities: [],
+      tableData: []
     };
   },
   created() {
@@ -118,7 +103,27 @@ export default {
           this.getTableData();
         });
     },
-    opened() {},
+    revertBehavior({ breadcrumb }) {
+      this.dialogTitle = '查看用户行为';
+      this.fullscreen = false;
+      this.revertdialog = true;
+      breadcrumb.forEach((item) => {
+        item.color = item.status == 'ok' ? '#5FF713' : '#F70B0B';
+        item.icon = item.status == 'ok' ? 'el-icon-check' : 'el-icon-close';
+        if (item.category == 'Click') {
+          item.content = `用户点击dom: ${item.data}`;
+        } else if (item.category == 'Http') {
+          item.content = `调用接口: ${item.data.url}, ${item.status == 'ok' ? '请求成功' : '请求失败'}`;
+        } else if (item.category == 'Code_Error') {
+          item.content = `代码报错：${item.data.message}`;
+        } else if (item.category == 'Resource_Error') {
+          item.content = `加载资源报错：${item.message}`;
+        } else if (item.category == 'Route') {
+          item.content = `路由变化：从 ${item.data.from}页面 切换到 ${item.data.to}页面`;
+        }
+      });
+      this.activities = breadcrumb;
+    },
     revertCode(row) {
       findCodeBySourceMap(row, (res) => {
         this.dialogTitle = '查看源码';
@@ -225,6 +230,12 @@ export default {
 .el-dialog__header {
   font-size: 20px;
   font-weight: 800;
+}
+.el-timeline {
+  text-align: left;
+  .el-timeline-item__icon {
+    font-size: 12px;
+  }
 }
 .revert-disalog {
   .el-dialog__body {
