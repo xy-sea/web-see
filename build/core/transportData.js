@@ -1,7 +1,6 @@
 import { _support, validateOption, isBrowserEnv, Queue, isEmpty, getLocationHref, generateUUID, getYMDHMS } from '../utils';
 import { SDK_NAME, SDK_VERSION, EVENTTYPES } from '../shared';
 import { breadcrumb } from './breadcrumb';
-import { EMethods } from '../types';
 import { options } from './options';
 /**
  * 用来上报数据，包含图片打点上报、xhr请求
@@ -36,12 +35,17 @@ export class TransportData {
   }
   async xhrPost(data, url) {
     const requestFun = () => {
-      const xhr = new XMLHttpRequest();
-      xhr.open(EMethods.Post, url);
-      xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
-      xhr.withCredentials = true;
-      xhr.send(JSON.stringify(data));
+      fetch(`${url}/reportData`, {
+        method: 'post',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((response) => response.json())
+        .then((res) => console.log(res, '成功'));
     };
+
     this.queue.addFn(requestFun);
   }
   // 获取用户信息
@@ -128,7 +132,7 @@ export class TransportData {
 
     const result = await this.beforePost(data);
     console.log('result', result);
-    if (!result) return;
+    if (result.type == 'performance') return;
     if (isBrowserEnv) {
       return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
     }

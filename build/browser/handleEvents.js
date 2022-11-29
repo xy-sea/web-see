@@ -10,7 +10,6 @@ const HandleEvents = {
    */
   handleHttp(data, type) {
     const isError = data.status === 0 || data.status === HTTP_CODE.BAD_REQUEST || data.status > HTTP_CODE.UNAUTHORIZED;
-    // httpTransform 处理接口的状态
     const result = httpTransform(data);
     // 添加用户行为
     breadcrumb.push({
@@ -36,6 +35,7 @@ const HandleEvents = {
         let errorData = {
           type: EVENTTYPES.ERROR,
           status: STATUS_CODE.ERROR,
+          time: getTimestamp(),
           message: ev.message,
           fileName,
           line: lineNumber,
@@ -113,7 +113,6 @@ const HandleEvents = {
       status: STATUS_CODE.ERROR,
       time: getTimestamp(),
       message: unknownToString(ev.reason.message || ev.reason.stack),
-      name: ev.type,
       fileName,
       line: lineNumber,
       column: columnNumber
@@ -164,7 +163,7 @@ const HandleEvents = {
         transportData.send({
           type: EVENTTYPES.PERFORMANCE,
           name: 'long_task',
-          longTask: long && JSON.parse(JSON.stringify(long)),
+          longTask: long,
           time: getTimestamp(),
           status: STATUS_CODE.OK
         });
@@ -194,7 +193,6 @@ const HandleEvents = {
   },
   handleScreen() {
     try {
-      console.log('record1111111111');
       // 存储录屏信息
       let events = [];
       // 调用stopFn停止录像
@@ -202,20 +200,11 @@ const HandleEvents = {
       record({
         emit(event, isCheckout) {
           if (isCheckout) {
-            console.log('isCheckout', isCheckout);
             // 此段时间内发生错误，上报录屏信息
             if (_support.hasError) {
               console.log('hasError', _support.hasError);
               let recordScreenId = _support.recordScreenId;
-
-              // 重置hasError
-              _support.hasError = false;
-              // 重置录屏
-              events = [];
-              // 重置录屏id
               _support.recordScreenId = generateUUID();
-              console.log('_support', _support);
-
               transportData.send({
                 type: EVENTTYPES.RECORDSCREEN,
                 recordScreenId,
@@ -223,6 +212,11 @@ const HandleEvents = {
                 status: STATUS_CODE.OK,
                 events: zip(events)
               });
+              events = [];
+              _support.hasError = false;
+            } else {
+              // 不上报，清空录屏
+              events = [];
             }
           }
           events.push(event);

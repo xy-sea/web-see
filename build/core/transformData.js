@@ -1,19 +1,17 @@
-import { fromHttpStatus, SpanStatus, interceptStr, getTimestamp } from '../utils';
-import { getRealPath } from './errorId';
+import { fromHttpStatus, interceptStr, getTimestamp } from '../utils';
 import { options } from './options';
 
 // 处理接口的状态
 export function httpTransform(data) {
-  // message 接口失败的原因
   let message = '';
   const { elapsedTime, time, method, type, status } = data;
   const name = `${type}--${method}`;
   if (status === 0) {
-    message = elapsedTime <= options.overtime * 1000 ? 'http请求失败，失败原因：跨域限制或域名不存在' : 'http请求失败，失败原因：超时';
+    message = elapsedTime <= options.overTime * 1000 ? 'http请求失败，失败原因：跨域限制或接口不存在' : 'http请求失败，失败原因：接口超时';
   } else {
     message = fromHttpStatus(status);
   }
-  message = message === SpanStatus.Ok ? message : `${message} ${getRealPath(data.url)}`;
+  message = `${data.url}; ${message}`;
   return {
     url: data.url,
     time,
@@ -38,7 +36,7 @@ const resourceMap = {
 export function resourceTransform(target) {
   return {
     time: getTimestamp(),
-    message: (interceptStr(target.src, 120) || interceptStr(target.href, 120)) + ' 资源加载失败',
+    message: (interceptStr(target.src, 120) || interceptStr(target.href, 120)) + '; 资源加载失败',
     name: `${resourceMap[target.localName] || target.localName}`
   };
 }

@@ -3,4 +3,4 @@ export const EMethods = {
   Post: 'POST',
   Put: 'PUT',
   Delete: 'DELETE'
-}
+};

@@ -2,7 +2,7 @@ import { EVENTTYPES, BREADCRUMBTYPES } from '../shared';
 import { validateOption, getTimestamp, _support } from '../utils';
 export class Breadcrumb {
   constructor() {
-    this.maxBreadcrumbs = 20;
+    this.maxBreadcrumbs = 10;
     this.beforePushBreadcrumb = null;
     this.stack = [];
   }
@@ -26,7 +26,6 @@ export class Breadcrumb {
     }
     this.stack.push(data);
     this.stack.sort((a, b) => a.time - b.time);
-    console.log('this.stack', this.stack);
   }
   shift() {
     return this.stack.shift() !== undefined;
