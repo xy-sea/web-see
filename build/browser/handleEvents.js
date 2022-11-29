@@ -217,6 +217,7 @@ const HandleEvents = {
             } else {
               // 不上报，清空录屏
               events = [];
+              _support.recordScreenId = generateUUID();
             }
           }
           events.push(event);

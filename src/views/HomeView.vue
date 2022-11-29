@@ -17,7 +17,7 @@
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="message" label="报错信息" width="350"> </el-table-column>
       <el-table-column prop="page_url" label="报错页面" width="180"> </el-table-column>
-      <el-table-column prop="time" label="报错时间" width="140">
+      <el-table-column prop="time" label="报错时间">
         <template slot-scope="scope">
           <span>{{ scope.row.time ? new Date(scope.row.time) : scope.row.date }}</span>
         </template>
@@ -44,16 +44,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog
-      :title="dialogTitle"
-      :custom-class="{ 'revert-disalog': fullscreen }"
-      top="10vh"
-      :fullscreen="fullscreen"
-      :visible.sync="revertdialog"
-      width="90%"
-      :destroy-on-close="true"
-      @opened="opened"
-    >
+    <el-dialog :title="dialogTitle" :class="{ 'revert-disalog': fullscreen }" top="10vh" :fullscreen="fullscreen" :visible.sync="revertdialog" width="90%" :destroy-on-close="true" @opened="opened">
       <div id="revert" ref="revert"></div>
     </el-dialog>
   </div>

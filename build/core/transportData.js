@@ -43,7 +43,7 @@ export class TransportData {
         }
       })
         .then((response) => response.json())
-        .then((res) => console.log(res, '成功'));
+        .then((res) => console.log(res));
     };
 
     this.queue.addFn(requestFun);
@@ -131,8 +131,6 @@ export class TransportData {
     }
 
     const result = await this.beforePost(data);
-    console.log('result', result);
-    if (result.type == 'performance') return;
     if (isBrowserEnv) {
       return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
     }
