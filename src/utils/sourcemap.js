@@ -24,7 +24,6 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
   let sourceData = await loadSourceMap(fileName);
   if (!sourceData) return;
   let { sourcesContent, sources } = sourceData;
-  console.log('sourceData', sourceData);
   let consumer = await new sourceMap.SourceMapConsumer(sourceData);
   let result = consumer.originalPositionFor({
     line: Number(line),
@@ -38,7 +37,6 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
   //   "name": null
   // }
   let code = sourcesContent[sources.indexOf(result.source)];
-  console.log('源码', code);
   let codeList = code.split('\n');
   var row = result.line,
     len = codeList.length - 1;

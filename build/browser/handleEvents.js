@@ -202,7 +202,6 @@ const HandleEvents = {
           if (isCheckout) {
             // 此段时间内发生错误，上报录屏信息
             if (_support.hasError) {
-              console.log('hasError', _support.hasError);
               let recordScreenId = _support.recordScreenId;
               _support.recordScreenId = generateUUID();
               transportData.send({

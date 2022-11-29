@@ -15,14 +15,16 @@
     <p class="error">报错统计</p>
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="index" width="50"></el-table-column>
-      <el-table-column prop="message" label="报错信息" width="350"> </el-table-column>
-      <el-table-column prop="page_url" label="报错页面" width="180"> </el-table-column>
-      <el-table-column prop="time" label="报错时间">
+      <el-table-column prop="message" label="报错信息" width="300"> </el-table-column>
+      <el-table-column prop="page_url" label="报错页面" width="200"> </el-table-column>
+      <el-table-column prop="time" label="报错时间" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.time ? new Date(scope.row.time) : scope.row.date }}</span>
+          <span>{{ scope.row.time ? format(scope.row.time) : scope.row.date }}</span>
         </template>
       </el-table-column>
+      <el-table-column prop="apikey" label="项目编号"> </el-table-column>
       <el-table-column prop="userId" label="用户id"> </el-table-column>
+      <el-table-column prop="sdkVersion" label="SDK版本"> </el-table-column>
       <el-table-column prop="deviceInfo" label="浏览器信息">
         <template slot-scope="scope">
           <span>{{ scope.row.deviceInfo.browser }}</span>
@@ -122,8 +124,6 @@ export default {
         this.dialogTitle = '查看源码';
         this.fullscreen = false;
         this.revertdialog = true;
-        console.log('v', res);
-
         this.$nextTick(() => {
           this.$refs.revert.innerHTML = res;
         });
