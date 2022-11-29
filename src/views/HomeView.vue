@@ -35,11 +35,6 @@
           <span>{{ scope.row.deviceInfo.os }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" prop="breadcrumb" label="用户行为记录" width="125">
-        <template slot-scope="scope">
-          <el-button v-if="scope.row.breadcrumb" type="primary" @click="revertBehavior(scope.row)">查看用户行为</el-button>
-        </template>
-      </el-table-column>
       <el-table-column fixed="right" prop="recordScreenId" label="还原错误代码" width="100">
         <template slot-scope="scope">
           <el-button v-if="scope.row.type == 'error' || scope.row.type == 'unhandledrejection'" type="primary" @click="revertCode(scope.row)">查看源码</el-button>
@@ -48,6 +43,11 @@
       <el-table-column fixed="right" prop="recordScreenId" label="播放录屏" width="100">
         <template slot-scope="scope">
           <el-button v-if="scope.row.recordScreenId" type="primary" @click="playRecord(scope.row.recordScreenId)">播放录屏</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column fixed="right" prop="breadcrumb" label="用户行为记录" width="125">
+        <template slot-scope="scope">
+          <el-button v-if="scope.row.breadcrumb" type="primary" @click="revertBehavior(scope.row)">查看用户行为</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -252,7 +252,7 @@ export default {
 .errdetail {
   text-align: left;
   width: 100%;
-  font-size: 18px;
+  font-size: 16px;
 }
 .code-line {
   padding: 5px 0;
