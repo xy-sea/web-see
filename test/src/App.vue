@@ -2,7 +2,7 @@
   <div id="app">
     <div class="header">
       <img class="logo" src="./assets/logo.png" alt="logo" />
-      <span class="title">前端监控</span>
+      <span class="title">前端监控 test</span>
     </div>
     <nav>
       <router-link to="/">Home</router-link> |

@@ -8,7 +8,10 @@ import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '../shared';
 import { HandleEvents } from './handleEvents';
 
 function webInit(options = {}) {
-  if (!('XMLHttpRequest' in _global) || options.disabled) return;
+  if (!options.dsn || !options.apikey) {
+    return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
+  }
+  if (!('fetch' in _global) || options.disabled) return;
   // 初始化配置
   initOptions(options);
   setupReplace();

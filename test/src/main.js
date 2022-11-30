@@ -5,8 +5,7 @@ import store from './store';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import webSee from '../build/browser/index';
-// import webSee from '../build/dist/bundle.js';
+import webSee from '../../src';
 
 Vue.use(webSee, {
   dsn: 'http://localhost:8083',

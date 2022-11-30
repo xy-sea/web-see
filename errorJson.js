@@ -1,20 +1,21 @@
+// 报错信息的字段列表
+
 // js错误
 let code_error = {
   type: 'error',
   status: 'error',
   message: "Cannot read properties of undefined (reading 'length')",
-  fileName:
-    'webpack-internal:///./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/views/HomeView.vue?vue&type=script&lang=js&',
-  line: 17,
-  column: 13,
-  recordScreenId: '89023d91-a370-4e44-ac7d-d093d66b02a9',
+  fileName: 'http://10.105.108.93:3000/js/app.8c773fef.js',
+  line: 1,
+  column: 1509,
+  recordScreenId: '8a2d8510-747c-43da-abfa-4cf61fef5446',
   userId: '123',
   sdkVersion: '1.0.0',
   sdkName: 'web-see',
   apikey: 'abcd',
   date: '2022-11-28',
-  uuid: 'eeaa3943-37b3-4194-b331-8d40cba61fdf',
-  page_url: 'http://10.105.108.93:8080/#/',
+  uuid: '42fa00f5-aea2-44f0-bfcf-d59186d34714',
+  page_url: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -31,18 +32,17 @@ let asyncError = {
   type: 'error',
   status: 'error',
   message: 'Uncaught SyntaxError: Unexpected end of JSON input',
-  fileName:
-    'webpack-internal:///./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/views/HomeView.vue?vue&type=script&lang=js&',
-  line: 12,
-  column: 14,
-  recordScreenId: 'c060da1c-27d2-46ac-9053-c5727d7b6f68',
+  fileName: 'http://10.105.108.93:3000/js/app.8c773fef.js',
+  line: 1,
+  column: 1477,
+  recordScreenId: '3e45a989-8cce-45da-b1b5-d245ccdb1fa8',
   userId: '123',
   sdkVersion: '1.0.0',
   sdkName: 'web-see',
   apikey: 'abcd',
   date: '2022-11-28',
-  uuid: '846f9c46-4333-4d95-b5b7-3d8887a368ba',
-  page_url: 'http://10.105.108.93:8080/#/',
+  uuid: '42fa00f5-aea2-44f0-bfcf-d59186d34714',
+  page_url: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -58,21 +58,20 @@ let asyncError = {
 let promiseError = {
   type: 'unhandledrejection',
   status: 'error',
-  time: 1669631404734,
+  time: 1669631626635,
   message: "Cannot read properties of undefined (reading 'age')",
   name: 'unhandledrejection',
-  fileName:
-    'webpack-internal:///./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/views/HomeView.vue?vue&type=script&lang=js&',
-  line: 30,
-  column: 21,
-  recordScreenId: 'e2032226-0aa8-43ab-9ef1-d1d1cd82137d',
+  fileName: 'http://10.105.108.93:3000/js/app.8c773fef.js',
+  line: 1,
+  column: 1724,
+  recordScreenId: 'ecea73b5-d590-4292-8d30-cf0c61e9efbe',
   userId: '123',
   sdkVersion: '1.0.0',
   sdkName: 'web-see',
   apikey: 'abcd',
   date: '2022-11-28',
-  uuid: '846f9c46-4333-4d95-b5b7-3d8887a368ba',
-  page_url: 'http://10.105.108.93:8080/#/',
+  uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
+  page_url: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -84,11 +83,11 @@ let promiseError = {
   }
 };
 
-// xhr错误
+// xhr请求错误
 let xhrError = {
   url: 'https://abc.com/test/api',
-  time: 1669630962693,
-  elapsedTime: 788,
+  time: 1669631643045,
+  elapsedTime: 797,
   message: 'https://abc.com/test/api; http请求失败，失败原因：跨域限制或接口不存在',
   name: 'xhr--GET',
   request: {
@@ -102,14 +101,14 @@ let xhrError = {
   },
   type: 'xhr',
   status: 'error',
-  recordScreenId: '5af161a7-e03b-47e5-a6f1-cfca60a45dfe',
+  recordScreenId: 'ead6c6ec-2497-48c8-9f93-478b60977527',
   userId: '123',
   sdkVersion: '1.0.0',
   sdkName: 'web-see',
   apikey: 'abcd',
   date: '2022-11-28',
-  uuid: '46e93796-c545-4945-be05-29a6f1a84eb3',
-  page_url: 'http://10.105.108.93:8080/#/',
+  uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
+  page_url: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -121,11 +120,11 @@ let xhrError = {
   }
 };
 
-// fetch错误
+// fecth错误
 let fetchError = {
   url: 'https://abc.com/test/api',
-  time: 1669630980396,
-  elapsedTime: 613,
+  time: 1669631665846,
+  elapsedTime: 636,
   message: 'https://abc.com/test/api; http请求失败，失败原因：跨域限制或接口不存在',
   name: 'fetch--GET',
   request: {
@@ -138,14 +137,14 @@ let fetchError = {
   },
   type: 'fetch',
   status: 'error',
-  recordScreenId: '8440eedd-76c8-4eae-aeac-a1331e55a8a5',
+  recordScreenId: 'a6e804f9-c906-42f0-be51-b5c33b5725ae',
   userId: '123',
   sdkVersion: '1.0.0',
   sdkName: 'web-see',
   apikey: 'abcd',
   date: '2022-11-28',
-  uuid: '46e93796-c545-4945-be05-29a6f1a84eb3',
-  page_url: 'http://10.105.108.93:8080/#/',
+  uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
+  page_url: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -158,20 +157,20 @@ let fetchError = {
 };
 
 // 加载资源错误
-let sourceError = {
-  time: 1669629469131,
+let resouceError = {
+  time: 1669631708689,
   message: 'https://abc.com/index.js; 资源加载失败',
   name: 'js脚本',
   type: 'resource',
   status: 'error',
-  recordScreenId: '8a9442a9-3fd9-4c73-b596-7b5d2beb1df2',
+  recordScreenId: '09ab41d2-c07a-45c4-802f-bb05097ca5f7',
   userId: '123',
   sdkVersion: '1.0.0',
   sdkName: 'web-see',
   apikey: 'abcd',
   date: '2022-11-28',
-  uuid: '2f95f7d9-23f6-45cc-9310-a2d679044351',
-  page_url: 'http://10.105.108.93:8080/#/',
+  uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
+  page_url: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',

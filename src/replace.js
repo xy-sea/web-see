@@ -63,8 +63,6 @@ function xhrReplace() {
   replaceAop(originalXhrProto, 'send', (originalSend) => {
     return function (...args) {
       const { method, url } = this.websee_xhr;
-      // 拦截用户页面的ajax请求，并在ajax请求发送前执行该hook
-      options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, this);
       // 监听loadend事件，接口成功或失败都会执行
       on(this, 'loadend', function () {
         // isSdkTransportUrl 判断当前接口是否为上报的接口
@@ -107,7 +105,6 @@ function fetchReplace() {
       Object.assign(headers, {
         setRequestHeader: headers.set
       });
-      options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, headers);
       config = Object.assign(Object.assign({}, config), { headers });
       return originalFetch.apply(_global, [url, config]).then(
         (res) => {

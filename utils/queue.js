@@ -1,5 +1,5 @@
 import { _global } from './global';
-// 利用浏览器空闲时间or微任务上报数据
+// 优先利用浏览器空闲时间上报数据
 export class Queue {
   constructor() {
     this.stack = [];

@@ -105,7 +105,7 @@ export function toStringAny(target, type) {
 export function validateOption(target, targetName, expectType) {
   if (!target) return false;
   if (typeofAny(target) === expectType) return true;
-  console.error(`${targetName}期望传入${expectType}类型，目前是${typeofAny(target)}类型`);
+  console.error(`web-see: ${targetName}期望传入${expectType}类型，目前是${typeofAny(target)}类型`);
 }
 
 export function generateUUID() {

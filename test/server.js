@@ -29,7 +29,6 @@ app.get('/getmap', (req, res) => {
   let mapFile = path.join(__filename, '..', 'dist/js');
   // 拿到dist目录下对应map文件的路径
   let mapPath = path.join(mapFile, `${fileName}.map`);
-  console.log('path', mapPath);
   fs.readFile(mapPath, function (err, data) {
     if (err) {
       console.error(err);
@@ -48,7 +47,6 @@ app.get('/getErrorList', (req, res) => {
 
 app.get('/getRecordScreenId', (req, res) => {
   let id = req.query.id;
-  console.log('getRecordScreenId', id);
   let data = recordScreenList.filter((item) => item.recordScreenId == id);
   res.send({
     code: 200,

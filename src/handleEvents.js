@@ -71,7 +71,7 @@ const HandleEvents = {
         });
       }
     } catch (er) {
-      console.error('错误代码解析异常:', er);
+      console.error('web-see: 错误代码解析异常:', er);
     }
   },
   handleHistory(data) {
@@ -196,7 +196,11 @@ const HandleEvents = {
         name: 'memory',
         time: getTimestamp(),
         status: STATUS_CODE.OK,
-        memory: performance.memory
+        memory: {
+          jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
+          totalJSHeapSize: performance.memory.totalJSHeapSize,
+          usedJSHeapSize: performance.memory.usedJSHeapSize
+        }
       });
     });
   },

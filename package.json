@@ -1,45 +1,37 @@
 {
-  "name": "web-see-demo",
-  "version": "0.1.0",
-  "private": true,
+  "name": "web-see",
+  "version": "1.0.2",
+  "description": "监控SDK，一款自研的前端监控SDK，可用来收集并上报：代码报错、性能数据、用户行为、加载资源、个性化指标等数据",
+  "main": "dist/index.js",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "build": "webpack"
   },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "web see",
+    "web monitor",
+    "web see sdk"
+  ],
+  "author": "海阔天空",
+  "license": "ISC",
   "dependencies": {
-    "@zyf2e/monitor-web-performance": "^2.1.54",
-    "body-parser": "^1.20.1",
-    "core-js": "^3.8.3",
-    "element-ui": "^2.15.12",
+    "core-js": "^3.19.1",
     "error-stack-parser": "^2.1.4",
-    "express": "^4.18.2",
     "js-base64": "^3.7.3",
-    "less": "^4.1.3",
-    "less-loader": "^11.1.0",
     "pako": "^2.1.0",
-    "raven-js": "^3.27.2",
-    "rrweb": "^2.0.0-alpha.3",
-    "rrweb-player": "^1.0.0-alpha.3",
-    "source-map-js": "^1.0.2",
+    "path-to-regexp": "^6.2.0",
+    "rrweb": "^2.0.0-alpha.4",
     "ua-parser-js": "^1.0.32",
-    "vue": "^2.6.14",
-    "vue-router": "^3.5.1",
-    "vuex": "^3.6.2",
     "web-vitals": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "sass": "^1.32.7",
-    "sass-loader": "^12.0.0",
-    "vue-template-compiler": "^2.6.14"
+    "webpack": "^4.14.0",
+    "webpack-cli": "^3.0.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:xy-sea/web-see.git"
   }
 }

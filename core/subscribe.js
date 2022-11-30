@@ -18,7 +18,7 @@ export function triggerHandlers(type, data) {
         callback(data);
       },
       (e) => {
-        console.error(`重写事件triggerHandlers的回调函数发生错误\nType:${type}\nName: ${getFunctionName(callback)}\nError: ${e}`);
+        console.error(`web-see 重写事件triggerHandlers的回调函数发生错误\nType:${type}\nName: ${getFunctionName(callback)}\nError: ${e}`);
       }
     );
   });

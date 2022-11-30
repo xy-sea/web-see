@@ -68,7 +68,7 @@ export class TransportData {
       if (typeof id === 'string' || typeof id === 'number') {
         return id;
       } else {
-        console.error(`userId: ${id} 期望 string 或 number 类型，但是传入 ${typeof id}`);
+        console.error(web-see `userId: ${id} 期望 string 或 number 类型，但是传入 ${typeof id}`);
       }
     }
     return '';
@@ -116,7 +116,7 @@ export class TransportData {
   async send(data) {
     let dsn = this.errorDsn;
     if (isEmpty(dsn)) {
-      console.error('dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
+      console.error('web-see: dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
       return;
     }
 
