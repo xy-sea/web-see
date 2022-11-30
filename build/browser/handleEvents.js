@@ -3,7 +3,7 @@ import { record } from 'rrweb';
 import { onLCP, onFID, onCLS, onFCP, onTTFB } from 'web-vitals';
 import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../shared';
 import { transportData, breadcrumb, resourceTransform, httpTransform, options } from '../core';
-import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global, _support, zip, generateUUID } from '../utils';
+import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global, _support, zip, generateUUID, observeFirstScreenPaint } from '../utils';
 const HandleEvents = {
   /**
    * 处理xhr、fetch回调
@@ -142,6 +142,15 @@ const HandleEvents = {
     });
     onTTFB((res) => {
       fn(res);
+    });
+
+    observeFirstScreenPaint((res) => {
+      let data = {
+        name: 'FSP', // 首屏加载时间
+        value: res,
+        rating: res > 2500 ? 'poor' : 'good'
+      };
+      fn(data);
     });
 
     function fn(res) {

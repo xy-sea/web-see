@@ -1,4 +1,4 @@
-import { _global, on, getTimestamp, replaceOld, throttle, getLocationHref, isExistProperty, variableTypeDetection, supportsHistory } from '../utils';
+import { _global, on, getTimestamp, replaceAop, throttle, getLocationHref, isExistProperty, variableTypeDetection, supportsHistory } from '../utils';
 import { transportData, options, triggerHandlers, subscribeEvent } from '../core';
 import { EMethods } from '../types';
 import { EVENTTYPES, HTTPTYPE, HTTP_CODE } from '../shared';
@@ -49,9 +49,9 @@ function xhrReplace() {
     return;
   }
   const originalXhrProto = XMLHttpRequest.prototype;
-  replaceOld(originalXhrProto, 'open', (originalOpen) => {
+  replaceAop(originalXhrProto, 'open', (originalOpen) => {
     return function (...args) {
-      this.mito_xhr = {
+      this.websee_xhr = {
         method: variableTypeDetection.isString(args[0]) ? args[0].toUpperCase() : args[0],
         url: args[1],
         sTime: getTimestamp(),
@@ -60,9 +60,9 @@ function xhrReplace() {
       originalOpen.apply(this, args);
     };
   });
-  replaceOld(originalXhrProto, 'send', (originalSend) => {
+  replaceAop(originalXhrProto, 'send', (originalSend) => {
     return function (...args) {
-      const { method, url } = this.mito_xhr;
+      const { method, url } = this.websee_xhr;
       // 拦截用户页面的ajax请求，并在ajax请求发送前执行该hook
       options.beforeAppAjaxSend && options.beforeAppAjaxSend({ method, url }, this);
       // 监听loadend事件，接口成功或失败都会执行
@@ -71,18 +71,18 @@ function xhrReplace() {
         // isFilterHttpUrl 判断当前接口是否为需要过滤掉的接口
         if ((method === EMethods.Post && transportData.isSdkTransportUrl(url)) || isFilterHttpUrl(url)) return;
         const { responseType, response, status } = this;
-        this.mito_xhr.reqData = args[0];
+        this.websee_xhr.reqData = args[0];
         const eTime = getTimestamp();
         // 设置该接口的time，用户用户行为按时间排序
-        this.mito_xhr.time = this.mito_xhr.sTime;
-        this.mito_xhr.status = status;
+        this.websee_xhr.time = this.websee_xhr.sTime;
+        this.websee_xhr.status = status;
         if (['', 'json', 'text'].indexOf(responseType) !== -1) {
-          this.mito_xhr.responseText = typeof response === 'object' ? JSON.stringify(response) : response;
+          this.websee_xhr.responseText = typeof response === 'object' ? JSON.stringify(response) : response;
         }
         // 接口的执行时长
-        this.mito_xhr.elapsedTime = eTime - this.mito_xhr.sTime;
+        this.websee_xhr.elapsedTime = eTime - this.websee_xhr.sTime;
         // 执行之前注册的xhr回调函数
-        triggerHandlers(EVENTTYPES.XHR, this.mito_xhr);
+        triggerHandlers(EVENTTYPES.XHR, this.websee_xhr);
       });
       originalSend.apply(this, args);
     };
@@ -92,7 +92,7 @@ function fetchReplace() {
   if (!('fetch' in _global)) {
     return;
   }
-  replaceOld(_global, EVENTTYPES.FETCH, (originalFetch) => {
+  replaceAop(_global, EVENTTYPES.FETCH, (originalFetch) => {
     return function (url, config = {}) {
       const sTime = getTimestamp();
       const method = (config && config.method) || 'GET';
@@ -197,8 +197,8 @@ function historyReplace() {
     };
   }
   // 重写pushState、replaceState事件
-  replaceOld(_global.history, 'pushState', historyReplaceFn);
-  replaceOld(_global.history, 'replaceState', historyReplaceFn);
+  replaceAop(_global.history, 'pushState', historyReplaceFn);
+  replaceAop(_global.history, 'replaceState', historyReplaceFn);
 }
 function unhandledrejectionReplace() {
   on(_global, EVENTTYPES.UNHANDLEDREJECTION, function (ev) {
@@ -221,24 +221,9 @@ function domReplace() {
     },
     true
   );
-  // 暂时不需要keypress的重写
-  // on(
-  //   _global.document,
-  //   'keypress',
-  //   function (e: MITOElement) {
-  //     keypressThrottle('dom', {
-  //       category: 'keypress',
-  //       data: this
-  //     })
-  //   },
-  //   true
-  // )
 }
 function listenPerformance() {
-  // window添加load事件，在load事件中，获取performance性能数据
-  // on(_global, 'load', function () {
   triggerHandlers(EVENTTYPES.PERFORMANCE);
-  // });
 }
 
 function recordScreen() {

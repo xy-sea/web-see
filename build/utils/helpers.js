@@ -25,7 +25,7 @@ export function on(target, eventName, handler, opitons = false) {
  * ../param isForced 是否强制重写（可能原先没有该属性）
  * ../returns void
  */
-export function replaceOld(source, name, replacement, isForced = false) {
+export function replaceAop(source, name, replacement, isForced = false) {
   if (source === undefined) return;
   if (name in source || isForced) {
     const original = source[name];

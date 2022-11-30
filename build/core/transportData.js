@@ -41,9 +41,8 @@ export class TransportData {
         headers: {
           'Content-Type': 'application/json'
         }
-      })
-        .then((response) => response.json())
-        .then((res) => console.log(res));
+      }).then((response) => response.json());
+      // .then((res) => console.log(res));
     };
 
     this.queue.addFn(requestFun);
