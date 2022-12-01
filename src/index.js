@@ -1,6 +1,3 @@
-export * from './handleEvents';
-export * from './load';
-export * from './replace';
 import { setupReplace } from './load';
 import { initOptions, log } from '../core';
 import { _global, getFlag, setFlag } from '../utils';
