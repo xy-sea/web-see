@@ -1,4 +1,3 @@
-/* eslint-disable */
 import pako from 'pako';
 import { Base64 } from 'js-base64';
 import { EVENTTYPES } from '../shared';

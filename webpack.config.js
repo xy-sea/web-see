@@ -7,5 +7,6 @@ module.exports = {
     filename: 'index.js',
     libraryTarget: 'commonjs2'
   },
+  mode: 'production',
   devtool: 'source-map'
 };
