@@ -7,7 +7,7 @@ import { _global, getFlag, setFlag } from '../utils';
 import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '../shared';
 import { HandleEvents } from './handleEvents';
 
-function webInit(options = {}) {
+function init(options = {}) {
   if (!options.dsn || !options.apikey) {
     return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
   }
@@ -21,6 +21,7 @@ const install = function (Vue, options = {}) {
   if (getFlag(EVENTTYPES.VUE)) return;
   setFlag(EVENTTYPES.VUE, true);
   let handler = Vue.config.errorHandler;
+  // vue项目在Vue.config.errorHandler中上报错误
   Vue.config.errorHandler = function (err, vm, info) {
     HandleEvents.handleError(err);
     if (handler) handler.apply(null, [err, vm, info]);
@@ -28,17 +29,7 @@ const install = function (Vue, options = {}) {
   init(options);
 };
 
-function init(options = {}) {
-  webInit(options);
-}
-
-/**
- * react在ErrorBoundary中上报错误
- * 例如：componentDidCatch(error, errorInfo) {
- *        // error的错误信息和vue中errorHandler中的信息一致
- *        webSee.errorBoundaryReport(error)
- *      }
- * */
+// react项目在ErrorBoundary中上报错误
 function errorBoundary(err) {
   if (getFlag(EVENTTYPES.REACT)) return;
   setFlag(EVENTTYPES.REACT, true);

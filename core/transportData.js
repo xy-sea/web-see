@@ -68,7 +68,7 @@ export class TransportData {
       if (typeof id === 'string' || typeof id === 'number') {
         return id;
       } else {
-        console.error(web-see `userId: ${id} 期望 string 或 number 类型，但是传入 ${typeof id}`);
+        console.error(web - see`userId: ${id} 期望 string 或 number 类型，但是传入 ${typeof id}`);
       }
     }
     return '';
@@ -108,18 +108,13 @@ export class TransportData {
     validateOption(beforeDataReport, 'beforeDataReport', 'function') && (this.beforeDataReport = beforeDataReport);
     validateOption(getUserId, 'getUserId', 'function') && (this.getUserId = getUserId);
   }
-  /**
-   * 监控错误上报的请求函数
-   * @param data 错误上报数据格式
-   * @returns
-   */
+  // 上报数据
   async send(data) {
     let dsn = this.errorDsn;
     if (isEmpty(dsn)) {
       console.error('web-see: dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
       return;
     }
-
     // 开启录屏
     if (_support.options.silentRecordScreen) {
       if (options.recordScreenTypeList.includes(data.type)) {
@@ -128,9 +123,9 @@ export class TransportData {
         data.recordScreenId = _support.recordScreenId;
       }
     }
-
     const result = await this.beforePost(data);
     if (isBrowserEnv) {
+      // 支持图片打点上报和fetch上报
       return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
     }
   }

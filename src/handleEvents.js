@@ -5,9 +5,7 @@ import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../shared';
 import { transportData, breadcrumb, resourceTransform, httpTransform, options } from '../core';
 import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global, _support, zip, generateUUID, observeFirstScreenPaint } from '../utils';
 const HandleEvents = {
-  /**
-   * 处理xhr、fetch回调
-   */
+  // 处理xhr、fetch回调
   handleHttp(data, type) {
     const isError = data.status === 0 || data.status === HTTP_CODE.BAD_REQUEST || data.status > HTTP_CODE.UNAUTHORIZED;
     const result = httpTransform(data);
@@ -43,7 +41,6 @@ const HandleEvents = {
         };
         breadcrumb.push({
           type: EVENTTYPES.ERROR,
-          // 用户行为类型
           category: breadcrumb.getCategory(EVENTTYPES.ERROR),
           data: errorData,
           time: getTimestamp(),
@@ -52,14 +49,13 @@ const HandleEvents = {
         return transportData.send(errorData);
       }
 
-      // 资源加载报错 验证ok ✔
+      // 资源加载报错
       if (target.localName) {
-        // 资源加载错误 提取有用数据
+        // 提取资源加载的信息
         const data = resourceTransform(target);
         breadcrumb.push({
           ...data,
           type: EVENTTYPES.RESOURCE,
-          // 用户行为类型 Resource
           category: breadcrumb.getCategory(EVENTTYPES.RESOURCE),
           status: STATUS_CODE.ERROR,
           time: getTimestamp()

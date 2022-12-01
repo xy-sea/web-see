@@ -1,5 +1,4 @@
 import { _global } from './global';
-// 优先利用浏览器空闲时间上报数据
 export class Queue {
   constructor() {
     this.stack = [];
@@ -18,6 +17,7 @@ export class Queue {
       if ('requestIdleCallback' in _global) {
         requestIdleCallback(() => this.flushStack());
       } else {
+        // 其次使用微任务上报
         Promise.resolve().then(() => this.flushStack());
       }
     }

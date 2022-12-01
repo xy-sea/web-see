@@ -36,7 +36,6 @@ export function isError(wat) {
 }
 /**
  * 检查是否是空对象
- * ../param obj 待检测的对象
  */
 export function isEmptyObject(obj) {
   return variableTypeDetection.isObject(obj) && Object.keys(obj).length === 0;

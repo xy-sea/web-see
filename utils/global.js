@@ -49,11 +49,7 @@ export function getGlobalSupport() {
   return _global.__webSee__;
 }
 export function supportsHistory() {
-  // NOTE: in Chrome App environment, touching history.pushState, *even inside
-  //       a try/catch block*, will cause Chrome to output an error to console.error
-  // borrowed from: https://github.com/angular/angular.js/pull/13945/files
   const chrome = _global.chrome;
-  // tslint:disable-next-line:no-unsafe-any
   const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
   const hasHistoryApi = 'history' in _global && !!_global.history.pushState && !!_global.history.replaceState;
   return !isChromePackagedApp && hasHistoryApi;

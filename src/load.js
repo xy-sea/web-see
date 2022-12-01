@@ -4,41 +4,42 @@ import { EVENTTYPES, STATUS_CODE } from '../shared';
 import { breadcrumb } from '../core';
 import { addReplaceHandler } from './replace';
 export function setupReplace() {
-  // 验证ok ✔
+  // 重写XMLHttpRequest
   addReplaceHandler({
     callback: (data) => {
       HandleEvents.handleHttp(data, EVENTTYPES.XHR);
     },
     type: EVENTTYPES.XHR
   });
-  // 验证ok ✔
+  // 重写fetch
   addReplaceHandler({
     callback: (data) => {
       HandleEvents.handleHttp(data, EVENTTYPES.FETCH);
     },
     type: EVENTTYPES.FETCH
   });
+  // 捕获错误
   addReplaceHandler({
     callback: (error) => {
       HandleEvents.handleError(error);
     },
     type: EVENTTYPES.ERROR
   });
-  // 验证ok ✔
+  // 监听history模式路由的变化
   addReplaceHandler({
     callback: (data) => {
       HandleEvents.handleHistory(data);
     },
     type: EVENTTYPES.HISTORY
   });
-  // 验证ok ✔
+  // 添加handleUnhandleRejection事件
   addReplaceHandler({
     callback: (data) => {
       HandleEvents.handleUnhandleRejection(data);
     },
     type: EVENTTYPES.UNHANDLEDREJECTION
   });
-  // 验证ok ✔
+  // 监听click事件
   addReplaceHandler({
     callback: (data) => {
       // 获取html信息
@@ -55,7 +56,7 @@ export function setupReplace() {
     },
     type: EVENTTYPES.CLICK
   });
-  // 验证ok ✔
+  // 监听hashchange
   addReplaceHandler({
     callback: (e) => {
       HandleEvents.handleHashchange(e);
@@ -69,7 +70,7 @@ export function setupReplace() {
     },
     type: EVENTTYPES.PERFORMANCE
   });
-  // 录屏
+  // 前端录屏
   addReplaceHandler({
     callback: () => {
       HandleEvents.handleScreen();
