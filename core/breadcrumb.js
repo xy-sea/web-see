@@ -1,4 +1,4 @@
-import { EVENTTYPES, BREADCRUMBTYPES } from '../shared';
+import { EVENTTYPES, BREADCRUMBTYPES } from '../common';
 import { validateOption, getTimestamp, _support } from '../utils';
 export class Breadcrumb {
   constructor() {

@@ -1,7 +1,7 @@
 import ErrorStackParser from 'error-stack-parser';
 import { record } from 'rrweb';
 import { onLCP, onFID, onCLS, onFCP, onTTFB } from 'web-vitals';
-import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../shared';
+import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../common';
 import { transportData, breadcrumb, resourceTransform, httpTransform, options } from '../core';
 import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global, _support, zip, generateUUID, observeFirstScreenPaint } from '../utils';
 const HandleEvents = {

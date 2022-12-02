@@ -1,7 +1,6 @@
 import { _global, on, getTimestamp, replaceAop, throttle, getLocationHref, isExistProperty, variableTypeDetection, supportsHistory } from '../utils';
 import { transportData, options, triggerHandlers, subscribeEvent } from '../core';
-import { EMethods } from '../types';
-import { EVENTTYPES, HTTPTYPE, HTTP_CODE } from '../shared';
+import { EVENTTYPES, HTTPTYPE, HTTP_CODE, EMethods } from '../common';
 
 // 判断当前接口是否为需要过滤掉的接口
 function isFilterHttpUrl(url) {

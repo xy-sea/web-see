@@ -1,5 +1,5 @@
 import ErrorStackParser from 'error-stack-parser';
-import { EVENTTYPES, STATUS_CODE } from '../shared';
+import { EVENTTYPES, STATUS_CODE } from '../common';
 import { isError, getLocationHref, getTimestamp, unknownToString } from '../utils';
 import { transportData } from './transportData';
 import { breadcrumb } from './breadcrumb';

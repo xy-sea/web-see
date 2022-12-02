@@ -1,6 +1,6 @@
 import pako from 'pako';
 import { Base64 } from 'js-base64';
-import { EVENTTYPES } from '../shared';
+import { EVENTTYPES } from '../common';
 import { setFlag } from './global';
 
 export function getResource() {
@@ -43,16 +43,14 @@ export function htmlElementAsString(target) {
   return `<${tagName}${id}${classNames !== '' ? classNames : ''}>${innerText}</${tagName}>`;
 }
 /**
- * 将地址字符串转换成对象，例如
- * 输入：parseUrlToObj('https://github.com/clouDr-f2e/monitor/blob/master/docs/guide.md?token=123&name=11')
+ * 将地址字符串转换成对象，
+ * 输入：'https://github.com/xy-sea/web-see?token=123&name=11'
  * 输出：{
- *   "host": "github.com",
- *   "path": "/clouDr-f2e/monitor/blob/master/docs/guide.md",
- *   "protocol": "https",
- *   "relative": "/clouDr-f2e/monitor/blob/master/docs/guide.md?token=123&name=11"
- *  }
- *
- * @returns 返回一个对象
+ *  "host": "github.com",
+ *  "path": "/xy-sea/web-see",
+ *  "protocol": "https",
+ *  "relative": "/xy-sea/web-see?token=123&name=11"
+ * }
  */
 export function parseUrlToObj(url) {
   if (!url) {
@@ -68,7 +66,7 @@ export function parseUrlToObj(url) {
     host: match[4],
     path: match[5],
     protocol: match[2],
-    relative: match[5] + query + fragment // everything minus origin
+    relative: match[5] + query + fragment
   };
 }
 

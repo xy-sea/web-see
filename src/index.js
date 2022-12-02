@@ -1,7 +1,7 @@
 import { setupReplace } from './load';
 import { initOptions, log } from '../core';
 import { _global, getFlag, setFlag } from '../utils';
-import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '../shared';
+import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '../common';
 import { HandleEvents } from './handleEvents';
 
 function init(options = {}) {

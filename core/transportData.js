@@ -1,5 +1,5 @@
 import { _support, validateOption, isBrowserEnv, Queue, isEmpty, getLocationHref, generateUUID, getYMDHMS } from '../utils';
-import { SDK_NAME, SDK_VERSION, EVENTTYPES } from '../shared';
+import { SDK_NAME, SDK_VERSION, EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
 import { options } from './options';
 /**
