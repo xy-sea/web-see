@@ -3,16 +3,12 @@ import { EVENTTYPES, STATUS_CODE } from '../common';
 import { isError, getLocationHref, getTimestamp, unknownToString } from '../utils';
 import { transportData } from './transportData';
 import { breadcrumb } from './breadcrumb';
-/**
- *
- * 自定义上报事件
- * @export
- * @param {LogTypes} { message = 'emptyMsg', tag = '', ex = '' }
- */
-export function log({ message = 'emptyMsg', tag = '', error = '', type = EVENTTYPES.CUSTOM }) {
+
+// 自定义上报事件
+export function log({ message = 'emptyMsg', error = '', type = EVENTTYPES.CUSTOM }) {
   let errorInfo = {};
   if (isError(error)) {
-    let result = ErrorStackParser.parse(error.error || error.reason)[0];
+    let result = ErrorStackParser.parse(!error.target ? error : error.error || error.reason)[0];
     errorInfo = { ...result, line: result.lineNumber, column: result.columnNumber };
   }
   const data = Object.assign(
@@ -20,8 +16,6 @@ export function log({ message = 'emptyMsg', tag = '', error = '', type = EVENTTY
       type,
       status: STATUS_CODE.ERROR,
       message: unknownToString(message),
-      customTag: unknownToString(tag),
-      url: getLocationHref(),
       time: getTimestamp()
     },
     errorInfo
@@ -29,7 +23,7 @@ export function log({ message = 'emptyMsg', tag = '', error = '', type = EVENTTY
   breadcrumb.push({
     type,
     category: breadcrumb.getCategory(EVENTTYPES.CUSTOM),
-    data: message,
+    message: unknownToString(message),
     time: getTimestamp()
   });
   transportData.send(data);

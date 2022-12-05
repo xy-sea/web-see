@@ -23,7 +23,7 @@ export const BREADCRUMBTYPES = {
   RESOURCE: 'Resource_Error',
   CODEERROR: 'Code_Error',
   ROUTE: 'Route',
-  CUSTOM: 'Customer'
+  CUSTOM: 'Custom'
 };
 
 /**
@@ -49,7 +49,7 @@ export const EVENTTYPES = {
   DOM: 'dom',
   VUE: 'vue',
   REACT: 'react',
-  CUSTOM: 'customer',
+  CUSTOM: 'custom',
   PERFORMANCE: 'performance',
   RECORDSCREEN: 'recordScreen'
 };

@@ -11,9 +11,9 @@
 - [√] ✈️ 错误捕获：代码报错、资源加载报错、接口请求报错
 - [√] ✈️ 性能数据：FP、FCP、LCP、CLS、TTFB、FID
 - [√] ✈️ 用户行为：页面点击、路由跳转、接口调用、资源加载
-- [√] ✈️ 个性化指标：Long Task、Memory页面内存、首屏加载时间
+- [√] ✈️ 个性化指标：Long Task、Memory 页面内存、首屏加载时间
 - [√] 🚀 自定义上报错误
-- [√] 🚀 支持多种配置：自定义hook与选项
+- [√] 🚀 支持多种配置：自定义 hook 与选项
 - [√] 🚀 支持的 Web 框架：vue2、vue3、React
 
 ## 安装
@@ -110,6 +110,18 @@ async beforePost(data) {
   }
   return transportData;
 }
+```
+
+## 手动上报示例
+
+```javascript
+import webSee from 'web-see';
+
+webSee.log({
+  type: 'custom',
+  message: '手动报错信息',
+  error: new Error('报错')
+});
 ```
 
 ## 演示
