@@ -12,7 +12,7 @@
 - [√] ✈️ 性能数据：FP、FCP、LCP、CLS、TTFB、FID
 - [√] ✈️ 用户行为：页面点击、路由跳转、接口调用、资源加载
 - [√] ✈️ 个性化指标：Long Task、Memory 页面内存、首屏加载时间
-- [√] 🚀 自定义上报错误
+- [√] 🚀 手动上报错误
 - [√] 🚀 支持多种配置：自定义 hook 与选项
 - [√] 🚀 支持的 Web 框架：vue2、vue3、React
 
@@ -112,7 +112,7 @@ async beforePost(data) {
 }
 ```
 
-## 手动上报示例
+## 手动上报错误示例
 
 ```javascript
 import webSee from 'web-see';
