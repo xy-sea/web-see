@@ -28,9 +28,10 @@ $ npm i web-see
 import webSee from 'web-see';
 
 Vue.use(webSee, {
-  dsn: 'http://localhost:8083', // 上报的地址
+  dsn: 'http://localhost:8083/reportData', // 上报的地址
   apikey: 'project1', // 项目唯一的id
-  userId: '89757' // 用户id
+  userId: '89757', // 用户id
+  silentRecordScreen: true // 开启录屏
 });
 ```
 
@@ -40,7 +41,7 @@ Vue.use(webSee, {
 import webSee from 'web-see';
 
 webSee.init({
-  dsn: 'http://localhost:8083',
+  dsn: 'http://localhost:8083/reportData',
   apikey: 'project1',
   userId: '89757'
 });
