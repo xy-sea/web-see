@@ -139,7 +139,7 @@ export default {
         .then((response) => response.json())
         .then((res) => {
           let { code, data } = res;
-          if (code == 200) {
+          if (code == 200 && data && Array.isArray(data) && data[0].events) {
             let events = unzip(data[0].events);
             this.fullscreen = true;
             this.dialogTitle = '播放录屏';
