@@ -1,9 +1,8 @@
 import ErrorStackParser from 'error-stack-parser';
 import { record } from 'rrweb';
-import { onLCP, onFID, onCLS, onFCP, onTTFB } from 'web-vitals';
 import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../common';
 import { transportData, breadcrumb, resourceTransform, httpTransform, options } from '../core';
-import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global, _support, zip, generateUUID, observeFirstScreenPaint } from '../utils';
+import { getTimestamp, parseUrlToObj, unknownToString, getResource, on, _global, _support, zip, generateUUID, getWebVitals } from '../utils';
 const HandleEvents = {
   // 处理xhr、fetch回调
   handleHttp(data, type) {
@@ -102,54 +101,34 @@ const HandleEvents = {
     });
   },
   handleUnhandleRejection(ev) {
-    let stackFrame = ErrorStackParser.parse(ev.reason)[0];
-    let { fileName, columnNumber, lineNumber } = stackFrame;
-    let data = {
-      type: EVENTTYPES.UNHANDLEDREJECTION,
-      status: STATUS_CODE.ERROR,
-      time: getTimestamp(),
-      message: unknownToString(ev.reason.message || ev.reason.stack),
-      fileName,
-      line: lineNumber,
-      column: columnNumber
-    };
+    try {
+      let stackFrame = ErrorStackParser.parse(ev.reason)[0];
+      let { fileName, columnNumber, lineNumber } = stackFrame;
+      let data = {
+        type: EVENTTYPES.UNHANDLEDREJECTION,
+        status: STATUS_CODE.ERROR,
+        time: getTimestamp(),
+        message: unknownToString(ev.reason.message || ev.reason.stack),
+        fileName,
+        line: lineNumber,
+        column: columnNumber
+      };
 
-    breadcrumb.push({
-      type: EVENTTYPES.UNHANDLEDREJECTION,
-      category: breadcrumb.getCategory(EVENTTYPES.UNHANDLEDREJECTION),
-      data: Object.assign({}, data),
-      time: getTimestamp(),
-      status: STATUS_CODE.ERROR
-    });
-    transportData.send(data);
+      breadcrumb.push({
+        type: EVENTTYPES.UNHANDLEDREJECTION,
+        category: breadcrumb.getCategory(EVENTTYPES.UNHANDLEDREJECTION),
+        data: Object.assign({}, data),
+        time: getTimestamp(),
+        status: STATUS_CODE.ERROR
+      });
+      transportData.send(data);
+    } catch (er) {
+      console.error('web-see: 错误代码解析异常1:', er);
+    }
   },
   handlePerformance() {
-    onLCP((res) => {
-      fn(res);
-    });
-    onFID((res) => {
-      fn(res);
-    });
-    onCLS((res) => {
-      fn(res);
-    });
-    onFCP((res) => {
-      fn(res);
-    });
-    onTTFB((res) => {
-      fn(res);
-    });
-
-    observeFirstScreenPaint((res) => {
-      let data = {
-        name: 'FSP', // 首屏加载时间
-        value: res,
-        rating: res > 2500 ? 'poor' : 'good'
-      };
-      fn(data);
-    });
-
-    function fn(res) {
+    // 获取FCP、LCP、TTFB、FID等指标
+    getWebVitals((res) => {
       // name指标名称、rating 评级、value数值
       let { name, rating, value } = res;
       transportData.send({
@@ -160,7 +139,7 @@ const HandleEvents = {
         rating,
         value
       });
-    }
+    });
 
     let observer = new PerformanceObserver((list) => {
       for (const long of list.getEntries()) {
@@ -186,18 +165,20 @@ const HandleEvents = {
         resourceList: getResource()
       });
 
-      // 上报内存情况
-      transportData.send({
-        type: EVENTTYPES.PERFORMANCE,
-        name: 'memory',
-        time: getTimestamp(),
-        status: STATUS_CODE.OK,
-        memory: {
-          jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
-          totalJSHeapSize: performance.memory.totalJSHeapSize,
-          usedJSHeapSize: performance.memory.usedJSHeapSize
-        }
-      });
+      // 上报内存情况, safari、firefox不支持该属性
+      if (performance.memory) {
+        transportData.send({
+          type: EVENTTYPES.PERFORMANCE,
+          name: 'memory',
+          time: getTimestamp(),
+          status: STATUS_CODE.OK,
+          memory: {
+            jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
+            totalJSHeapSize: performance.memory.totalJSHeapSize,
+            usedJSHeapSize: performance.memory.usedJSHeapSize
+          }
+        });
+      }
     });
   },
   handleScreen() {

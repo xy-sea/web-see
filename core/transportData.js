@@ -35,7 +35,7 @@ export class TransportData {
   }
   async xhrPost(data, url) {
     const requestFun = () => {
-      fetch(`${url}/reportData`, {
+      fetch(`${url}`, {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
