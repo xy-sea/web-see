@@ -1,6 +1,7 @@
 import resolve from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
+import {uglify} from 'rollup-plugin-uglify'
 export default [
   {
     input: "./src/index.js",
@@ -35,7 +36,7 @@ export default [
   },
   {
     input: "src/index.js",
-    plugins: [resolve(), commonjs(), json()],
+    plugins: [uglify(),resolve(), commonjs(), json()],
     output: {
       dir: "dist",
       format: "umd",
