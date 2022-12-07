@@ -2,9 +2,14 @@
   "name": "web-see",
   "version": "1.0.7",
   "description": "监控SDK，一款自研的前端监控SDK，可用来收集并上报：代码报错、性能数据、用户行为、加载资源、个性化指标等数据",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "build:dev": "rollup -w -c",
+    "build:rollup": "rollup -c",
+    "prepare": "husky install",
+    "commit": "git-cz"
   },
   "files": [
     "dist"
@@ -27,11 +32,28 @@
     "web-vitals": "^3.1.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^17.3.0",
+    "@commitlint/config-conventional": "^17.3.0",
+    "@rollup/plugin-commonjs": "^23.0.3",
+    "@rollup/plugin-json": "^5.0.2",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "commitizen": "^4.2.6",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.29.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.0",
+    "rollup": "^2.78.0",
     "webpack": "^4.14.0",
     "webpack-cli": "^3.0.8"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:xy-sea/web-see.git"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

@@ -19,7 +19,7 @@
 ## 安装
 
 ```bash
-$ npm i web-see
+$ npm i -S web-see
 ```
 
 ## Vue
