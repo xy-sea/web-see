@@ -68,7 +68,7 @@ export class TransportData {
       if (typeof id === 'string' || typeof id === 'number') {
         return id;
       } else {
-        console.error(web - see`userId: ${id} 期望 string 或 number 类型，但是传入 ${typeof id}`);
+        console.error(`web-see userId: ${id} 期望 string 或 number 类型，但是传入 ${typeof id}`);
       }
     }
     return '';

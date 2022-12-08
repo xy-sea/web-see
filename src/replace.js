@@ -141,7 +141,7 @@ function fetchReplace() {
 }
 function listenHashchange() {
   // 通过onpopstate事件，来监听hash模式下路由的变化
-  if (!isExistProperty(_global, 'onpopstate')) {
+  if (isExistProperty(_global, 'onhashchange')) {
     on(_global, EVENTTYPES.HASHCHANGE, function (e) {
       triggerHandlers(EVENTTYPES.HASHCHANGE, e);
     });
