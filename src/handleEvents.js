@@ -24,9 +24,8 @@ const HandleEvents = {
   handleError(ev) {
     try {
       const target = ev.target;
-      // Vue.config.errorHandler捕获的报错 or 异步错误
       if (!target || (ev.target && !ev.target.localName)) {
-        // errorHandler捕获的报错使用ev解析，异步错误使用ev.error解析
+        // vue和react捕获的报错使用ev解析，异步错误使用ev.error解析
         let stackFrame = ErrorStackParser.parse(!target ? ev : ev.error)[0];
         let { fileName, columnNumber, lineNumber } = stackFrame;
         let errorData = {
