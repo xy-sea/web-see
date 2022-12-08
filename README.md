@@ -116,12 +116,12 @@ async beforePost(data) {
 ## 手动上报错误示例
 
 ```javascript
-import webSee from "web-see";
+import webSee from 'web-see';
 
 webSee.log({
-  type: "custom",
-  message: "手动报错信息",
-  error: new Error("报错"),
+  type: 'custom',
+  message: '手动报错信息',
+  error: new Error('报错'),
 });
 ```
 
@@ -134,6 +134,10 @@ webSee.log({
 演示效果
 
 ![web-see.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ca730fd02164501a82eb492a6bf8583~tplv-k3u1fbpfcp-watermark.image?)
+
+## 特别感谢
+
+- [haixin-fang](https://github.com/haixin-fang)
 
 ## 后台仓库
 

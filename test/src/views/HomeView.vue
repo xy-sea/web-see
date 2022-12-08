@@ -37,24 +37,50 @@
       </el-table-column>
       <el-table-column fixed="right" prop="recordScreenId" label="还原错误代码" width="100">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.type == 'error' || scope.row.type == 'unhandledrejection'" type="primary" @click="revertCode(scope.row)">查看源码</el-button>
+          <el-button
+            v-if="scope.row.type == 'error' || scope.row.type == 'unhandledrejection'"
+            type="primary"
+            @click="revertCode(scope.row)"
+            >查看源码</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column fixed="right" prop="recordScreenId" label="播放录屏" width="100">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.recordScreenId" type="primary" @click="playRecord(scope.row.recordScreenId)">播放录屏</el-button>
+          <el-button
+            v-if="scope.row.recordScreenId"
+            type="primary"
+            @click="playRecord(scope.row.recordScreenId)"
+            >播放录屏</el-button
+          >
         </template>
       </el-table-column>
       <el-table-column fixed="right" prop="breadcrumb" label="用户行为记录" width="125">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.breadcrumb" type="primary" @click="revertBehavior(scope.row)">查看用户行为</el-button>
+          <el-button v-if="scope.row.breadcrumb" type="primary" @click="revertBehavior(scope.row)"
+            >查看用户行为</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog :title="dialogTitle" :class="{ 'revert-disalog': fullscreen }" top="10vh" :fullscreen="fullscreen" :visible.sync="revertdialog" width="90%" :destroy-on-close="true">
+    <el-dialog
+      :title="dialogTitle"
+      :class="{ 'revert-disalog': fullscreen }"
+      top="10vh"
+      :fullscreen="fullscreen"
+      :visible.sync="revertdialog"
+      width="90%"
+      :destroy-on-close="true"
+    >
       <div id="revert" ref="revert" v-if="dialogTitle != '查看用户行为'"></div>
       <el-timeline v-else>
-        <el-timeline-item v-for="(activity, index) in activities" :key="index" :icon="activity.icon" :color="activity.color" :timestamp="format(activity.time)">
+        <el-timeline-item
+          v-for="(activity, index) in activities"
+          :key="index"
+          :icon="activity.icon"
+          :color="activity.color"
+          :timestamp="format(activity.time)"
+        >
           {{ activity.content }}
         </el-timeline-item>
       </el-timeline>
@@ -76,7 +102,7 @@ export default {
       revertdialog: false,
       dialogTitle: '',
       activities: [],
-      tableData: []
+      tableData: [],
     };
   },
   created() {
@@ -86,15 +112,15 @@ export default {
     getTableData() {
       setTimeout(() => {
         fetch(`http://localhost:8083/getErrorList`)
-          .then((response) => response.json())
-          .then((res) => {
+          .then(response => response.json())
+          .then(res => {
             this.tableData = res.data;
           });
       }, 500);
     },
     fetchError() {
       fetch('https://jsonplaceholder.typicode.com/posts/a')
-        .then((res) => {
+        .then(res => {
           if (res.status == 404) {
             this.getTableData();
           }
@@ -107,13 +133,15 @@ export default {
       this.dialogTitle = '查看用户行为';
       this.fullscreen = false;
       this.revertdialog = true;
-      breadcrumb.forEach((item) => {
+      breadcrumb.forEach(item => {
         item.color = item.status == 'ok' ? '#5FF713' : '#F70B0B';
         item.icon = item.status == 'ok' ? 'el-icon-check' : 'el-icon-close';
         if (item.category == 'Click') {
           item.content = `用户点击dom: ${item.data}`;
         } else if (item.category == 'Http') {
-          item.content = `调用接口: ${item.data.url}, ${item.status == 'ok' ? '请求成功' : '请求失败'}`;
+          item.content = `调用接口: ${item.data.url}, ${
+            item.status == 'ok' ? '请求成功' : '请求失败'
+          }`;
         } else if (item.category == 'Code_Error') {
           item.content = `代码报错：${item.data.message}`;
         } else if (item.category == 'Resource_Error') {
@@ -125,7 +153,7 @@ export default {
       this.activities = breadcrumb;
     },
     revertCode(row) {
-      findCodeBySourceMap(row, (res) => {
+      findCodeBySourceMap(row, res => {
         this.dialogTitle = '查看源码';
         this.fullscreen = false;
         this.revertdialog = true;
@@ -136,10 +164,10 @@ export default {
     },
     playRecord(id) {
       fetch(`http://localhost:8083/getRecordScreenId?id=${id}`)
-        .then((response) => response.json())
-        .then((res) => {
+        .then(response => response.json())
+        .then(res => {
           let { code, data } = res;
-          if (code == 200 && data && Array.isArray(data) && data[0].events) {
+          if (code == 200 && Array.isArray(data) && data[0] && data[0].events) {
             let events = unzip(data[0].events);
             this.fullscreen = true;
             this.dialogTitle = '播放录屏';
@@ -149,13 +177,18 @@ export default {
                 {
                   target: document.getElementById('revert'),
                   data: {
-                    events
-                  }
+                    events,
+                  },
                 },
                 {
-                  UNSAFE_replayCanvas: true
+                  UNSAFE_replayCanvas: true,
                 }
               );
+            });
+          } else {
+            this.$message({
+              message: '暂无数据，请稍后重试~',
+              type: 'warning',
             });
           }
         });
@@ -188,7 +221,7 @@ export default {
       };
     },
     promiseErr() {
-      new Promise((resolve) => {
+      new Promise(resolve => {
         this.getTableData();
         let person = {};
         person.name.age();
@@ -211,8 +244,8 @@ export default {
       };
       ajax.send();
       ajax.addEventListener('loadend', () => {});
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less">
