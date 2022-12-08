@@ -24,6 +24,7 @@ let recordScreenList = [];
 
 // 获取js.map源码文件
 app.get('/getmap', (req, res) => {
+  console.log(req.query)
   // req.query 获取接口参数
   let fileName = req.query.fileName;
   let mapFile = path.join(__filename, '..', 'dist/js');

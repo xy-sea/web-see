@@ -10,15 +10,31 @@ function repalceAll(str) {
   return str.replace(new RegExp(' ', 'gm'), '&nbsp;');
 }
 
+// 获取文件路径
+function getFileLink(str) {
+  const reg = /vue-loader-options!\.(.*)\?/;
+  const res = str.match(reg);
+  console.log(res);
+  if (res && Array.isArray(res)) {
+    return res[1];
+  }
+}
+
 function loadSourceMap(fileName) {
-  let file = matchStr(fileName);
+  let file, env = process.env.NODE_ENV;
+  if (env == "development") {
+    file = getFileLink(fileName);
+  } else {
+    file = matchStr(fileName);
+  }
   if (!file) return;
-  return new Promise((resolve) => {
-    fetch(`http://localhost:8083/getmap?fileName=${file}`).then((response) => {
+  return new Promise(resolve => {
+    fetch(`http://localhost:8083/getmap?fileName=${file}&env=${env}`).then(response => {
       resolve(response.json());
     });
   });
 }
+
 
 export const findCodeBySourceMap = async ({ fileName, line, column }, callback) => {
   let sourceData = await loadSourceMap(fileName);
