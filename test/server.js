@@ -4,8 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ limit: '50mb', extended: true, parameterLimit: 50000 }));
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true, parameterLimit: 50000 }));
 
 app.all('*', function (res, req, next) {
   req.header('Access-Control-Allow-Origin', '*');
@@ -24,33 +24,45 @@ let recordScreenList = [];
 
 // 获取js.map源码文件
 app.get('/getmap', (req, res) => {
-  // req.query 获取接口参数
   let fileName = req.query.fileName;
-  let mapFile = path.join(__filename, '..', 'dist/js');
-  // 拿到dist目录下对应map文件的路径
-  let mapPath = path.join(mapFile, `${fileName}.map`);
-  fs.readFile(mapPath, function (err, data) {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    res.send(data);
-  });
+  if (req.query.env == 'development') {
+    let mapFile = path.join(__filename, '..', fileName);
+    console.log('mapFile', mapFile);
+    fs.readFile(mapFile, function (err, data) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      res.send(data);
+    });
+  } else {
+    // req.query 获取接口参数
+    let mapFile = path.join(__filename, '..', 'dist/js');
+    // 拿到dist目录下对应map文件的路径
+    let mapPath = path.join(mapFile, `${fileName}.map`);
+    fs.readFile(mapPath, function (err, data) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      res.send(data);
+    });
+  }
 });
 
 app.get('/getErrorList', (req, res) => {
   res.send({
     code: 200,
-    data: errorList
+    data: errorList,
   });
 });
 
 app.get('/getRecordScreenId', (req, res) => {
   let id = req.query.id;
-  let data = recordScreenList.filter((item) => item.recordScreenId == id);
+  let data = recordScreenList.filter(item => item.recordScreenId == id);
   res.send({
     code: 200,
-    data
+    data,
   });
 });
 
@@ -67,13 +79,13 @@ app.post('/reportData', (req, res) => {
     }
     res.send({
       code: 200,
-      meaage: '上报成功！'
+      meaage: '上报成功！',
     });
   } catch (err) {
     res.send({
       code: 203,
       meaage: '上报失败！',
-      err
+      err,
     });
   }
 });
