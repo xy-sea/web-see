@@ -5,7 +5,7 @@
   "scripts": {
     "start": "concurrently  \"npm run serve\" \"npm run service\"",
     "serve": "vue-cli-service serve",
-    "service": "node ./server.js",
+    "service": "nodemon ./server.js",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -40,6 +40,7 @@
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
+    "nodemon": "^2.0.20",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
     "vue-template-compiler": "^2.6.14"
