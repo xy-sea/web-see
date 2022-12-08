@@ -116,12 +116,12 @@ async beforePost(data) {
 ## 手动上报错误示例
 
 ```javascript
-import webSee from 'web-see';
+import webSee from "web-see";
 
 webSee.log({
-  type: 'custom',
-  message: '手动报错信息',
-  error: new Error('报错')
+  type: "custom",
+  message: "手动报错信息",
+  error: new Error("报错"),
 });
 ```
 
