@@ -2,7 +2,7 @@
   "name": "web-see",
   "version": "1.0.7",
   "description": "监控SDK，一款自研的前端监控SDK，可用来收集并上报：代码报错、性能数据、用户行为、加载资源、个性化指标等数据",
-  "main": "dist/index.cjs.js",
+  "main": "dist/index.min.js",
   "module": "dist/index.esm.js",
   "scripts": {
     "build": "webpack",
