@@ -20,27 +20,30 @@
   text-align: center;
   color: #2c3e50;
   padding: 0 10px;
-}
-.header {
-  width: 100%;
-  padding: 10px 20px;
-  text-align: left;
-  background-color: #ffffff;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  .logo {
-    width: 70px;
-    height: 42px;
+
+  .header {
+    width: 100%;
+    padding: 10px 20px;
+    height: 60px;
+    text-align: left;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    .logo {
+      width: 70px;
+      height: 42px;
+    }
+    .title {
+      margin-left: 10px;
+      font-weight: bold;
+    }
   }
-  .title {
-    margin-left: 10px;
-    font-weight: bold;
-  }
 }
+
 nav {
   padding: 10px;
 

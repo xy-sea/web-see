@@ -4,20 +4,55 @@ import { breadcrumb } from './breadcrumb';
 import { transportData } from './transportData';
 export class Options {
   constructor() {
+    this.dsn = ''; // 监控上报接口的地址
     this.throttleDelayTime = 0; // click事件的节流时长
     this.overTime = 10; // 接口超时时长
+
     this.silentRecordScreen = false; // 是否开启录屏
     this.recordScreentime = 10; // 录屏时长
-    this.recordScreenTypeList = [EVENTTYPES.ERROR, EVENTTYPES.UNHANDLEDREJECTION, EVENTTYPES.RESOURCE, EVENTTYPES.FETCH, EVENTTYPES.XHR]; // 录屏事件集合
+    this.recordScreenTypeList = [
+      EVENTTYPES.ERROR,
+      EVENTTYPES.UNHANDLEDREJECTION,
+      EVENTTYPES.RESOURCE,
+      EVENTTYPES.FETCH,
+      EVENTTYPES.XHR,
+    ]; // 录屏事件集合
+
+    this.silentWhiteScreen = false; // 是否开启白屏检测
+    this.skeletonProject = false; // 项目是否有骨架屏
+    this.whiteBoxElements = ['html', 'body', '#app', '#root']; // 白屏检测的父容器列表
   }
   bindOptions(options = {}) {
-    const { filterXhrUrlRegExp, throttleDelayTime, silentRecordScreen, overTime, recordScreenTypeList, recordScreentime } = options;
-    validateOption(throttleDelayTime, 'throttleDelayTime', 'number') && (this.throttleDelayTime = throttleDelayTime);
+    const {
+      dsn,
+      filterXhrUrlRegExp,
+      throttleDelayTime,
+      silentRecordScreen,
+      overTime,
+      recordScreenTypeList,
+      recordScreentime,
+      silentWhiteScreen,
+      whiteBoxElements,
+      skeletonProject,
+    } = options;
+    validateOption(dsn, 'dsn', 'string') && (this.dsn = dsn);
+    validateOption(throttleDelayTime, 'throttleDelayTime', 'number') &&
+      (this.throttleDelayTime = throttleDelayTime);
     validateOption(overTime, 'overTime', 'number') && (this.overTime = overTime);
-    validateOption(recordScreentime, 'recordScreentime', 'number') && (this.recordScreentime = recordScreentime);
-    validateOption(silentRecordScreen, 'silentRecordScreen', 'boolean') && (this.silentRecordScreen = silentRecordScreen);
-    validateOption(recordScreenTypeList, 'recordScreenTypeList', 'array') && (this.recordScreenTypeList = recordScreenTypeList);
-    validateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', 'regexp') && (this.filterXhrUrlRegExp = filterXhrUrlRegExp);
+    validateOption(recordScreentime, 'recordScreentime', 'number') &&
+      (this.recordScreentime = recordScreentime);
+    validateOption(silentRecordScreen, 'silentRecordScreen', 'boolean') &&
+      (this.silentRecordScreen = silentRecordScreen);
+    validateOption(recordScreenTypeList, 'recordScreenTypeList', 'array') &&
+      (this.recordScreenTypeList = recordScreenTypeList);
+    validateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', 'regexp') &&
+      (this.filterXhrUrlRegExp = filterXhrUrlRegExp);
+    validateOption(silentWhiteScreen, 'silentWhiteScreen', 'boolean') &&
+      (this.silentWhiteScreen = silentWhiteScreen);
+    validateOption(skeletonProject, 'skeletonProject', 'boolean') &&
+      (this.skeletonProject = skeletonProject);
+    validateOption(whiteBoxElements, 'whiteBoxElements', 'array') &&
+      (this.whiteBoxElements = whiteBoxElements);
   }
 }
 const options = _support.options || (_support.options = new Options());

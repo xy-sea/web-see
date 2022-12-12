@@ -43,7 +43,7 @@ export function parseUrlToObj(url) {
     host: match[4],
     path: match[5],
     protocol: match[2],
-    relative: match[5] + query + fragment
+    relative: match[5] + query + fragment,
   };
 }
 
@@ -51,13 +51,14 @@ export function parseUrlToObj(url) {
 export function zip(data) {
   if (!data) return data;
   // 判断数据是否需要转为JSON
-  const dataJson = typeof data !== 'string' && typeof data !== 'number' ? JSON.stringify(data) : data;
+  const dataJson =
+    typeof data !== 'string' && typeof data !== 'number' ? JSON.stringify(data) : data;
   // 使用Base64.encode处理字符编码，兼容中文
   const str = Base64.encode(dataJson);
   let binaryString = pako.gzip(str);
   let arr = Array.from(binaryString);
   let s = '';
-  arr.forEach((item) => {
+  arr.forEach(item => {
     s += String.fromCharCode(item);
   });
   return Base64.btoa(s);
@@ -74,4 +75,5 @@ export function setSilentFlag(paramOptions = {}) {
   setFlag(EVENTTYPES.UNHANDLEDREJECTION, !!paramOptions.silentUnhandledrejection);
   setFlag(EVENTTYPES.PERFORMANCE, !!paramOptions.silentPerformance);
   setFlag(EVENTTYPES.RECORDSCREEN, !paramOptions.silentRecordScreen);
+  setFlag(EVENTTYPES.WHITESCREEN, !paramOptions.silentWhiteScreen);
 }

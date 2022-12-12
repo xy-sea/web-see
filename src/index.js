@@ -39,5 +39,5 @@ export default {
   init,
   install,
   errorBoundary,
-  log
+  log,
 };

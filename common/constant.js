@@ -51,7 +51,8 @@ export const EVENTTYPES = {
   REACT: 'react',
   CUSTOM: 'custom',
   PERFORMANCE: 'performance',
-  RECORDSCREEN: 'recordScreen'
+  RECORDSCREEN: 'recordScreen',
+  WHITESCREEN: 'whiteScreen'
 };
 
 export const HTTPTYPE = {

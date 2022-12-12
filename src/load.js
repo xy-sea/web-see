@@ -4,44 +4,51 @@ import { EVENTTYPES, STATUS_CODE } from '../common';
 import { breadcrumb } from '../core';
 import { addReplaceHandler } from './replace';
 export function setupReplace() {
+  // 白屏检测
+  addReplaceHandler({
+    callback: () => {
+      HandleEvents.handleWhiteScreen();
+    },
+    type: EVENTTYPES.WHITESCREEN,
+  });
   // 重写XMLHttpRequest
   addReplaceHandler({
-    callback: (data) => {
+    callback: data => {
       HandleEvents.handleHttp(data, EVENTTYPES.XHR);
     },
-    type: EVENTTYPES.XHR
+    type: EVENTTYPES.XHR,
   });
   // 重写fetch
   addReplaceHandler({
-    callback: (data) => {
+    callback: data => {
       HandleEvents.handleHttp(data, EVENTTYPES.FETCH);
     },
-    type: EVENTTYPES.FETCH
+    type: EVENTTYPES.FETCH,
   });
   // 捕获错误
   addReplaceHandler({
-    callback: (error) => {
+    callback: error => {
       HandleEvents.handleError(error);
     },
-    type: EVENTTYPES.ERROR
+    type: EVENTTYPES.ERROR,
   });
   // 监听history模式路由的变化
   addReplaceHandler({
-    callback: (data) => {
+    callback: data => {
       HandleEvents.handleHistory(data);
     },
-    type: EVENTTYPES.HISTORY
+    type: EVENTTYPES.HISTORY,
   });
   // 添加handleUnhandleRejection事件
   addReplaceHandler({
-    callback: (data) => {
+    callback: data => {
       HandleEvents.handleUnhandleRejection(data);
     },
-    type: EVENTTYPES.UNHANDLEDREJECTION
+    type: EVENTTYPES.UNHANDLEDREJECTION,
   });
   // 监听click事件
   addReplaceHandler({
-    callback: (data) => {
+    callback: data => {
       // 获取html信息
       const htmlString = htmlElementAsString(data.data.activeElement);
       if (htmlString) {
@@ -50,31 +57,31 @@ export function setupReplace() {
           status: STATUS_CODE.OK,
           category: breadcrumb.getCategory(EVENTTYPES.CLICK),
           data: htmlString,
-          time: getTimestamp()
+          time: getTimestamp(),
         });
       }
     },
-    type: EVENTTYPES.CLICK
+    type: EVENTTYPES.CLICK,
   });
   // 监听hashchange
   addReplaceHandler({
-    callback: (e) => {
+    callback: e => {
       HandleEvents.handleHashchange(e);
     },
-    type: EVENTTYPES.HASHCHANGE
+    type: EVENTTYPES.HASHCHANGE,
   });
   // 获取性能指标
   addReplaceHandler({
     callback: () => {
       HandleEvents.handlePerformance();
     },
-    type: EVENTTYPES.PERFORMANCE
+    type: EVENTTYPES.PERFORMANCE,
   });
   // 前端录屏
   addReplaceHandler({
     callback: () => {
       HandleEvents.handleScreen();
     },
-    type: EVENTTYPES.RECORDSCREEN
+    type: EVENTTYPES.RECORDSCREEN,
   });
 }
