@@ -8,9 +8,9 @@ import {
   isExistProperty,
   variableTypeDetection,
   supportsHistory,
-} from '../utils';
-import { transportData, options, triggerHandlers, subscribeEvent } from '../core';
-import { EVENTTYPES, HTTPTYPE, EMethods } from '../common';
+} from './utils';
+import { transportData, options, triggerHandlers, subscribeEvent } from './core';
+import { EVENTTYPES, HTTPTYPE, HTTP_CODE, EMethods } from './common';
 
 // 判断当前接口是否为需要过滤掉的接口
 function isFilterHttpUrl(url) {
@@ -109,10 +109,10 @@ function fetchReplace() {
     return;
   }
   replaceAop(_global, EVENTTYPES.FETCH, originalFetch => {
-    return function (url, config = {}) {
+    return function (url, config: any = {}) {
       const sTime = getTimestamp();
       const method = (config && config.method) || 'GET';
-      let handlerData = {
+      let handlerData: any = {
         type: HTTPTYPE.FETCH,
         method,
         reqData: config && config.body,

@@ -1,6 +1,9 @@
 import { EVENTTYPES, BREADCRUMBTYPES } from '../common';
 import { validateOption, getTimestamp, _support } from '../utils';
 export class Breadcrumb {
+  maxBreadcrumbs: number;
+  beforePushBreadcrumb: any;
+  stack: any[];
   constructor() {
     this.maxBreadcrumbs = 20;
     this.beforePushBreadcrumb = null;
@@ -12,7 +15,7 @@ export class Breadcrumb {
   push(data) {
     if (typeof this.beforePushBreadcrumb === 'function') {
       // 执行用户自定义的hook
-      let result = this.beforePushBreadcrumb(this, data);
+      const result = this.beforePushBreadcrumb(this, data);
       if (!result) return;
       this.immediatePush(result);
       return;
@@ -66,12 +69,14 @@ export class Breadcrumb {
         return BREADCRUMBTYPES.CUSTOM;
     }
   }
-  bindOptions(options = {}) {
+  bindOptions(options: any = {}) {
     // maxBreadcrumbs 用户行为存放的最大容量
     // beforePushBreadcrumb 添加用户行为前的处理函数
     const { maxBreadcrumbs, beforePushBreadcrumb } = options;
-    validateOption(maxBreadcrumbs, 'maxBreadcrumbs', 'number') && (this.maxBreadcrumbs = maxBreadcrumbs);
-    validateOption(beforePushBreadcrumb, 'beforePushBreadcrumb', 'function') && (this.beforePushBreadcrumb = beforePushBreadcrumb);
+    validateOption(maxBreadcrumbs, 'maxBreadcrumbs', 'number') &&
+      (this.maxBreadcrumbs = maxBreadcrumbs);
+    validateOption(beforePushBreadcrumb, 'beforePushBreadcrumb', 'function') &&
+      (this.beforePushBreadcrumb = beforePushBreadcrumb);
   }
 }
 const breadcrumb = _support.breadcrumb || (_support.breadcrumb = new Breadcrumb());

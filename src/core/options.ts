@@ -3,6 +3,16 @@ import { EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
 import { transportData } from './transportData';
 export class Options {
+  throttleDelayTime: number;
+  overTime: number;
+  silentRecordScreen: boolean;
+  recordScreentime: number;
+  recordScreenTypeList: string[];
+  filterXhrUrlRegExp: any;
+  whiteBoxElements: string[];
+  dsn: string;
+  silentWhiteScreen: boolean;
+  skeletonProject: boolean;
   constructor() {
     this.dsn = ''; // 监控上报接口的地址
     this.throttleDelayTime = 0; // click事件的节流时长
@@ -22,7 +32,7 @@ export class Options {
     this.skeletonProject = false; // 项目是否有骨架屏
     this.whiteBoxElements = ['html', 'body', '#app', '#root']; // 白屏检测的父容器列表
   }
-  bindOptions(options = {}) {
+  bindOptions(options: any = {}) {
     const {
       dsn,
       filterXhrUrlRegExp,

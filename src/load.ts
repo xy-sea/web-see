@@ -1,7 +1,7 @@
 import { HandleEvents } from './handleEvents';
-import { htmlElementAsString, getTimestamp } from '../utils';
-import { EVENTTYPES, STATUS_CODE } from '../common';
-import { breadcrumb } from '../core';
+import { htmlElementAsString, getTimestamp } from './utils';
+import { EVENTTYPES, STATUS_CODE } from './common';
+import { breadcrumb } from './core';
 import { addReplaceHandler } from './replace';
 export function setupReplace() {
   // 白屏检测

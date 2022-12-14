@@ -1,15 +1,15 @@
-import ErrorStackParser from 'error-stack-parser';
+import * as ErrorStackParser from 'error-stack-parser';
 import { EVENTTYPES, STATUS_CODE } from '../common';
 import { isError, getTimestamp, unknownToString } from '../utils';
 import { transportData } from './transportData';
 import { breadcrumb } from './breadcrumb';
 
 // 自定义上报事件
-export function log({ message = 'emptyMsg', error = '', type = EVENTTYPES.CUSTOM }) {
+export function log({ message = 'emptyMsg', error = '', type = EVENTTYPES.CUSTOM }: any) {
   try {
     let errorInfo = {};
     if (isError(error)) {
-      let result = ErrorStackParser.parse(!error.target ? error : error.error || error.reason)[0];
+      const result = ErrorStackParser.parse(!error.target ? error : error.error || error.reason)[0];
       errorInfo = { ...result, line: result.lineNumber, column: result.columnNumber };
     }
     const data = Object.assign(

@@ -15,6 +15,14 @@ import { options } from './options';
  * 用来上报数据，包含图片打点上报、xhr请求
  */
 export class TransportData {
+  queue: Queue;
+  apikey: string;
+  errorDsn: string;
+  userId: string;
+  uuid: string;
+  beforeDataReport: any;
+  getUserId: any;
+  useImgUpload: boolean;
   constructor() {
     this.queue = new Queue();
     this.apikey = ''; // 每个项目对应的唯一标识
@@ -27,7 +35,7 @@ export class TransportData {
   }
   imgRequest(data, url) {
     const requestFun = () => {
-      let img = new Image();
+      const img = new Image();
       const spliceStr = url.indexOf('?') === -1 ? '?' : '&';
       img.src = `${url}${spliceStr}data=${encodeURIComponent(JSON.stringify(data))}`;
     };
@@ -60,7 +68,7 @@ export class TransportData {
   // 获取用户信息
   getAuthInfo() {
     const userId = this.userId || this.getTrackerId() || '';
-    const result = {
+    const result: any = {
       userId: String(userId),
       sdkVersion: SDK_VERSION,
       sdkName: SDK_NAME,
@@ -86,7 +94,7 @@ export class TransportData {
   // 添加公共信息
   // 这里不要添加时间戳，比如接口报错，发生的时间和上报时间不一致
   getTransportData(data) {
-    let info = {
+    const info = {
       ...data,
       ...this.getAuthInfo(), // 获取用户信息
       date: getYMDHMS(),
@@ -109,7 +117,7 @@ export class TransportData {
     return isSdkDsn;
   }
 
-  bindOptions(options = {}) {
+  bindOptions(options: any = {}) {
     const { dsn, apikey, beforeDataReport, userId, getUserId, useImgUpload } = options;
     validateOption(apikey, 'apikey', 'string') && (this.apikey = apikey);
     validateOption(dsn, 'dsn', 'string') && (this.errorDsn = dsn);
@@ -122,7 +130,7 @@ export class TransportData {
   // 上报数据
   async send(data) {
     try {
-      let dsn = this.errorDsn;
+      const dsn = this.errorDsn;
       if (isEmpty(dsn)) {
         console.error('web-see: dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
         return;

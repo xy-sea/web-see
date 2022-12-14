@@ -1,5 +1,7 @@
 import { _global } from './global';
 export class Queue {
+  stack: any[];
+  isFlushing: boolean;
   constructor() {
     this.stack = [];
     this.isFlushing = false;

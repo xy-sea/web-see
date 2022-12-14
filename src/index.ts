@@ -1,10 +1,10 @@
 import { setupReplace } from './load';
-import { initOptions, log } from '../core';
-import { _global, getFlag, setFlag } from '../utils';
-import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '../common';
+import { initOptions, log } from './core';
+import { _global, getFlag, setFlag } from './utils';
+import { SDK_VERSION, SDK_NAME, EVENTTYPES } from './common';
 import { HandleEvents } from './handleEvents';
 
-function init(options = {}) {
+function init(options: any = {}) {
   if (!options.dsn || !options.apikey) {
     return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
   }
@@ -17,7 +17,7 @@ function init(options = {}) {
 const install = function (Vue, options = {}) {
   if (getFlag(EVENTTYPES.VUE)) return;
   setFlag(EVENTTYPES.VUE, true);
-  let handler = Vue.config.errorHandler;
+  const handler = Vue.config.errorHandler;
   // vue项目在Vue.config.errorHandler中上报错误
   Vue.config.errorHandler = function (err, vm, info) {
     console.log(err);
