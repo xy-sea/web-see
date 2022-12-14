@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2019",
+    "strict": false,
+    "outDir": "./dist/",
+    "noImplicitAny": false,
+    "sourceMap": true
+  }
+}
