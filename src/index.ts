@@ -4,7 +4,34 @@ import { _global, getFlag, setFlag } from './utils';
 import { SDK_VERSION, SDK_NAME, EVENTTYPES } from './common';
 import { HandleEvents } from './handleEvents';
 
-function init(options: any = {}) {
+interface IInitializationOption {
+  dsn: string;
+  apikey: string;
+  userId?: string;
+  disabled?: boolean;
+  useImgUpload?: boolean;
+  throttleDelayTime?: number;
+  overTime?: number;
+  maxBreadcrumbs?: number;
+  recordScreentime?: number;
+  silentXhr?: boolean;
+  silentFetch?: boolean;
+  silentClick?: boolean;
+  silentHistory?: boolean;
+  silentError?: boolean;
+  silentUnhandledrejection?: boolean;
+  silentHashchange?: boolean;
+  silentPerformance?: boolean;
+  silentRecordScreen?: boolean;
+  silentWhiteScreen?: boolean;
+  skeletonProject?: boolean;
+  whiteBoxElements?: string[];
+  filterXhrUrlRegExp?: RegExp;
+  beforePushBreadcrumb?: () => void;
+  beforeDataReport?: () => void;
+}
+
+function init(options: IInitializationOption) {
   if (!options.dsn || !options.apikey) {
     return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
   }
@@ -14,7 +41,7 @@ function init(options: any = {}) {
   setupReplace();
 }
 
-const install = function (Vue, options = {}) {
+const install = function (Vue, options: IInitializationOption) {
   if (getFlag(EVENTTYPES.VUE)) return;
   setFlag(EVENTTYPES.VUE, true);
   const handler = Vue.config.errorHandler;

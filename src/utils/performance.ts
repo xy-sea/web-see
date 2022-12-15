@@ -189,6 +189,8 @@ export function getCLS(callback) {
           clsEntries = sessionEntries;
           observer.disconnect();
 
+          console.log('clsEntries :>> ', clsEntries);
+
           callback({
             name: 'CLS',
             value: clsValue,
