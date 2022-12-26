@@ -29,7 +29,7 @@ function checkDOMChange(callback) {
 }
 function getRenderTime() {
   let startTime = 0;
-  entries.forEach((entry) => {
+  entries.forEach(entry => {
     if (entry.startTime > startTime) {
       startTime = entry.startTime;
     }
@@ -52,9 +52,9 @@ let entries = [];
 // 外部通过callback 拿到首屏加载时间
 export function observeFirstScreenPaint(callback) {
   const ignoreDOMList = ['STYLE', 'SCRIPT', 'LINK'];
-  observer = new MutationObserver((mutationList) => {
+  observer = new MutationObserver((mutationList: any) => {
     checkDOMChange(callback);
-    const entry = { children: [] };
+    const entry: any = { children: [] };
     for (const mutation of mutationList) {
       if (mutation.addedNodes.length && isInScreen(mutation.target)) {
         for (const node of mutation.addedNodes) {
@@ -75,7 +75,7 @@ export function observeFirstScreenPaint(callback) {
     childList: true, // 监听添加或删除子节点
     subtree: true, // 监听整个子树
     characterData: true, // 监听元素的文本是否变化
-    attributes: true // 监听元素的属性是否变化
+    attributes: true, // 监听元素的属性是否变化
   });
 }
 
@@ -87,13 +87,13 @@ export function getResource() {
   if (performance.getEntriesByType) {
     const entries = performance.getEntriesByType('resource');
     // 过滤掉非静态资源的 fetch、 xmlhttprequest、beacon
-    let list = entries.filter((entry) => {
+    let list = entries.filter(entry => {
       return ['fetch', 'xmlhttprequest', 'beacon'].indexOf(entry.initiatorType) === -1;
     });
 
     if (list.length) {
       list = JSON.parse(JSON.stringify(list));
-      list.forEach((entry) => {
+      list.forEach((entry: any) => {
         entry.isCache = isCache(entry);
       });
     }
@@ -107,14 +107,14 @@ export function isCache(entry) {
 }
 
 export function getFCP(callback) {
-  const entryHandler = (list) => {
+  const entryHandler = list => {
     for (const entry of list.getEntries()) {
       if (entry.name === 'first-contentful-paint') {
         observer.disconnect();
         callback({
           name: 'FCP',
           value: entry.startTime,
-          rating: entry.startTime > 2500 ? 'poor' : 'good'
+          rating: entry.startTime > 2500 ? 'poor' : 'good',
         });
       }
     }
@@ -124,13 +124,13 @@ export function getFCP(callback) {
 }
 
 export function getLCP(callback) {
-  const entryHandler = (list) => {
+  const entryHandler = list => {
     for (const entry of list.getEntries()) {
       observer.disconnect();
       callback({
         name: 'LCP',
         value: entry.startTime,
-        rating: entry.startTime > 2500 ? 'poor' : 'good'
+        rating: entry.startTime > 2500 ? 'poor' : 'good',
       });
     }
   };
@@ -139,14 +139,14 @@ export function getLCP(callback) {
 }
 
 export function getFID(callback) {
-  const entryHandler = (entryList) => {
+  const entryHandler = entryList => {
     for (const entry of entryList.getEntries()) {
       observer.disconnect();
       const value = entry.processingStart - entry.startTime;
       callback({
         name: 'FID',
         value,
-        rating: value > 100 ? 'poor' : 'good'
+        rating: value > 100 ? 'poor' : 'good',
       });
     }
   };
@@ -161,7 +161,7 @@ export function getCLS(callback) {
   let sessionValue = 0;
   let sessionEntries = [];
 
-  const entryHandler = (entryList) => {
+  const entryHandler = entryList => {
     for (const entry of entryList.getEntries()) {
       // 只将不带有最近用户输入标志的布局偏移计算在内。
       if (!entry.hadRecentInput) {
@@ -170,7 +170,11 @@ export function getCLS(callback) {
         // 如果条目与上一条目的相隔时间小于 1 秒且
         // 与会话中第一个条目的相隔时间小于 5 秒，那么将条目
         // 包含在当前会话中。否则，开始一个新会话。
-        if (sessionValue && entry.startTime - lastSessionEntry.startTime < 1000 && entry.startTime - firstSessionEntry.startTime < 5000) {
+        if (
+          sessionValue &&
+          entry.startTime - lastSessionEntry.startTime < 1000 &&
+          entry.startTime - firstSessionEntry.startTime < 5000
+        ) {
           sessionValue += entry.value;
           sessionEntries.push(entry);
         } else {
@@ -185,10 +189,12 @@ export function getCLS(callback) {
           clsEntries = sessionEntries;
           observer.disconnect();
 
+          console.log('clsEntries :>> ', clsEntries);
+
           callback({
             name: 'CLS',
             value: clsValue,
-            rating: clsValue > 2500 ? 'poor' : 'good'
+            rating: clsValue > 2500 ? 'poor' : 'good',
           });
         }
       }
@@ -201,12 +207,12 @@ export function getCLS(callback) {
 
 export function getTTFB(callback) {
   on(_global, 'load', function () {
-    let { responseStart, navigationStart } = _global.performance.timing;
-    let value = responseStart - navigationStart;
+    const { responseStart, navigationStart } = _global.performance.timing;
+    const value = responseStart - navigationStart;
     callback({
       name: 'TTFB',
       value,
-      rating: value > 100 ? 'poor' : 'good'
+      rating: value > 100 ? 'poor' : 'good',
     });
   });
 }
@@ -214,45 +220,45 @@ export function getTTFB(callback) {
 export function getWebVitals(callback) {
   // web-vitals 不兼容safari浏览器
   if (isSafari()) {
-    getFID((res) => {
+    getFID(res => {
       callback(res);
     });
-    getFCP((res) => {
+    getFCP(res => {
       callback(res);
     });
-    getLCP((res) => {
+    getLCP(res => {
       callback(res);
     });
-    getCLS((res) => {
+    getCLS(res => {
       callback(res);
     });
-    getTTFB((res) => {
+    getTTFB(res => {
       callback(res);
     });
   } else {
-    onLCP((res) => {
+    onLCP(res => {
       callback(res);
     });
-    onFID((res) => {
+    onFID(res => {
       callback(res);
     });
-    onCLS((res) => {
+    onCLS(res => {
       callback(res);
     });
-    onFCP((res) => {
+    onFCP(res => {
       callback(res);
     });
-    onTTFB((res) => {
+    onTTFB(res => {
       callback(res);
     });
   }
 
   // 首屏加载时间
-  observeFirstScreenPaint((res) => {
-    let data = {
+  observeFirstScreenPaint(res => {
+    const data = {
       name: 'FSP',
       value: res,
-      rating: res > 2500 ? 'poor' : 'good'
+      rating: res > 2500 ? 'poor' : 'good',
     };
     callback(data);
   });

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "pretty": true,
+    "rootDir": "src",
+    "sourceMap": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": true,
+    "outDir": "dist",
+    "lib": ["es2019", "dom"],
+    "importHelpers": true
+  },
+  "exclude": ["node_modules", "test", "dist"]
+}

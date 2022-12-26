@@ -54,17 +54,17 @@ export function zip(data) {
   const dataJson =
     typeof data !== 'string' && typeof data !== 'number' ? JSON.stringify(data) : data;
   // 使用Base64.encode处理字符编码，兼容中文
-  const str = Base64.encode(dataJson);
-  let binaryString = pako.gzip(str);
-  let arr = Array.from(binaryString);
+  const str = Base64.encode(dataJson as string);
+  const binaryString = pako.gzip(str);
+  const arr = Array.from(binaryString);
   let s = '';
-  arr.forEach(item => {
+  arr.forEach((item: number) => {
     s += String.fromCharCode(item);
   });
   return Base64.btoa(s);
 }
 
-export function setSilentFlag(paramOptions = {}) {
+export function setSilentFlag(paramOptions: any = {}) {
   // 默认会监控xhr，为true时，当silentXhr为true时将不再监控
   setFlag(EVENTTYPES.XHR, !!paramOptions.silentXhr);
   setFlag(EVENTTYPES.FETCH, !!paramOptions.silentFetch);

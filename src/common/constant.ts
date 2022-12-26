@@ -11,7 +11,7 @@ export const ERRORTYPES = {
   REACT_ERROR: 'REACT_ERROR',
   RESOURCE_ERROR: 'Resource_Error',
   PROMISE_ERROR: 'PROMISE_ERROR',
-  ROUTE_ERROR: 'ROUTE_ERROR'
+  ROUTE_ERROR: 'ROUTE_ERROR',
 };
 
 /**
@@ -23,7 +23,7 @@ export const BREADCRUMBTYPES = {
   RESOURCE: 'Resource_Error',
   CODEERROR: 'Code_Error',
   ROUTE: 'Route',
-  CUSTOM: 'Custom'
+  CUSTOM: 'Custom',
 };
 
 /**
@@ -31,7 +31,7 @@ export const BREADCRUMBTYPES = {
  */
 export const STATUS_CODE = {
   ERROR: 'error',
-  OK: 'ok'
+  OK: 'ok',
 };
 
 /**
@@ -52,22 +52,22 @@ export const EVENTTYPES = {
   CUSTOM: 'custom',
   PERFORMANCE: 'performance',
   RECORDSCREEN: 'recordScreen',
-  WHITESCREEN: 'whiteScreen'
+  WHITESCREEN: 'whiteScreen',
 };
 
 export const HTTPTYPE = {
   XHR: 'xhr',
-  FETCH: 'fetch'
+  FETCH: 'fetch',
 };
 
 export const HTTP_CODE = {
   BAD_REQUEST: 400,
-  UNAUTHORIZED: 401
+  UNAUTHORIZED: 401,
 };
 
 export const EMethods = {
   Get: 'GET',
   Post: 'POST',
   Put: 'PUT',
-  Delete: 'DELETE'
+  Delete: 'DELETE',
 };

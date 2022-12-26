@@ -1,7 +1,7 @@
-import ErrorStackParser from 'error-stack-parser';
+import * as ErrorStackParser from 'error-stack-parser';
 import { record } from 'rrweb';
-import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../common';
-import { transportData, breadcrumb, resourceTransform, httpTransform, options } from '../core';
+import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from './common';
+import { transportData, breadcrumb, resourceTransform, httpTransform, options } from './core';
 import {
   getTimestamp,
   parseUrlToObj,
@@ -14,7 +14,7 @@ import {
   generateUUID,
   getWebVitals,
   openWhiteScreen,
-} from '../utils';
+} from './utils';
 const HandleEvents = {
   // 处理xhr、fetch回调
   handleHttp(data, type) {
@@ -45,9 +45,9 @@ const HandleEvents = {
       const target = ev.target;
       if (!target || (ev.target && !ev.target.localName)) {
         // vue和react捕获的报错使用ev解析，异步错误使用ev.error解析
-        let stackFrame = ErrorStackParser.parse(!target ? ev : ev.error)[0];
-        let { fileName, columnNumber, lineNumber } = stackFrame;
-        let errorData = {
+        const stackFrame = ErrorStackParser.parse(!target ? ev : ev.error)[0];
+        const { fileName, columnNumber, lineNumber } = stackFrame;
+        const errorData = {
           type: EVENTTYPES.ERROR,
           status: STATUS_CODE.ERROR,
           time: getTimestamp(),
@@ -120,9 +120,9 @@ const HandleEvents = {
   },
   handleUnhandleRejection(ev) {
     try {
-      let stackFrame = ErrorStackParser.parse(ev.reason)[0];
-      let { fileName, columnNumber, lineNumber } = stackFrame;
-      let data = {
+      const stackFrame = ErrorStackParser.parse(ev.reason)[0];
+      const { fileName, columnNumber, lineNumber } = stackFrame;
+      const data = {
         type: EVENTTYPES.UNHANDLEDREJECTION,
         status: STATUS_CODE.ERROR,
         time: getTimestamp(),
@@ -148,7 +148,7 @@ const HandleEvents = {
     // 获取FCP、LCP、TTFB、FID等指标
     getWebVitals(res => {
       // name指标名称、rating 评级、value数值
-      let { name, rating, value } = res;
+      const { name, rating, value } = res;
       transportData.send({
         type: EVENTTYPES.PERFORMANCE,
         status: STATUS_CODE.OK,
@@ -159,7 +159,7 @@ const HandleEvents = {
       });
     });
 
-    let observer = new PerformanceObserver(list => {
+    const observer = new PerformanceObserver(list => {
       for (const long of list.getEntries()) {
         // 上报长任务详情
         transportData.send({
@@ -183,6 +183,7 @@ const HandleEvents = {
         resourceList: getResource(),
       });
 
+      const performance = window.performance;
       // 上报内存情况, safari、firefox不支持该属性
       if (performance.memory) {
         transportData.send({
@@ -210,7 +211,7 @@ const HandleEvents = {
           if (isCheckout) {
             // 此段时间内发生错误，上报录屏信息
             if (_support.hasError) {
-              let recordScreenId = _support.recordScreenId;
+              const recordScreenId = _support.recordScreenId;
               _support.recordScreenId = generateUUID();
               transportData.send({
                 type: EVENTTYPES.RECORDSCREEN,
@@ -234,7 +235,7 @@ const HandleEvents = {
         checkoutEveryNms: 1000 * options.recordScreentime,
       });
     } catch (err) {
-      console.err('录屏报错:', err);
+      console.err('录屏报错:' + err);
     }
   },
   handleWhiteScreen() {

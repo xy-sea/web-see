@@ -1,12 +1,14 @@
 import { UAParser } from 'ua-parser-js';
 import { variableTypeDetection } from './is';
 import { generateUUID } from './helpers';
-export const isBrowserEnv = variableTypeDetection.isWindow(typeof window !== 'undefined' ? window : 0);
+export const isBrowserEnv = variableTypeDetection.isWindow(
+  typeof window !== 'undefined' ? window : 0
+);
 // 获取全局变量
 export function getGlobal() {
   if (isBrowserEnv) return window;
 }
-const _global = getGlobal();
+const _global: any = getGlobal();
 const _support = getGlobalSupport();
 const uaResult = new UAParser().getResult();
 
@@ -31,11 +33,11 @@ _support.deviceInfo = {
   ua: uaResult.ua,
   device: uaResult.device.model ? uaResult.device.model : 'Unknow',
   // pc
-  device_type: uaResult.device.type ? uaResult.device.type : 'Pc'
+  device_type: uaResult.device.type ? uaResult.device.type : 'Pc',
 };
 
 _support.replaceFlag = _support.replaceFlag || {};
-let replaceFlag = _support.replaceFlag;
+const replaceFlag = _support.replaceFlag;
 export function setFlag(replaceType, isSet) {
   if (replaceFlag[replaceType]) return;
   replaceFlag[replaceType] = isSet;
@@ -51,7 +53,8 @@ export function getGlobalSupport() {
 export function supportsHistory() {
   const chrome = _global.chrome;
   const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
-  const hasHistoryApi = 'history' in _global && !!_global.history.pushState && !!_global.history.replaceState;
+  const hasHistoryApi =
+    'history' in _global && !!_global.history.pushState && !!_global.history.replaceState;
   return !isChromePackagedApp && hasHistoryApi;
 }
 
