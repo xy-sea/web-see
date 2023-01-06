@@ -1,4 +1,13 @@
-import { _support, validateOption, isBrowserEnv, Queue, isEmpty, getLocationHref, generateUUID, getYMDHMS } from '../utils';
+import {
+  _support,
+  validateOption,
+  isBrowserEnv,
+  Queue,
+  isEmpty,
+  getLocationHref,
+  generateUUID,
+  getYMDHMS,
+} from '../utils';
 import { SDK_NAME, SDK_VERSION, EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
 import { options } from './options';
@@ -39,9 +48,9 @@ export class TransportData {
         method: 'post',
         body: JSON.stringify(data),
         headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then((response) => response.json());
+          'Content-Type': 'application/json',
+        },
+      }).then(response => response.json());
       // .then((res) => console.log(res));
     };
 
@@ -53,7 +62,7 @@ export class TransportData {
     const result = {
       userId: String(userId),
       sdkVersion: SDK_VERSION,
-      sdkName: SDK_NAME
+      sdkName: SDK_NAME,
     };
     // 每个项目对应一个apikey
     this.apikey && (result.apikey = this.apikey);
@@ -82,7 +91,7 @@ export class TransportData {
       date: getYMDHMS(),
       uuid: this.uuid,
       page_url: getLocationHref(),
-      deviceInfo: _support.deviceInfo // 获取设备信息
+      deviceInfo: _support.deviceInfo, // 获取设备信息
     };
 
     // 性能数据和录屏不需要附带用户行为
@@ -105,28 +114,33 @@ export class TransportData {
     validateOption(dsn, 'dsn', 'string') && (this.errorDsn = dsn);
     validateOption(userId, 'userId', 'string') && (this.userId = userId);
     validateOption(useImgUpload, 'useImgUpload', 'boolean') && (this.useImgUpload = useImgUpload);
-    validateOption(beforeDataReport, 'beforeDataReport', 'function') && (this.beforeDataReport = beforeDataReport);
+    validateOption(beforeDataReport, 'beforeDataReport', 'function') &&
+      (this.beforeDataReport = beforeDataReport);
     validateOption(getUserId, 'getUserId', 'function') && (this.getUserId = getUserId);
   }
   // 上报数据
   async send(data) {
-    let dsn = this.errorDsn;
-    if (isEmpty(dsn)) {
-      console.error('web-see: dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
-      return;
-    }
-    // 开启录屏
-    if (_support.options.silentRecordScreen) {
-      if (options.recordScreenTypeList.includes(data.type)) {
-        // 修改hasError
-        _support.hasError = true;
-        data.recordScreenId = _support.recordScreenId;
+    try {
+      let dsn = this.errorDsn;
+      if (isEmpty(dsn)) {
+        console.error('web-see: dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
+        return;
       }
-    }
-    const result = await this.beforePost(data);
-    if (isBrowserEnv) {
-      // 支持图片打点上报和fetch上报
-      return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
+      // 开启录屏
+      if (_support.options.silentRecordScreen) {
+        if (options.recordScreenTypeList.includes(data.type)) {
+          // 修改hasError
+          _support.hasError = true;
+          data.recordScreenId = _support.recordScreenId;
+        }
+      }
+      const result = await this.beforePost(data);
+      if (isBrowserEnv) {
+        // 支持图片打点上报和fetch上报
+        return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
+      }
+    } catch (err) {
+      console.log('上报时报错：', err);
     }
   }
 }

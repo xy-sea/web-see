@@ -179,6 +179,7 @@ function listenError() {
     _global,
     'error',
     function (e) {
+      console.log(e);
       triggerHandlers(EVENTTYPES.ERROR, e);
     },
     true

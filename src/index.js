@@ -20,6 +20,7 @@ const install = function (Vue, options = {}) {
   let handler = Vue.config.errorHandler;
   // vue项目在Vue.config.errorHandler中上报错误
   Vue.config.errorHandler = function (err, vm, info) {
+    console.log(err);
     HandleEvents.handleError(err);
     if (handler) handler.apply(null, [err, vm, info]);
   };
