@@ -45,12 +45,13 @@ export class TransportData {
   async xhrPost(data, url) {
     const requestFun = () => {
       fetch(`${url}`, {
-        method: 'post',
+        method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then(response => response.json());
+      });
+      // .then(response => response.json());
       // .then((res) => console.log(res));
     };
 
