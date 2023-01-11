@@ -10,7 +10,7 @@ import {
   supportsHistory,
 } from '../utils';
 import { transportData, options, triggerHandlers, subscribeEvent } from '../core';
-import { EVENTTYPES, HTTPTYPE, HTTP_CODE, EMethods } from '../common';
+import { EVENTTYPES, HTTPTYPE, EMethods } from '../common';
 
 // 判断当前接口是否为需要过滤掉的接口
 function isFilterHttpUrl(url) {
@@ -84,16 +84,17 @@ function xhrReplace() {
           isFilterHttpUrl(url)
         )
           return;
-        const { responseType, response, status } = this;
+        // const { responseType, response, status } = this;
+        const { status } = this;
         this.websee_xhr.reqData = args[0];
         const eTime = getTimestamp();
         // 设置该接口的time，用户用户行为按时间排序
         this.websee_xhr.time = this.websee_xhr.sTime;
         this.websee_xhr.status = status;
-        if (['', 'json', 'text'].indexOf(responseType) !== -1) {
-          this.websee_xhr.responseText =
-            typeof response === 'object' ? JSON.stringify(response) : response;
-        }
+        // if (['', 'json', 'text'].indexOf(responseType) !== -1) {
+        //   this.websee_xhr.responseText =
+        //     typeof response === 'object' ? JSON.stringify(response) : response;
+        // }
         // 接口的执行时长
         this.websee_xhr.elapsedTime = eTime - this.websee_xhr.sTime;
         // 执行之前注册的xhr回调函数
@@ -133,14 +134,16 @@ function fetchReplace() {
             status: tempRes.status,
             time: sTime,
           });
-          tempRes.text().then(data => {
+          // tempRes.text().then(data => {
+          tempRes.text().then(() => {
             // 同理，进接口进行过滤
             if (
               (method === EMethods.Post && transportData.isSdkTransportUrl(url)) ||
               isFilterHttpUrl(url)
             )
               return;
-            handlerData.responseText = tempRes.status > HTTP_CODE.UNAUTHORIZED && data;
+            // 接口返回的数据量可能很大，舍弃保留返回信息
+            // handlerData.responseText = tempRes.status > HTTP_CODE.UNAUTHORIZED && data;
             triggerHandlers(EVENTTYPES.FETCH, handlerData);
           });
           return res;
