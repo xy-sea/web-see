@@ -7,7 +7,7 @@ export default [
     input: "./src/index.js",
     output: {
       dir: "dist",
-      format: "cjs",
+      format: "cjs", // cjs – CommonJS，适用于 Node 和 Browserify/Webpack
       entryFileNames: "index.cjs.js",
       sourcemap: true,
     },
@@ -17,7 +17,7 @@ export default [
     input: "./src/index.js",
     output: {
       dir: "dist",
-      format: "esm",
+      format: "esm", // esm – 将软件包保存为 ES 模块文件，在现代浏览器中可以通过 <script type=module> 标签引入
       entryFileNames: "index.esm.js",
       sourcemap: true,
     },
@@ -28,7 +28,7 @@ export default [
     plugins: [resolve(), commonjs(), json()],
     output: {
       dir: "dist",
-      format: "umd",
+      format: "umd", // umd – 通用模块定义，以amd，cjs 和 iife 为一体
       name: "web-see",
       entryFileNames: "index.js",
       sourcemap: true,
