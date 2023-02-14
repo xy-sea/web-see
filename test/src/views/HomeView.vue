@@ -173,13 +173,17 @@ export default {
             this.dialogTitle = '播放录屏';
             this.revertdialog = true;
             this.$nextTick(() => {
-              new rrwebPlayer({
-                target: document.getElementById('revert'),
-                props: {
-                  events,
-                  UNSAFE_replayCanvas: true,
+              new rrwebPlayer(
+                {
+                  target: document.getElementById('revert'),
+                  data: {
+                    events,
+                  },
                 },
-              });
+                {
+                  UNSAFE_replayCanvas: true,
+                }
+              );
             });
           } else {
             this.$message({

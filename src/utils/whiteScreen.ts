@@ -8,7 +8,7 @@ import { STATUS_CODE } from '../common';
 
 export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements }) {
   let _whiteLoopNum = 0;
-  let _skeletonInitList = []; // 存储初次采样点
+  const _skeletonInitList = []; // 存储初次采样点
   let _skeletonNowList = []; // 存储当前采样点
 
   // 项目有骨架屏
@@ -44,7 +44,7 @@ export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements })
   }
   // 判断采样点是否为容器节点
   function isContainer(element) {
-    let selector = getSelector(element);
+    const selector = getSelector(element);
     if (skeletonProject) {
       _whiteLoopNum ? _skeletonNowList.push(selector) : _skeletonInitList.push(selector);
     }
@@ -54,11 +54,11 @@ export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements })
   function sampling() {
     let emptyPoints = 0;
     for (let i = 1; i <= 9; i++) {
-      let xElements = document.elementsFromPoint(
+      const xElements = document.elementsFromPoint(
         (window.innerWidth * i) / 10,
         window.innerHeight / 2
       );
-      let yElements = document.elementsFromPoint(
+      const yElements = document.elementsFromPoint(
         window.innerWidth / 2,
         (window.innerHeight * i) / 10
       );

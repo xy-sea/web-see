@@ -15,7 +15,7 @@ export const SpanStatus = {
   FailedPrecondition: 'failed_precondition',
   Aborted: 'aborted',
   OutOfRange: 'out_of_range',
-  DataLoss: 'data_loss'
+  DataLoss: 'data_loss',
 };
 
 export function fromHttpStatus(httpStatus) {
