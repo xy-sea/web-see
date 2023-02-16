@@ -141,7 +141,7 @@ export class TransportData {
         return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
       }
     } catch (err) {
-      console.log('上报时报错：', err);
+      // console.log('上报时报错：', err);
     }
   }
 }

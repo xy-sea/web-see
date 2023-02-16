@@ -44,7 +44,10 @@ export function splitObjToQuery(obj) {
     if (index !== 0) {
       result += '&';
     }
-    const valueStr = variableTypeDetection.isObject(value) || variableTypeDetection.isArray(value) ? JSON.stringify(value) : value;
+    const valueStr =
+      variableTypeDetection.isObject(value) || variableTypeDetection.isArray(value)
+        ? JSON.stringify(value)
+        : value;
     result += `${key}=${valueStr}`;
     return result;
   }, '');
@@ -129,7 +132,10 @@ export function unknownToString(target) {
 
 export function interceptStr(str, interceptLength) {
   if (variableTypeDetection.isString(str)) {
-    return str.slice(0, interceptLength) + (str.length > interceptLength ? `:截取前${interceptLength}个字符` : '');
+    return (
+      str.slice(0, interceptLength) +
+      (str.length > interceptLength ? `:截取前${interceptLength}个字符` : '')
+    );
   }
   return '';
 }

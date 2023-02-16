@@ -84,7 +84,7 @@ const HandleEvents = {
         });
       }
     } catch (er) {
-      console.error('web-see: handleError错误解析异常:', er);
+      // console.error('web-see: handleError错误解析异常:', er);
     }
   },
   handleHistory(data) {
@@ -141,7 +141,7 @@ const HandleEvents = {
       });
       transportData.send(data);
     } catch (er) {
-      console.error('web-see: handleUnhandleRejection错误解析异常:', er);
+      // console.error('web-see: handleUnhandleRejection错误解析异常:', er);
     }
   },
   handlePerformance() {
@@ -234,7 +234,7 @@ const HandleEvents = {
         checkoutEveryNms: 1000 * options.recordScreentime,
       });
     } catch (err) {
-      console.err('录屏报错:', err);
+      // console.err('录屏报错:', err);
     }
   },
   handleWhiteScreen() {

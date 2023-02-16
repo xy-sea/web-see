@@ -235,7 +235,7 @@ export default {
           _this.getTableData();
         }
         if (ajax.status === 200 || ajax.status === 304) {
-          console.log('ajax', ajax);
+          // console.log('ajax', ajax);
         }
       };
       ajax.send();

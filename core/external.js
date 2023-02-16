@@ -29,6 +29,6 @@ export function log({ message = 'emptyMsg', error = '', type = EVENTTYPES.CUSTOM
     });
     transportData.send(data);
   } catch (err) {
-    console.log('上报自定义事件时报错：', err);
+    // console.log('上报自定义事件时报错：', err);
   }
 }

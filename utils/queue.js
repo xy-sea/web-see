@@ -23,7 +23,7 @@ export class Queue {
         }
       }
     } catch (err) {
-      console.log('addFn报错：', err);
+      // console.log('addFn报错：', err);
     }
   }
   clear() {

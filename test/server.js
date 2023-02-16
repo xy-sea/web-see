@@ -27,10 +27,10 @@ app.get('/getmap', (req, res) => {
   let fileName = req.query.fileName;
   if (req.query.env == 'development') {
     let mapFile = path.join(__filename, '..', fileName);
-    console.log('mapFile', mapFile);
+    // console.log('mapFile', mapFile);
     fs.readFile(mapFile, function (err, data) {
       if (err) {
-        console.error(err);
+        // console.error(err);
         return;
       }
       res.send(data);
@@ -91,5 +91,5 @@ app.post('/reportData', (req, res) => {
 });
 
 app.listen(8083, () => {
-  console.log('Server is running at http://localhost:8083');
+  // console.log('Server is running at http://localhost:8083');
 });
