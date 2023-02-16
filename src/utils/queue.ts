@@ -1,12 +1,11 @@
 import { _global } from './global';
+import { voidFun } from '../types'
+
 export class Queue {
-  stack: any[];
-  isFlushing: boolean;
-  constructor() {
-    this.stack = [];
-    this.isFlushing = false;
-  }
-  addFn(fn) {
+  private stack: any[] = [];
+  private isFlushing: boolean = false;
+  constructor() {}
+  addFn(fn: voidFun): void {
     if (typeof fn !== 'function') return;
     if (!('requestIdleCallback' in _global || 'Promise' in _global)) {
       fn();
@@ -30,7 +29,7 @@ export class Queue {
   getStack() {
     return this.stack;
   }
-  flushStack() {
+  flushStack(): void {
     const temp = this.stack.slice(0);
     this.stack = [];
     this.isFlushing = false;

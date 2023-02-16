@@ -32,7 +32,7 @@ export class TransportData {
     this.beforeDataReport = null; // 上报数据前的hook
     this.getUserId = null; // 上报数据前的获取用的userId
     this.useImgUpload = false;
-  }
+  } 
   imgRequest(data, url) {
     const requestFun = () => {
       const img = new Image();
