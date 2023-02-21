@@ -21,11 +21,7 @@ module.exports = {
     },
   },
   configureWebpack: {
-<<<<<<< HEAD
-    resolve: { extensions: ['.ts', '.tsx', '.json'] },
-=======
     resolve: { extensions: ['.ts', '.tsx', '.js', '.json'] },
->>>>>>> b31aa4780f2f4c9fcf454a342be00fad715283ee
     module: {
       rules: [
         {
