@@ -1,28 +1,28 @@
 import { EVENTTYPES, BREADCRUMBTYPES } from '../common';
 import { validateOption, getTimestamp, _support } from '../utils';
+import { BreadcrumbData, InitOptions } from '../types';
+
 export class Breadcrumb {
-  maxBreadcrumbs: number;
-  beforePushBreadcrumb: any;
-  stack: any[];
+  maxBreadcrumbs = 20; // 用户行为存放的最大长度
+  beforePushBreadcrumb: (data: BreadcrumbData) => object = null;
+  stack: BreadcrumbData[];
   constructor() {
-    this.maxBreadcrumbs = 20;
-    this.beforePushBreadcrumb = null;
     this.stack = [];
   }
   /**
    * 添加用户行为栈
    */
-  push(data) {
+  push(data: BreadcrumbData): void {
     if (typeof this.beforePushBreadcrumb === 'function') {
       // 执行用户自定义的hook
-      const result = this.beforePushBreadcrumb(this, data);
+      const result = this.beforePushBreadcrumb(data) as BreadcrumbData;
       if (!result) return;
       this.immediatePush(result);
       return;
     }
     this.immediatePush(data);
   }
-  immediatePush(data) {
+  immediatePush(data: BreadcrumbData): void {
     data.time || (data.time = getTimestamp());
     if (this.stack.length >= this.maxBreadcrumbs) {
       this.shift();
@@ -30,16 +30,16 @@ export class Breadcrumb {
     this.stack.push(data);
     this.stack.sort((a, b) => a.time - b.time);
   }
-  shift() {
+  shift(): boolean {
     return this.stack.shift() !== undefined;
   }
-  clear() {
+  clear(): void {
     this.stack = [];
   }
   getStack() {
     return this.stack;
   }
-  getCategory(type) {
+  getCategory(type: EVENTTYPES): BREADCRUMBTYPES {
     switch (type) {
       // 接口请求
       case EVENTTYPES.XHR:
@@ -69,7 +69,7 @@ export class Breadcrumb {
         return BREADCRUMBTYPES.CUSTOM;
     }
   }
-  bindOptions(options: any = {}) {
+  bindOptions(options: InitOptions): void {
     // maxBreadcrumbs 用户行为存放的最大容量
     // beforePushBreadcrumb 添加用户行为前的处理函数
     const { maxBreadcrumbs, beforePushBreadcrumb } = options;

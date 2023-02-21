@@ -2,37 +2,31 @@ import { validateOption, _support, setSilentFlag } from '../utils';
 import { EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
 import { transportData } from './reportData';
-export class Options {
-  throttleDelayTime: number;
-  overTime: number;
-  silentRecordScreen: boolean;
-  recordScreentime: number;
-  recordScreenTypeList: string[];
-  filterXhrUrlRegExp: any;
-  whiteBoxElements: string[];
-  dsn: string;
-  silentWhiteScreen: boolean;
-  skeletonProject: boolean;
-  constructor() {
-    this.dsn = ''; // 监控上报接口的地址
-    this.throttleDelayTime = 0; // click事件的节流时长
-    this.overTime = 10; // 接口超时时长
+import { InitOptions } from '../types';
 
-    this.silentRecordScreen = false; // 是否开启录屏
-    this.recordScreentime = 10; // 录屏时长
+export class Options {
+  dsn = ''; // 监控上报接口的地址
+  throttleDelayTime = 0; // click事件的节流时长
+  overTime = 10; // 接口超时时长
+  silentRecordScreen = false; // 是否开启录屏
+  recordScreentime = 10; // 默认录屏时长
+  recordScreenTypeList: string[]; // 上报录屏的错误列表
+  whiteBoxElements: string[]; // // 白屏检测的容器列表
+  silentWhiteScreen = false; // 是否开启白屏检测
+  skeletonProject = false; // 项目是否有骨架屏
+  filterXhrUrlRegExp: RegExp; // // 过滤的接口请求正则
+  constructor() {
     this.recordScreenTypeList = [
+      // 录屏事件集合
       EVENTTYPES.ERROR,
       EVENTTYPES.UNHANDLEDREJECTION,
       EVENTTYPES.RESOURCE,
       EVENTTYPES.FETCH,
       EVENTTYPES.XHR,
-    ]; // 录屏事件集合
-
-    this.silentWhiteScreen = false; // 是否开启白屏检测
-    this.skeletonProject = false; // 项目是否有骨架屏
+    ];
     this.whiteBoxElements = ['html', 'body', '#app', '#root']; // 白屏检测的父容器列表
   }
-  bindOptions(options: any = {}) {
+  bindOptions(options: InitOptions): void {
     const {
       dsn,
       filterXhrUrlRegExp,
@@ -67,7 +61,7 @@ export class Options {
 }
 const options = _support.options || (_support.options = new Options());
 
-export function initOptions(paramOptions = {}) {
+export function handleOptions(paramOptions: InitOptions): void {
   // setSilentFlag 给全局添加已设置的标识，防止重复设置
   setSilentFlag(paramOptions);
   // 设置用户行为的配置项
