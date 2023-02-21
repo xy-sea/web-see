@@ -156,7 +156,7 @@ export function getFID(callback) {
 
 export function getCLS(callback) {
   let clsValue = 0;
-  let clsEntries = [];
+  // let clsEntries = [];
 
   let sessionValue = 0;
   let sessionEntries = [];
@@ -186,10 +186,8 @@ export function getCLS(callback) {
         // 那么更新 CLS 及其相关条目。
         if (sessionValue > clsValue) {
           clsValue = sessionValue;
-          clsEntries = sessionEntries;
+          // clsEntries = sessionEntries;
           observer.disconnect();
-
-          console.log('clsEntries :>> ', clsEntries);
 
           callback({
             name: 'CLS',

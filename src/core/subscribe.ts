@@ -1,4 +1,4 @@
-import { getFlag, getFunctionName, nativeTryCatch, setFlag } from '../utils';
+import { getFlag, nativeTryCatch, setFlag } from '../utils';
 const handlers = {};
 
 // subscribeEvent 设置标识，并将处理的方法放置到handlers中，{ xhr: [ funtion ] }
@@ -17,12 +17,12 @@ export function triggerHandlers(type, data?) {
       () => {
         callback(data);
       },
-      e => {
-        console.error(
-          `web-see 重写事件triggerHandlers的回调函数发生错误\nType:${type}\nName: ${getFunctionName(
-            callback
-          )}\nError: ${e}`
-        );
+      () => {
+        // console.error(
+        //   `web-see 重写事件triggerHandlers的回调函数发生错误\nType:${type}\nName: ${getFunctionName(
+        //     callback
+        //   )}\nError: ${e}`
+        // );
       }
     );
   });

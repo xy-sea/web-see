@@ -1,7 +1,7 @@
-import * as ErrorStackParser from 'error-stack-parser';
+import ErrorStackParser from 'error-stack-parser';
 import { record } from 'rrweb';
-import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from './common';
-import { transportData, breadcrumb, resourceTransform, httpTransform, options } from './core';
+import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../common';
+import { transportData, breadcrumb, resourceTransform, httpTransform, options } from './index';
 import {
   getTimestamp,
   parseUrlToObj,
@@ -14,7 +14,7 @@ import {
   generateUUID,
   getWebVitals,
   openWhiteScreen,
-} from './utils';
+} from '../utils';
 const HandleEvents = {
   // 处理xhr、fetch回调
   handleHttp(data, type) {
@@ -84,7 +84,7 @@ const HandleEvents = {
         });
       }
     } catch (er) {
-      console.error('web-see: handleError错误解析异常:', er);
+      // console.error('web-see: handleError错误解析异常:', er);
     }
   },
   handleHistory(data) {
@@ -141,23 +141,27 @@ const HandleEvents = {
       });
       transportData.send(data);
     } catch (er) {
-      console.error('web-see: handleUnhandleRejection错误解析异常:', er);
+      // console.error('web-see: handleUnhandleRejection错误解析异常:', er);
     }
   },
   handlePerformance() {
-    // 获取FCP、LCP、TTFB、FID等指标
-    getWebVitals(res => {
-      // name指标名称、rating 评级、value数值
-      const { name, rating, value } = res;
-      transportData.send({
-        type: EVENTTYPES.PERFORMANCE,
-        status: STATUS_CODE.OK,
-        time: getTimestamp(),
-        name,
-        rating,
-        value,
+    try {
+      // 获取FCP、LCP、TTFB、FID等指标
+      getWebVitals(res => {
+        // name指标名称、rating 评级、value数值
+        const { name, rating, value } = res;
+        transportData.send({
+          type: EVENTTYPES.PERFORMANCE,
+          status: STATUS_CODE.OK,
+          time: getTimestamp(),
+          name,
+          rating,
+          value,
+        });
       });
-    });
+    } catch (err) {
+      // console.err('性能指标获取错误:' + err);
+    }
 
     const observer = new PerformanceObserver(list => {
       for (const long of list.getEntries()) {
@@ -183,7 +187,6 @@ const HandleEvents = {
         resourceList: getResource(),
       });
 
-      const performance = window.performance;
       // 上报内存情况, safari、firefox不支持该属性
       if (performance.memory) {
         transportData.send({
@@ -202,7 +205,7 @@ const HandleEvents = {
   },
   handleScreen() {
     try {
-      // 存储录屏信息
+      // events存储录屏信息
       let events = [];
       // 调用stopFn停止录像
       // let stopFn = record({
@@ -235,18 +238,22 @@ const HandleEvents = {
         checkoutEveryNms: 1000 * options.recordScreentime,
       });
     } catch (err) {
-      console.err('录屏报错:' + err);
+      // console.err('录屏报错:' + err);
     }
   },
   handleWhiteScreen() {
-    openWhiteScreen(res => {
-      // 上报白屏检测信息
-      transportData.send({
-        type: EVENTTYPES.WHITESCREEN,
-        time: getTimestamp(),
-        ...res,
-      });
-    }, options);
+    try {
+      openWhiteScreen(res => {
+        // 上报白屏检测信息
+        transportData.send({
+          type: EVENTTYPES.WHITESCREEN,
+          time: getTimestamp(),
+          ...res,
+        });
+      }, options);
+    } catch (err) {
+      // console.err('白屏检测错误:' + err);
+    }
   },
 };
 export { HandleEvents };

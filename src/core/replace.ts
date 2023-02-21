@@ -8,9 +8,9 @@ import {
   isExistProperty,
   variableTypeDetection,
   supportsHistory,
-} from './utils';
-import { transportData, options, triggerHandlers, subscribeEvent } from './core';
-import { EVENTTYPES, HTTPTYPE, HTTP_CODE, EMethods } from './common';
+} from '../utils';
+import { transportData, options, triggerHandlers, subscribeEvent } from './index';
+import { EVENTTYPES, HTTPTYPE, EMethods } from '../common';
 
 // 判断当前接口是否为需要过滤掉的接口
 function isFilterHttpUrl(url) {
@@ -84,16 +84,17 @@ function xhrReplace() {
           isFilterHttpUrl(url)
         )
           return;
-        const { responseType, response, status } = this;
+        // const { responseType, response, status } = this;
+        const { status } = this;
         this.websee_xhr.reqData = args[0];
         const eTime = getTimestamp();
         // 设置该接口的time，用户用户行为按时间排序
         this.websee_xhr.time = this.websee_xhr.sTime;
         this.websee_xhr.status = status;
-        if (['', 'json', 'text'].indexOf(responseType) !== -1) {
-          this.websee_xhr.responseText =
-            typeof response === 'object' ? JSON.stringify(response) : response;
-        }
+        // if (['', 'json', 'text'].indexOf(responseType) !== -1) {
+        //   this.websee_xhr.responseText =
+        //     typeof response === 'object' ? JSON.stringify(response) : response;
+        // }
         // 接口的执行时长
         this.websee_xhr.elapsedTime = eTime - this.websee_xhr.sTime;
         // 执行之前注册的xhr回调函数
@@ -122,25 +123,27 @@ function fetchReplace() {
       Object.assign(headers, {
         setRequestHeader: headers.set,
       });
-      config = Object.assign(Object.assign({}, config), { headers });
+      config = Object.assign({}, config, headers);
       return originalFetch.apply(_global, [url, config]).then(
         res => {
           // 克隆一份，防止被标记已消费
           const tempRes = res.clone();
           const eTime = getTimestamp();
-          handlerData = Object.assign(Object.assign({}, handlerData), {
+          handlerData = Object.assign({}, handlerData, {
             elapsedTime: eTime - sTime,
             status: tempRes.status,
             time: sTime,
           });
-          tempRes.text().then(data => {
+          // tempRes.text().then(data => {
+          tempRes.text().then(() => {
             // 同理，进接口进行过滤
             if (
               (method === EMethods.Post && transportData.isSdkTransportUrl(url)) ||
               isFilterHttpUrl(url)
             )
               return;
-            handlerData.responseText = tempRes.status > HTTP_CODE.UNAUTHORIZED && data;
+            // 接口返回的数据量可能很大，舍弃保留返回信息
+            // handlerData.responseText = tempRes.status > HTTP_CODE.UNAUTHORIZED && data;
             triggerHandlers(EVENTTYPES.FETCH, handlerData);
           });
           return res;
@@ -153,7 +156,7 @@ function fetchReplace() {
             isFilterHttpUrl(url)
           )
             return;
-          handlerData = Object.assign(Object.assign({}, handlerData), {
+          handlerData = Object.assign({}, handlerData, {
             elapsedTime: eTime - sTime,
             status: 0,
             time: sTime,
@@ -179,6 +182,7 @@ function listenError() {
     _global,
     'error',
     function (e) {
+      console.log(e);
       triggerHandlers(EVENTTYPES.ERROR, e);
     },
     true
@@ -186,8 +190,7 @@ function listenError() {
 }
 
 // last time route
-let lastHref;
-lastHref = getLocationHref();
+let lastHref = getLocationHref();
 function historyReplace() {
   // 是否支持history
   if (!supportsHistory()) return;

@@ -97,7 +97,6 @@ export function getYMDHMS() {
 }
 
 export function typeofAny(target) {
-  // return typeof target === type;
   return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
 export function toStringAny(target, type) {

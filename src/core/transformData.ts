@@ -28,7 +28,7 @@ export function httpTransform(data) {
     },
     response: {
       status,
-      data: data.responseText,
+      // data: data.responseText,
     },
   };
 }

@@ -1,8 +1,6 @@
-import { setupReplace } from './load';
-import { initOptions, log } from './core';
+import { initOptions, log, setupReplace, HandleEvents } from './core';
 import { _global, getFlag, setFlag } from './utils';
 import { SDK_VERSION, SDK_NAME, EVENTTYPES } from './common';
-import { HandleEvents } from './handleEvents';
 
 interface IInitializationOption {
   dsn: string;

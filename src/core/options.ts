@@ -1,7 +1,7 @@
 import { validateOption, _support, setSilentFlag } from '../utils';
 import { EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
-import { transportData } from './transportData';
+import { transportData } from './reportData';
 export class Options {
   throttleDelayTime: number;
   overTime: number;

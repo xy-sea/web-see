@@ -32,7 +32,7 @@ export class TransportData {
     this.beforeDataReport = null; // 上报数据前的hook
     this.getUserId = null; // 上报数据前的获取用的userId
     this.useImgUpload = false;
-  } 
+  }
   imgRequest(data, url) {
     const requestFun = () => {
       const img = new Image();
@@ -53,15 +53,15 @@ export class TransportData {
   async xhrPost(data, url) {
     const requestFun = () => {
       fetch(`${url}`, {
-        method: 'post',
+        method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
         },
       });
+      // .then(response => response.json());
       // .then((res) => console.log(res));
     };
-
     this.queue.addFn(requestFun);
   }
   // 获取用户信息

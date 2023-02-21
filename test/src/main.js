@@ -11,6 +11,7 @@ import webSee from '../../src/index.ts';
 Vue.use(webSee, {
   dsn: 'http://localhost:8083/reportData',
   apikey: 'abcd',
+  silentRecordScreen: true, // 开启录屏
   silentWhiteScreen: true,
   skeletonProject: true,
   userId: '123',
