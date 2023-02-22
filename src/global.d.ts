@@ -6,15 +6,18 @@ declare interface Performance extends Performance {
   };
 }
 
-declare interface Console extends Console {
-  err?: (payload: any) => void;
-}
-
 declare module '*.json' {
   const value: any;
   export default value;
 }
 
 declare interface Window {
-  _loopTimer: number;
+  chrome?: {
+    app: {
+      [key: string]: any;
+    };
+  };
+  __webSee__: {
+    [key: string]: any;
+  };
 }

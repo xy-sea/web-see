@@ -89,8 +89,12 @@ export class TransportData {
       deviceInfo: _support.deviceInfo, // 获取设备信息
     };
 
-    // 性能数据和录屏不需要附带用户行为
-    if (data.type != EVENTTYPES.PERFORMANCE && data.type != EVENTTYPES.RECORDSCREEN) {
+    // 性能数据、录屏、白屏检测等不需要附带用户行为
+    if (
+      data.type != EVENTTYPES.PERFORMANCE &&
+      data.type != EVENTTYPES.RECORDSCREEN &&
+      data.type != EVENTTYPES.WHITESCREEN
+    ) {
       info.breadcrumb = breadcrumb.getStack(); // 获取用户行为栈
     }
     return info;

@@ -1,5 +1,5 @@
 import { EVENTTYPES, STATUS_CODE, BREADCRUMBTYPES } from '../common';
-// import { TransportData } from '../core';
+import { TransportData, Options } from '../core';
 
 export interface IAnyObject {
   [key: string]: any;
@@ -152,12 +152,6 @@ export interface AuthInfo {
   userId?: string;
 }
 
-export interface Global {
-  __webSee__?: any;
-  chrome?: any;
-  history?: any;
-}
-
 export interface BreadcrumbData {
   type: EVENTTYPES; // 事件类型
   category: BREADCRUMBTYPES; // 用户行为类型
@@ -179,11 +173,19 @@ export interface RouteHistory {
   to: string;
 }
 
-// export interface Global {
-//   hasError: false, // 某段时间代码是否报错
-//   events: [], // 存储录屏的信息
-//   recordScreenId: string, // 本次录屏的id
-//   replaceFlag: {},
-//   deviceInfo: {},
-//   transportData: TransportData
-// }
+export interface WebSee {
+  hasError: false; // 某段时间代码是否报错
+  events: string[]; // 存储录屏的信息
+  recordScreenId: string; // 本次录屏的id
+  _loopTimer: number; // 白屏循环检测的timer
+  transportData: TransportData; // 数据上报
+  options: Options; // 配置信息
+  replaceFlag: {
+    // 订阅消息
+    [key: string]: any;
+  };
+  deviceInfo: {
+    // 设备信息
+    [key: string]: any;
+  };
+}

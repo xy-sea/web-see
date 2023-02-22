@@ -1,6 +1,7 @@
 import { UAParser } from 'ua-parser-js';
 import { variableTypeDetection } from './is';
-import { generateUUID } from './helpers';
+import { WebSee } from '../types';
+
 export const isBrowserEnv = variableTypeDetection.isWindow(
   typeof window !== 'undefined' ? window : 0
 );
@@ -8,31 +9,18 @@ export const isBrowserEnv = variableTypeDetection.isWindow(
 export function getGlobal() {
   if (isBrowserEnv) return window;
 }
-const _global: any = getGlobal();
+const _global = getGlobal();
 const _support = getGlobalSupport();
 const uaResult = new UAParser().getResult();
 
-// 某段时间代码是否报错
-_support.hasError = false;
-
-// 存储录屏的信息
-_support.events = [];
-// 本次录屏的id
-_support.recordScreenId = generateUUID();
-
 // 获取设备信息
 _support.deviceInfo = {
-  // 浏览器版本号 107.0.0.0
-  browserVersion: uaResult.browser.version,
-  // Chrome
-  browser: uaResult.browser.name,
-  // 电脑系统 10
-  osVersion: uaResult.os.version,
-  // Windows
-  os: uaResult.os.name,
+  browserVersion: uaResult.browser.version, // // 浏览器版本号 107.0.0.0
+  browser: uaResult.browser.name, // 浏览器类型 Chrome
+  osVersion: uaResult.os.version, // 操作系统 电脑系统 10
+  os: uaResult.os.name, // Windows
   ua: uaResult.ua,
   device: uaResult.device.model ? uaResult.device.model : 'Unknow',
-  // pc
   device_type: uaResult.device.type ? uaResult.device.type : 'Pc',
 };
 
@@ -47,10 +35,10 @@ export function getFlag(replaceType) {
 }
 // 获取全部变量__webSee__的引用地址
 export function getGlobalSupport() {
-  _global.__webSee__ = _global.__webSee__ || {};
+  _global.__webSee__ = _global.__webSee__ || ({} as WebSee);
   return _global.__webSee__;
 }
-export function supportsHistory() {
+export function supportsHistory(): boolean {
   const chrome = _global.chrome;
   const isChromePackagedApp = chrome && chrome.app && chrome.app.runtime;
   const hasHistoryApi =

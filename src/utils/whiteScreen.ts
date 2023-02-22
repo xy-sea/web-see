@@ -1,5 +1,5 @@
 import { STATUS_CODE } from '../common';
-import { _global } from './index';
+import { _global, _support } from './index';
 import { Callback, InitOptions } from '../types';
 
 /**
@@ -88,13 +88,13 @@ export function openWhiteScreen(
             status: STATUS_CODE.ERROR,
           });
       }
-      if (_global._loopTimer) {
-        clearTimeout(_global._loopTimer);
-        _global._loopTimer = null;
+      if (_support._loopTimer) {
+        clearTimeout(_support._loopTimer);
+        _support._loopTimer = null;
       }
     } else {
       // 开启轮训
-      if (!_global._loopTimer) {
+      if (!_support._loopTimer) {
         openWhiteLoop();
       }
     }
@@ -105,8 +105,8 @@ export function openWhiteScreen(
   }
   // 开启白屏轮训
   function openWhiteLoop(): void {
-    if (_global._loopTimer) return;
-    _global._loopTimer = setInterval(() => {
+    if (_support._loopTimer) return;
+    _support._loopTimer = setInterval(() => {
       if (skeletonProject) {
         _whiteLoopNum++;
         _skeletonNowList = [];
