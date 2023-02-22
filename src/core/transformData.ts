@@ -12,7 +12,7 @@ export function httpTransform(data: HttpData): HttpData {
         ? 'http请求失败，失败原因：跨域限制或接口不存在'
         : 'http请求失败，失败原因：接口超时';
   } else {
-    message = fromHttpStatus(status);
+    message = fromHttpStatus(status as number);
   }
   message = `${data.url}; ${message}`;
   return {

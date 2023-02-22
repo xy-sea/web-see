@@ -1,7 +1,6 @@
-export const nativeToString = Object.prototype.toString;
-function isType(type) {
-  return function (value) {
-    return nativeToString.call(value) === `[object ${type}]`;
+function isType(type: any) {
+  return function (value): boolean {
+    return Object.prototype.toString.call(value) === `[object ${type}]`;
   };
 }
 /**
@@ -22,8 +21,8 @@ export const variableTypeDetection = {
   isWindow: isType('Window'),
 };
 
-export function isError(wat) {
-  switch (nativeToString.call(wat)) {
+export function isError(error: Error): boolean {
+  switch (Object.prototype.toString.call(error)) {
     case '[object Error]':
       return true;
     case '[object Exception]':
@@ -37,15 +36,15 @@ export function isError(wat) {
 /**
  * 检查是否是空对象
  */
-export function isEmptyObject(obj) {
+export function isEmptyObject(obj: object): boolean {
   return variableTypeDetection.isObject(obj) && Object.keys(obj).length === 0;
 }
-export function isEmpty(wat) {
+export function isEmpty(wat): boolean {
   return (
     (variableTypeDetection.isString(wat) && wat.trim() === '') || wat === undefined || wat === null
   );
 }
 
-export function isExistProperty(obj, key) {
+export function isExistProperty(obj, key): boolean {
   return Object.prototype.hasOwnProperty.call(obj, key);
 }

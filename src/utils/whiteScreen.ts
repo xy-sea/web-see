@@ -1,4 +1,7 @@
 import { STATUS_CODE } from '../common';
+import { _global } from './index';
+import { Callback, InitOptions } from '../types';
+
 /**
  * 检测页面是否白屏
  * @param {function} callback - 回到函数获取检测结果
@@ -6,7 +9,10 @@ import { STATUS_CODE } from '../common';
  * @param {array} whiteBoxElements - 容器列表，默认值为['html', 'body', '#app', '#root']
  */
 
-export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements }) {
+export function openWhiteScreen(
+  callback: Callback,
+  { skeletonProject, whiteBoxElements }: InitOptions
+) {
   let _whiteLoopNum = 0;
   const _skeletonInitList = []; // 存储初次采样点
   let _skeletonNowList = []; // 存储当前采样点
@@ -21,7 +27,7 @@ export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements })
     if (document.readyState === 'complete') {
       sampling();
     } else {
-      window.addEventListener('load', sampling);
+      _global.addEventListener('load', sampling);
     }
   }
 
@@ -43,7 +49,7 @@ export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements })
     }
   }
   // 判断采样点是否为容器节点
-  function isContainer(element) {
+  function isContainer(element: HTMLElement) {
     const selector = getSelector(element);
     if (skeletonProject) {
       _whiteLoopNum ? _skeletonNowList.push(selector) : _skeletonInitList.push(selector);
@@ -55,17 +61,17 @@ export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements })
     let emptyPoints = 0;
     for (let i = 1; i <= 9; i++) {
       const xElements = document.elementsFromPoint(
-        (window.innerWidth * i) / 10,
-        window.innerHeight / 2
+        (_global.innerWidth * i) / 10,
+        _global.innerHeight / 2
       );
       const yElements = document.elementsFromPoint(
-        window.innerWidth / 2,
-        (window.innerHeight * i) / 10
+        _global.innerWidth / 2,
+        (_global.innerHeight * i) / 10
       );
-      if (isContainer(xElements[0])) emptyPoints++;
+      if (isContainer(xElements[0] as HTMLElement)) emptyPoints++;
       // 中心点只计算一次
       if (i != 5) {
-        if (isContainer(yElements[0])) emptyPoints++;
+        if (isContainer(yElements[0] as HTMLElement)) emptyPoints++;
       }
     }
     // console.log('_skeletonInitList', _skeletonInitList);
@@ -82,13 +88,13 @@ export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements })
             status: STATUS_CODE.ERROR,
           });
       }
-      if (window._loopTimer) {
-        clearTimeout(window._loopTimer);
-        window._loopTimer = null;
+      if (_global._loopTimer) {
+        clearTimeout(_global._loopTimer);
+        _global._loopTimer = null;
       }
     } else {
       // 开启轮训
-      if (!window._loopTimer) {
+      if (!_global._loopTimer) {
         openWhiteLoop();
       }
     }
@@ -98,9 +104,9 @@ export function openWhiteScreen(callback, { skeletonProject, whiteBoxElements })
     });
   }
   // 开启白屏轮训
-  function openWhiteLoop() {
-    if (window._loopTimer) return;
-    window._loopTimer = setInterval(() => {
+  function openWhiteLoop(): void {
+    if (_global._loopTimer) return;
+    _global._loopTimer = setInterval(() => {
       if (skeletonProject) {
         _whiteLoopNum++;
         _skeletonNowList = [];

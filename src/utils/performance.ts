@@ -1,5 +1,6 @@
 import { on, _global } from './index';
 import { onLCP, onFID, onCLS, onFCP, onTTFB } from 'web-vitals';
+import { Callback } from '../types';
 
 // firstScreenPaint为首屏加载时间
 let firstScreenPaint = 0;
@@ -9,7 +10,7 @@ let timer;
 let observer;
 
 // 定时器循环监听dom的变化，当document.readyState === 'complete'时，停止监听
-function checkDOMChange(callback) {
+function checkDOMChange(callback: Callback) {
   cancelAnimationFrame(timer);
   timer = requestAnimationFrame(() => {
     if (document.readyState === 'complete') {
@@ -27,7 +28,7 @@ function checkDOMChange(callback) {
     }
   });
 }
-function getRenderTime() {
+function getRenderTime(): number {
   let startTime = 0;
   entries.forEach(entry => {
     if (entry.startTime > startTime) {
@@ -37,10 +38,10 @@ function getRenderTime() {
   // performance.timing.navigationStart 页面的起始时间
   return startTime - performance.timing.navigationStart;
 }
-const viewportWidth = window.innerWidth;
-const viewportHeight = window.innerHeight;
+const viewportWidth = _global.innerWidth;
+const viewportHeight = _global.innerHeight;
 // dom 对象是否在屏幕内
-function isInScreen(dom) {
+function isInScreen(dom: HTMLElement): boolean {
   const rectInfo = dom.getBoundingClientRect();
   if (rectInfo.left < viewportWidth && rectInfo.top < viewportHeight) {
     return true;
@@ -50,11 +51,11 @@ function isInScreen(dom) {
 let entries = [];
 
 // 外部通过callback 拿到首屏加载时间
-export function observeFirstScreenPaint(callback) {
+export function observeFirstScreenPaint(callback: Callback): void {
   const ignoreDOMList = ['STYLE', 'SCRIPT', 'LINK'];
   observer = new MutationObserver((mutationList: any) => {
     checkDOMChange(callback);
-    const entry: any = { children: [] };
+    const entry = { children: [], startTime: 0 };
     for (const mutation of mutationList) {
       if (mutation.addedNodes.length && isInScreen(mutation.target)) {
         for (const node of mutation.addedNodes) {
@@ -79,11 +80,11 @@ export function observeFirstScreenPaint(callback) {
   });
 }
 
-export function isSafari() {
+export function isSafari(): boolean {
   return /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
 }
 
-export function getResource() {
+export function getResource(): PerformanceResourceTiming[] {
   if (performance.getEntriesByType) {
     const entries = performance.getEntriesByType('resource');
     // 过滤掉非静态资源的 fetch、 xmlhttprequest、beacon
@@ -102,11 +103,11 @@ export function getResource() {
 }
 
 // 判断资料是否来自缓存
-export function isCache(entry) {
+export function isCache(entry: PerformanceResourceTiming): boolean {
   return entry.transferSize === 0 || (entry.transferSize !== 0 && entry.encodedBodySize === 0);
 }
 
-export function getFCP(callback) {
+export function getFCP(callback: Callback): void {
   const entryHandler = list => {
     for (const entry of list.getEntries()) {
       if (entry.name === 'first-contentful-paint') {
@@ -123,7 +124,7 @@ export function getFCP(callback) {
   observer.observe({ type: 'paint', buffered: true });
 }
 
-export function getLCP(callback) {
+export function getLCP(callback: Callback): void {
   const entryHandler = list => {
     for (const entry of list.getEntries()) {
       observer.disconnect();
@@ -138,7 +139,7 @@ export function getLCP(callback) {
   observer.observe({ type: 'largest-contentful-paint', buffered: true });
 }
 
-export function getFID(callback) {
+export function getFID(callback: Callback): void {
   const entryHandler = entryList => {
     for (const entry of entryList.getEntries()) {
       observer.disconnect();
@@ -154,7 +155,7 @@ export function getFID(callback) {
   observer.observe({ type: 'first-input', buffered: true });
 }
 
-export function getCLS(callback) {
+export function getCLS(callback: Callback): void {
   let clsValue = 0;
   // let clsEntries = [];
 
@@ -203,7 +204,7 @@ export function getCLS(callback) {
   observer.observe({ type: 'layout-shift', buffered: true });
 }
 
-export function getTTFB(callback) {
+export function getTTFB(callback: Callback): void {
   on(_global, 'load', function () {
     const { responseStart, navigationStart } = _global.performance.timing;
     const value = responseStart - navigationStart;
@@ -215,7 +216,7 @@ export function getTTFB(callback) {
   });
 }
 
-export function getWebVitals(callback) {
+export function getWebVitals(callback: Callback): void {
   // web-vitals 不兼容safari浏览器
   if (isSafari()) {
     getFID(res => {

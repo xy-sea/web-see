@@ -1,11 +1,12 @@
-import { nativeToString, variableTypeDetection } from './is';
-export function getLocationHref() {
+import { variableTypeDetection } from './is';
+import { Callback } from '../types';
+
+export function getLocationHref(): string {
   if (typeof document === 'undefined' || document.location == null) return '';
   return document.location.href;
 }
 /**
  * 添加事件监听器
- *
  * ../export
  * ../param {{ addEventListener: Function }} target
  * ../param {keyof TotalEventName} eventName
@@ -13,7 +14,7 @@ export function getLocationHref() {
  * ../param {(boolean | Object)} opitons
  * ../returns
  */
-export function on(target, eventName, handler, opitons = false) {
+export function on(target, eventName: string, handler: Callback, opitons = false) {
   target.addEventListener(eventName, handler, opitons);
 }
 /**
@@ -25,7 +26,7 @@ export function on(target, eventName, handler, opitons = false) {
  * ../param isForced 是否强制重写（可能原先没有该属性）
  * ../returns void
  */
-export function replaceAop(source, name, replacement, isForced = false) {
+export function replaceAop(source: object, name: string, replacement: Callback, isForced = false) {
   if (source === undefined) return;
   if (name in source || isForced) {
     const original = source[name];
@@ -36,41 +37,12 @@ export function replaceAop(source, name, replacement, isForced = false) {
   }
 }
 /**
- * 用&分割对象，返回a=1&b=2
- * ../param obj 需要拼接的对象
- */
-export function splitObjToQuery(obj) {
-  return Object.entries(obj).reduce((result, [key, value], index) => {
-    if (index !== 0) {
-      result += '&';
-    }
-    const valueStr =
-      variableTypeDetection.isObject(value) || variableTypeDetection.isArray(value)
-        ? JSON.stringify(value)
-        : value;
-    result += `${key}=${valueStr}`;
-    return result;
-  }, '');
-}
-export const defaultFunctionName = '<anonymous>';
-/**
- * 需要获取函数名，匿名则返回<anonymous>
- * ../param {unknown} fn 需要获取函数名的函数本体
- * ../returns 返回传入的函数的函数名
- */
-export function getFunctionName(fn) {
-  if (!fn || typeof fn !== 'function') {
-    return defaultFunctionName;
-  }
-  return fn.name || defaultFunctionName;
-}
-/**
  * 函数节流
  * fn 需要节流的函数
  * delay 节流的时间间隔
  * 返回一个包含节流功能的函数
  */
-export const throttle = (fn, delay) => {
+export const throttle = (fn, delay: number) => {
   let canRun = true;
   return function (...args) {
     if (!canRun) return;
@@ -83,12 +55,12 @@ export const throttle = (fn, delay) => {
 };
 
 // 获取当前的时间戳
-export function getTimestamp() {
+export function getTimestamp(): number {
   return Date.now();
 }
 
 // 获取当天的日期 2022-11-08
-export function getYMDHMS() {
+export function getYMDHMS(): string {
   const datetime = new Date();
   const year = datetime.getFullYear(),
     month = ('0' + (datetime.getMonth() + 1)).slice(-2),
@@ -96,21 +68,21 @@ export function getYMDHMS() {
   return `${year}-${month}-${date}`;
 }
 
-export function typeofAny(target) {
+export function typeofAny(target: any): string {
   return Object.prototype.toString.call(target).slice(8, -1).toLowerCase();
 }
-export function toStringAny(target, type) {
-  return nativeToString.call(target) === type;
+export function toStringAny(target: any, type: string): boolean {
+  return Object.prototype.toString.call(target) === type;
 }
 
 // 验证选项的类型
-export function validateOption(target, targetName, expectType) {
+export function validateOption(target: any, targetName: string, expectType: string): boolean {
   if (!target) return false;
   if (typeofAny(target) === expectType) return true;
   console.error(`web-see: ${targetName}期望传入${expectType}类型，目前是${typeofAny(target)}类型`);
 }
 
-export function generateUUID() {
+export function generateUUID(): string {
   let d = new Date().getTime();
   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
     const r = (d + Math.random() * 16) % 16 | 0;
@@ -119,9 +91,9 @@ export function generateUUID() {
   });
   return uuid;
 }
-export function unknownToString(target) {
+export function unknownToString(target: unknown): string {
   if (variableTypeDetection.isString(target)) {
-    return target;
+    return target as string;
   }
   if (variableTypeDetection.isUndefined(target)) {
     return 'undefined';
@@ -129,7 +101,7 @@ export function unknownToString(target) {
   return JSON.stringify(target);
 }
 
-export function interceptStr(str, interceptLength) {
+export function interceptStr(str: string, interceptLength: number): string {
   if (variableTypeDetection.isString(str)) {
     return (
       str.slice(0, interceptLength) +
