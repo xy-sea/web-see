@@ -99,7 +99,7 @@ export class TransportData {
     return info;
   }
   // 判断请求是否为SDK配置的接口
-  isSdkTransportUrl(targetUrl): boolean {
+  isSdkTransportUrl(targetUrl: string): boolean {
     let isSdkDsn = false;
     if (this.errorDsn && targetUrl.indexOf(this.errorDsn) !== -1) {
       isSdkDsn = true;
@@ -107,7 +107,7 @@ export class TransportData {
     return isSdkDsn;
   }
 
-  bindOptions(options: InitOptions) {
+  bindOptions(options: InitOptions): void {
     const { dsn, apikey, beforeDataReport, userId, getUserId, useImgUpload } = options;
     validateOption(apikey, 'apikey', 'string') && (this.apikey = apikey);
     validateOption(dsn, 'dsn', 'string') && (this.errorDsn = dsn);
@@ -118,7 +118,7 @@ export class TransportData {
     validateOption(getUserId, 'getUserId', 'function') && (this.getUserId = getUserId);
   }
   // 上报数据
-  async send(data) {
+  async send(data: ReportData) {
     const dsn = this.errorDsn;
     if (isEmpty(dsn)) {
       console.error('web-see: dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');

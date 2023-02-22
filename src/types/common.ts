@@ -61,7 +61,7 @@ export interface Behavior {
  * 上报的数据接口
  */
 export interface ReportData {
-  type: string; // 数据类型
+  type: string; // 事件类型
   pageUrl: string; // 页面地址
   time: number; // 发生时间
   uuid: string; // 页面唯一标识

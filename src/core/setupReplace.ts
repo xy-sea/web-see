@@ -3,7 +3,7 @@ import { htmlElementAsString, getTimestamp } from '../utils';
 import { EVENTTYPES, STATUS_CODE } from '../common';
 import { breadcrumb } from './index';
 import { addReplaceHandler } from './replace';
-export function setupReplace() {
+export function setupReplace(): void {
   // 白屏检测
   addReplaceHandler({
     callback: () => {
@@ -50,7 +50,7 @@ export function setupReplace() {
   addReplaceHandler({
     callback: data => {
       // 获取html信息
-      const htmlString = htmlElementAsString(data.data.activeElement);
+      const htmlString = htmlElementAsString(data.data.activeElement as HTMLElement);
       if (htmlString) {
         breadcrumb.push({
           type: EVENTTYPES.CLICK,
@@ -65,7 +65,7 @@ export function setupReplace() {
   });
   // 监听hashchange
   addReplaceHandler({
-    callback: e => {
+    callback: (e: HashChangeEvent) => {
       HandleEvents.handleHashchange(e);
     },
     type: EVENTTYPES.HASHCHANGE,
