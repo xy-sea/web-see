@@ -170,7 +170,7 @@ const HandleEvents = {
         // 上报长任务详情
         transportData.send({
           type: EVENTTYPES.PERFORMANCE,
-          name: 'long_task',
+          name: 'longTask',
           longTask: long,
           time: getTimestamp(),
           status: STATUS_CODE.OK,

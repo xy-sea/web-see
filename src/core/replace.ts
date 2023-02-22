@@ -87,7 +87,7 @@ function xhrReplace(): void {
           return;
         // const { responseType, response, status } = this;
         const { status } = this;
-        this.websee_xhr.reqData = args[0];
+        this.websee_xhr.requestData = args[0];
         const eTime = getTimestamp();
         // 设置该接口的time，用户用户行为按时间排序
         this.websee_xhr.time = this.websee_xhr.sTime;
@@ -116,7 +116,7 @@ function fetchReplace(): void {
       let handlerData = {
         type: HTTPTYPE.FETCH,
         method,
-        reqData: config && config.body,
+        requestData: config && config.body,
         url,
       };
       // 获取配置的headers

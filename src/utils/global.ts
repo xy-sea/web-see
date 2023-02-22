@@ -23,11 +23,11 @@ _support.recordScreenId = generateUUID();
 // 获取设备信息
 _support.deviceInfo = {
   // 浏览器版本号 107.0.0.0
-  browser_version: uaResult.browser.version,
+  browserVersion: uaResult.browser.version,
   // Chrome
   browser: uaResult.browser.name,
   // 电脑系统 10
-  os_version: uaResult.os.version,
+  osVersion: uaResult.os.version,
   // Windows
   os: uaResult.os.name,
   ua: uaResult.ua,

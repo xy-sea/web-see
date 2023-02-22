@@ -1,11 +1,11 @@
 import { fromHttpStatus, interceptStr, getTimestamp } from '../utils';
 import { options } from './options';
+import { HttpData, ResouceError, ResourceTarget } from '../types';
 
 // 处理接口的状态
-export function httpTransform(data) {
+export function httpTransform(data: HttpData): HttpData {
   let message = '';
   const { elapsedTime, time, method, type, status } = data;
-  const name = `${type}--${method}`;
   if (status === 0) {
     message =
       elapsedTime <= options.overTime * 1000
@@ -20,11 +20,10 @@ export function httpTransform(data) {
     time,
     elapsedTime,
     message,
-    name,
-    request: {
+    requestData: {
       httpType: type,
       method,
-      data: data.reqData || '',
+      data: data.requestData || '',
     },
     response: {
       status,
@@ -36,7 +35,7 @@ const resourceMap = {
   img: '图片',
   script: 'js脚本',
 };
-export function resourceTransform(target) {
+export function resourceTransform(target: ResourceTarget): ResouceError {
   return {
     time: getTimestamp(),
     message: (interceptStr(target.src, 120) || interceptStr(target.href, 120)) + '; 资源加载失败',

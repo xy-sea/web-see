@@ -6,9 +6,8 @@ import {
   isEmpty,
   getLocationHref,
   generateUUID,
-  getYMDHMS,
 } from '../utils';
-import { SDK_NAME, SDK_VERSION, EVENTTYPES } from '../common';
+import { SDK_VERSION, EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
 import { options } from './options';
 import { ReportData, InitOptions } from '../types';
@@ -65,7 +64,6 @@ export class TransportData {
     return {
       userId: this.userId || this.getAuthId() || '',
       sdkVersion: SDK_VERSION,
-      sdkName: SDK_NAME,
       apikey: this.apikey,
     };
   }
@@ -82,11 +80,10 @@ export class TransportData {
   }
   // 添加公共信息
   // 这里不要添加时间戳，比如接口报错，发生的时间和上报时间不一致
-  getTransportData(data) {
+  getTransportData(data): ReportData {
     const info = {
       ...data,
       ...this.getAuthInfo(), // 获取用户信息
-      date: getYMDHMS(),
       uuid: this.uuid,
       pageUrl: getLocationHref(),
       deviceInfo: _support.deviceInfo, // 获取设备信息

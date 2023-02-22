@@ -2,12 +2,13 @@ import pako from 'pako';
 import { Base64 } from 'js-base64';
 import { EVENTTYPES } from '../common';
 import { setFlag } from './global';
+import { InitOptions } from '../types';
 
 /**
  * 返回包含id、class、innerTextde字符串的标签
  * @param target html节点
  */
-export function htmlElementAsString(target) {
+export function htmlElementAsString(target: HTMLElement): string {
   const tagName = target.tagName.toLowerCase();
   if (tagName === 'body') {
     return null;
@@ -29,7 +30,7 @@ export function htmlElementAsString(target) {
  *  "relative": "/xy-sea/web-see?token=123&name=11"
  * }
  */
-export function parseUrlToObj(url) {
+export function parseUrlToObj(url: string) {
   if (!url) {
     return {};
   }
@@ -48,7 +49,7 @@ export function parseUrlToObj(url) {
 }
 
 // 压缩
-export function zip(data) {
+export function zip(data: any): string {
   if (!data) return data;
   // 判断数据是否需要转为JSON
   const dataJson =
@@ -64,7 +65,7 @@ export function zip(data) {
   return Base64.btoa(s);
 }
 
-export function setSilentFlag(paramOptions: any = {}) {
+export function setSilentFlag(paramOptions: InitOptions): void {
   // 默认会监控xhr，为true时，当silentXhr为true时将不再监控
   setFlag(EVENTTYPES.XHR, !!paramOptions.silentXhr);
   setFlag(EVENTTYPES.FETCH, !!paramOptions.silentFetch);
