@@ -1,5 +1,5 @@
 import { EVENTTYPES, STATUS_CODE, BREADCRUMBTYPES } from '../common';
-import { TransportData } from '../core';
+// import { TransportData } from '../core';
 
 export interface IAnyObject {
   [key: string]: any;
