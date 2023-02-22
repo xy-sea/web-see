@@ -16,7 +16,7 @@ let code_error = {
   apikey: '项目1',
   date: '2022-12-01',
   uuid: '4896ba67-6de8-4e8c-82fd-c9b59b763d46',
-  page_url: 'http://localhost:8083/#/',
+  pageUrl: 'http://localhost:8083/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -99,7 +99,7 @@ let code_error = {
         request: {
           httpType: 'fetch',
           method: 'post',
-          data: '{"type":"performance","name":"long_task","longTask":{"name":"self","entryType":"longtask","startTime":11646.60000000894,"duration":79,"attribution":[{"name":"unknown","entryType":"taskattribution","startTime":0,"duration":0,"containerType":"window","containerSrc":"","containerId":"","containerName":""}]},"time":1669872768031,"status":"ok","userId":"123","sdkVersion":"1.0.1","sdkName":"web-see","apikey":"项目1","date":"2022-12-01","uuid":"4896ba67-6de8-4e8c-82fd-c9b59b763d46","page_url":"http://localhost:8083/#/","deviceInfo":{"browser_version":"107.0.0.0","browser":"Chrome","os_version":"10","os":"Windows","ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36","device":"Unknow","device_type":"Pc"}}',
+          data: '{"type":"performance","name":"long_task","longTask":{"name":"self","entryType":"longtask","startTime":11646.60000000894,"duration":79,"attribution":[{"name":"unknown","entryType":"taskattribution","startTime":0,"duration":0,"containerType":"window","containerSrc":"","containerId":"","containerName":""}]},"time":1669872768031,"status":"ok","userId":"123","sdkVersion":"1.0.1","sdkName":"web-see","apikey":"项目1","date":"2022-12-01","uuid":"4896ba67-6de8-4e8c-82fd-c9b59b763d46","pageUrl":"http://localhost:8083/#/","deviceInfo":{"browser_version":"107.0.0.0","browser":"Chrome","os_version":"10","os":"Windows","ua":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36","device":"Unknow","device_type":"Pc"}}',
         },
         response: {
           status: 200,
@@ -150,7 +150,7 @@ let asyncError = {
   apikey: 'abcd',
   date: '2022-11-28',
   uuid: '42fa00f5-aea2-44f0-bfcf-d59186d34714',
-  page_url: 'http://10.105.108.93:3000/#/',
+  pageUrl: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -179,7 +179,7 @@ let promiseError = {
   apikey: 'abcd',
   date: '2022-11-28',
   uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
-  page_url: 'http://10.105.108.93:3000/#/',
+  pageUrl: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -216,7 +216,7 @@ let xhrError = {
   apikey: 'abcd',
   date: '2022-11-28',
   uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
-  page_url: 'http://10.105.108.93:3000/#/',
+  pageUrl: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -252,7 +252,7 @@ let fetchError = {
   apikey: 'abcd',
   date: '2022-11-28',
   uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
-  page_url: 'http://10.105.108.93:3000/#/',
+  pageUrl: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -278,7 +278,7 @@ let resouceError = {
   apikey: 'abcd',
   date: '2022-11-28',
   uuid: 'bf1b3a83-2eec-4b4c-b7b3-e4bb1ea15040',
-  page_url: 'http://10.105.108.93:3000/#/',
+  pageUrl: 'http://10.105.108.93:3000/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -306,7 +306,7 @@ let FCP = {
   apikey: '项目1',
   date: '2022-12-01',
   uuid: 'c0c4efa4-0f45-4d43-a4ef-0b90711117ce',
-  page_url: 'http://localhost:8083/#/',
+  pageUrl: 'http://localhost:8083/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -348,7 +348,7 @@ let long_task = {
   apikey: '项目1',
   date: '2022-12-01',
   uuid: 'c0c4efa4-0f45-4d43-a4ef-0b90711117ce',
-  page_url: 'http://localhost:8083/#/',
+  pageUrl: 'http://localhost:8083/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',
@@ -478,7 +478,7 @@ let resource_list = {
   apikey: '项目1',
   date: '2022-12-01',
   uuid: 'c0c4efa4-0f45-4d43-a4ef-0b90711117ce',
-  page_url: 'http://localhost:8083/#/',
+  pageUrl: 'http://localhost:8083/#/',
   deviceInfo: {
     browser_version: '107.0.0.0',
     browser: 'Chrome',

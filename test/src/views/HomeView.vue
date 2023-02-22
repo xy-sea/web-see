@@ -16,7 +16,7 @@
     <el-table :data="tableData" style="width: 100%">
       <el-table-column type="index" width="50"></el-table-column>
       <el-table-column prop="message" label="报错信息" width="300"> </el-table-column>
-      <el-table-column prop="page_url" label="报错页面"> </el-table-column>
+      <el-table-column prop="pageUrl" label="报错页面"> </el-table-column>
       <el-table-column prop="time" label="报错时间" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.time ? format(scope.row.time) : scope.row.date }}</span>

@@ -15,9 +15,11 @@ import {
   getWebVitals,
   openWhiteScreen,
 } from '../utils';
+import { ErrorTarget, RouteHistory, HttpData } from '../types';
+
 const HandleEvents = {
   // 处理xhr、fetch回调
-  handleHttp(data, type) {
+  handleHttp(data: HttpData, type: EVENTTYPES): void {
     const isError =
       data.status === 0 ||
       data.status === HTTP_CODE.BAD_REQUEST ||
@@ -29,7 +31,7 @@ const HandleEvents = {
       breadcrumb.push({
         type,
         category: breadcrumb.getCategory(type),
-        data: Object.assign({}, result),
+        data: result,
         status: isError ? STATUS_CODE.ERROR : STATUS_CODE.OK,
         time: data.time,
       });
@@ -40,7 +42,7 @@ const HandleEvents = {
       transportData.send({ ...result, type, status: STATUS_CODE.ERROR });
     }
   },
-  handleError(ev) {
+  handleError(ev: ErrorTarget): void {
     try {
       const target = ev.target;
       if (!target || (ev.target && !ev.target.localName)) {
@@ -71,11 +73,11 @@ const HandleEvents = {
         // 提取资源加载的信息
         const data = resourceTransform(target);
         breadcrumb.push({
-          ...data,
           type: EVENTTYPES.RESOURCE,
           category: breadcrumb.getCategory(EVENTTYPES.RESOURCE),
           status: STATUS_CODE.ERROR,
           time: getTimestamp(),
+          data,
         });
         return transportData.send({
           ...data,
@@ -87,7 +89,7 @@ const HandleEvents = {
       // console.error('web-see: handleError错误解析异常:', er);
     }
   },
-  handleHistory(data) {
+  handleHistory(data: RouteHistory): void {
     const { from, to } = data;
     // 定义parsedFrom变量，值为relative
     const { relative: parsedFrom } = parseUrlToObj(from);
@@ -103,7 +105,7 @@ const HandleEvents = {
       status: STATUS_CODE.OK,
     });
   },
-  handleHashchange(data) {
+  handleHashchange(data: HashChangeEvent): void {
     const { oldURL, newURL } = data;
     const { relative: from } = parseUrlToObj(oldURL);
     const { relative: to } = parseUrlToObj(newURL);
@@ -118,7 +120,7 @@ const HandleEvents = {
       status: STATUS_CODE.OK,
     });
   },
-  handleUnhandleRejection(ev) {
+  handleUnhandleRejection(ev: PromiseRejectionEvent): void {
     try {
       const stackFrame = ErrorStackParser.parse(ev.reason)[0];
       const { fileName, columnNumber, lineNumber } = stackFrame;
@@ -144,7 +146,7 @@ const HandleEvents = {
       // console.error('web-see: handleUnhandleRejection错误解析异常:', er);
     }
   },
-  handlePerformance() {
+  handlePerformance(): void {
     try {
       // 获取FCP、LCP、TTFB、FID等指标
       getWebVitals(res => {
@@ -203,7 +205,7 @@ const HandleEvents = {
       }
     });
   },
-  handleScreen() {
+  handleScreen(): void {
     try {
       // events存储录屏信息
       let events = [];
@@ -241,7 +243,7 @@ const HandleEvents = {
       // console.err('录屏报错:' + err);
     }
   },
-  handleWhiteScreen() {
+  handleWhiteScreen(): void {
     try {
       openWhiteScreen(res => {
         // 上报白屏检测信息

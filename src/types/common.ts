@@ -6,7 +6,7 @@ export interface IAnyObject {
 export type voidFun = () => void;
 
 /**
- * 处理的数据类型
+ * 处理的http数据
  */
 export interface HttpData {
   url: string;
@@ -44,16 +44,6 @@ export interface BehaviorCodeErrorType {
   fileName?: string;
 }
 
-export interface BehaviorRouteType {
-  from: string;
-  to: string;
-}
-
-export interface BehaviorHashType {
-  oldURL: string;
-  newURL: string;
-}
-
 /**
  * 用户行为
  */
@@ -62,7 +52,7 @@ export interface Behavior {
   category: any;
   status: STATUS_CODE;
   time: number;
-  data?: BehaviorHttpType | BehaviorClickType | BehaviorCodeErrorType | BehaviorRouteType;
+  data?: BehaviorHttpType | BehaviorClickType | BehaviorCodeErrorType | RouteHistory;
   message?: string;
   name?: string;
 }
@@ -72,10 +62,10 @@ export interface Behavior {
  */
 export interface ReportData {
   type: string; // 数据类型
-  page_url: string; // 页面地址
+  pageUrl: string; // 页面地址
   time: number; // 发生时间
   uuid: string; // 页面唯一标识
-
+  breadcrumb?: BreadcrumbData[]; // 用户行为
   deviceInfo: {
     // 设备信息
     browser_version: string | number; // 社保版本号
@@ -134,5 +124,18 @@ export interface BreadcrumbData {
   category: BREADCRUMBTYPES; // 用户行为类型
   status: STATUS_CODE; // 行为状态
   time: number; // 发生时间
-  data?: any;
+  data: any;
+}
+
+export interface ErrorTarget {
+  target?: {
+    localName?: string;
+  };
+  error?: any;
+  message?: string;
+}
+
+export interface RouteHistory {
+  from: string;
+  to: string;
 }

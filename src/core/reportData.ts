@@ -11,29 +11,24 @@ import {
 import { SDK_NAME, SDK_VERSION, EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
 import { options } from './options';
+import { ReportData, InitOptions } from '../types';
+
 /**
  * 用来上报数据，包含图片打点上报、xhr请求
  */
 export class TransportData {
-  queue: Queue;
-  apikey: string;
-  errorDsn: string;
-  userId: string;
-  uuid: string;
-  beforeDataReport: any;
-  getUserId: any;
-  useImgUpload: boolean;
+  queue: Queue = new Queue(); // 消息队列
+  apikey = ''; // 每个项目对应的唯一标识
+  errorDsn = ''; // 监控上报接口的地址
+  userId = ''; // 用户id
+  uuid: string; // 每次页面加载的唯一标识
+  beforeDataReport = null; // 上报数据前的hook
+  getUserId: any; // 用户自定义获取userId的方法
+  useImgUpload = false; // 是否使用图片打点上报
   constructor() {
-    this.queue = new Queue();
-    this.apikey = ''; // 每个项目对应的唯一标识
-    this.errorDsn = ''; // 监控上报接口的地址
-    this.userId = ''; // 用户id
     this.uuid = generateUUID(); // 每次页面加载的唯一标识
-    this.beforeDataReport = null; // 上报数据前的hook
-    this.getUserId = null; // 上报数据前的获取用的userId
-    this.useImgUpload = false;
   }
-  imgRequest(data, url) {
+  imgRequest(data: ReportData, url: string): void {
     const requestFun = () => {
       const img = new Image();
       const spliceStr = url.indexOf('?') === -1 ? '?' : '&';
@@ -41,7 +36,8 @@ export class TransportData {
     };
     this.queue.addFn(requestFun);
   }
-  async beforePost(data) {
+
+  async beforePost(data: ReportData): Promise<ReportData | boolean> {
     let transportData = this.getTransportData(data);
     // 配置了beforeDataReport
     if (typeof this.beforeDataReport === 'function') {
@@ -50,7 +46,7 @@ export class TransportData {
     }
     return transportData;
   }
-  async xhrPost(data, url) {
+  async xhrPost(data: ReportData, url: string): Promise<void> {
     const requestFun = () => {
       fetch(`${url}`, {
         method: 'POST',
@@ -66,20 +62,14 @@ export class TransportData {
   }
   // 获取用户信息
   getAuthInfo() {
-    const userId = this.userId || this.getTrackerId() || '';
-    const result: any = {
-      userId: String(userId),
+    return {
+      userId: this.userId || this.getAuthId() || '',
       sdkVersion: SDK_VERSION,
       sdkName: SDK_NAME,
+      apikey: this.apikey,
     };
-    // 每个项目对应一个apikey
-    this.apikey && (result.apikey = this.apikey);
-    return result;
   }
-  getApikey() {
-    return this.apikey;
-  }
-  getTrackerId() {
+  getAuthId(): string | number {
     if (typeof this.getUserId === 'function') {
       const id = this.getUserId();
       if (typeof id === 'string' || typeof id === 'number') {
@@ -98,7 +88,7 @@ export class TransportData {
       ...this.getAuthInfo(), // 获取用户信息
       date: getYMDHMS(),
       uuid: this.uuid,
-      page_url: getLocationHref(),
+      pageUrl: getLocationHref(),
       deviceInfo: _support.deviceInfo, // 获取设备信息
     };
 
@@ -108,7 +98,8 @@ export class TransportData {
     }
     return info;
   }
-  isSdkTransportUrl(targetUrl) {
+  // 判断请求是否为SDK配置的接口
+  isSdkTransportUrl(targetUrl): boolean {
     let isSdkDsn = false;
     if (this.errorDsn && targetUrl.indexOf(this.errorDsn) !== -1) {
       isSdkDsn = true;
@@ -116,7 +107,7 @@ export class TransportData {
     return isSdkDsn;
   }
 
-  bindOptions(options: any = {}) {
+  bindOptions(options: InitOptions) {
     const { dsn, apikey, beforeDataReport, userId, getUserId, useImgUpload } = options;
     validateOption(apikey, 'apikey', 'string') && (this.apikey = apikey);
     validateOption(dsn, 'dsn', 'string') && (this.errorDsn = dsn);
@@ -141,8 +132,8 @@ export class TransportData {
         data.recordScreenId = _support.recordScreenId;
       }
     }
-    const result = await this.beforePost(data);
-    if (isBrowserEnv) {
+    const result = (await this.beforePost(data)) as ReportData;
+    if (isBrowserEnv && result) {
       // 支持图片打点上报和fetch上报
       return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
     }

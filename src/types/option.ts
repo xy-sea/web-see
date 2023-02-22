@@ -1,3 +1,5 @@
+import { ReportData, BreadcrumbData } from './common';
+
 export interface InitOptions {
   dsn: string; // 上报的地址
   apikey: string; // 项目id
@@ -22,6 +24,7 @@ export interface InitOptions {
   throttleDelayTime?: number; // click点击事件的节流时长
   overTime?: number; // 接口超时时长
   maxBreadcrumbs?: number; //  用户行为存放的最大长度
-  beforePushBreadcrumb?: () => object; // 添加到行为列表前的 hook
-  beforeDataReport?: () => void; // 数据上报前的 hook
+  beforePushBreadcrumb?(data: BreadcrumbData): BreadcrumbData; // 添加到行为列表前的 hook
+  beforeDataReport?(data: ReportData): Promise<ReportData | boolean>; // 数据上报前的 hook
+  getUserId?: () => void; // 用户定义的
 }

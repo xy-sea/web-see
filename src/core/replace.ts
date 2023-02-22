@@ -11,12 +11,13 @@ import {
 } from '../utils';
 import { transportData, options, triggerHandlers, subscribeEvent } from './index';
 import { EVENTTYPES, HTTPTYPE, EMethods } from '../common';
+import { ReplaceHandler, voidFun } from '../types';
 
 // 判断当前接口是否为需要过滤掉的接口
-function isFilterHttpUrl(url) {
+function isFilterHttpUrl(url: string): boolean {
   return options.filterXhrUrlRegExp && options.filterXhrUrlRegExp.test(url);
 }
-function replace(type) {
+function replace(type: EVENTTYPES): void {
   switch (type) {
     case EVENTTYPES.WHITESCREEN:
       whiteScreen();
@@ -52,17 +53,17 @@ function replace(type) {
       break;
   }
 }
-export function addReplaceHandler(handler) {
+export function addReplaceHandler(handler: ReplaceHandler): void {
   if (!subscribeEvent(handler)) return;
   replace(handler.type);
 }
-function xhrReplace() {
+function xhrReplace(): void {
   if (!('XMLHttpRequest' in _global)) {
     return;
   }
   const originalXhrProto = XMLHttpRequest.prototype;
-  replaceAop(originalXhrProto, 'open', originalOpen => {
-    return function (...args) {
+  replaceAop(originalXhrProto, 'open', (originalOpen: voidFun) => {
+    return function (...args: any[]): void {
       this.websee_xhr = {
         method: variableTypeDetection.isString(args[0]) ? args[0].toUpperCase() : args[0],
         url: args[1],
@@ -72,8 +73,8 @@ function xhrReplace() {
       originalOpen.apply(this, args);
     };
   });
-  replaceAop(originalXhrProto, 'send', originalSend => {
-    return function (...args) {
+  replaceAop(originalXhrProto, 'send', (originalSend: voidFun) => {
+    return function (...args: any[]): void {
       const { method, url } = this.websee_xhr;
       // 监听loadend事件，接口成功或失败都会执行
       on(this, 'loadend', function () {
@@ -104,15 +105,15 @@ function xhrReplace() {
     };
   });
 }
-function fetchReplace() {
+function fetchReplace(): void {
   if (!('fetch' in _global)) {
     return;
   }
-  replaceAop(_global, EVENTTYPES.FETCH, originalFetch => {
-    return function (url, config: any = {}) {
+  replaceAop(_global, EVENTTYPES.FETCH, (originalFetch: voidFun) => {
+    return function (url, config: Partial<Request> = {}): void {
       const sTime = getTimestamp();
       const method = (config && config.method) || 'GET';
-      let handlerData: any = {
+      let handlerData = {
         type: HTTPTYPE.FETCH,
         method,
         reqData: config && config.body,
@@ -168,20 +169,20 @@ function fetchReplace() {
     };
   });
 }
-function listenHashchange() {
+function listenHashchange(): void {
   // 通过onpopstate事件，来监听hash模式下路由的变化
   if (isExistProperty(_global, 'onhashchange')) {
-    on(_global, EVENTTYPES.HASHCHANGE, function (e) {
+    on(_global, EVENTTYPES.HASHCHANGE, function (e: HashChangeEvent) {
       triggerHandlers(EVENTTYPES.HASHCHANGE, e);
     });
   }
 }
 
-function listenError() {
+function listenError(): void {
   on(
     _global,
     'error',
-    function (e) {
+    function (e: ErrorEvent) {
       console.log(e);
       triggerHandlers(EVENTTYPES.ERROR, e);
     },
@@ -190,13 +191,13 @@ function listenError() {
 }
 
 // last time route
-let lastHref = getLocationHref();
-function historyReplace() {
+let lastHref: string = getLocationHref();
+function historyReplace(): void {
   // 是否支持history
   if (!supportsHistory()) return;
   const oldOnpopstate = _global.onpopstate;
   // 添加 onpopstate事件
-  _global.onpopstate = function (...args) {
+  _global.onpopstate = function (...args: any[]): void {
     const to = getLocationHref();
     const from = lastHref;
     lastHref = to;
@@ -206,8 +207,8 @@ function historyReplace() {
     });
     oldOnpopstate && oldOnpopstate.apply(this, args);
   };
-  function historyReplaceFn(originalHistoryFn) {
-    return function (...args) {
+  function historyReplaceFn(originalHistoryFn: voidFun): voidFun {
+    return function (...args: any[]): void {
       const url = args.length > 2 ? args[2] : undefined;
       if (url) {
         const from = lastHref;
@@ -225,20 +226,20 @@ function historyReplace() {
   replaceAop(_global.history, 'pushState', historyReplaceFn);
   replaceAop(_global.history, 'replaceState', historyReplaceFn);
 }
-function unhandledrejectionReplace() {
-  on(_global, EVENTTYPES.UNHANDLEDREJECTION, function (ev) {
+function unhandledrejectionReplace(): void {
+  on(_global, EVENTTYPES.UNHANDLEDREJECTION, function (ev: PromiseRejectionEvent) {
     // ev.preventDefault() 阻止默认行为后，控制台就不会再报红色错误
     triggerHandlers(EVENTTYPES.UNHANDLEDREJECTION, ev);
   });
 }
-function domReplace() {
+function domReplace(): void {
   if (!('document' in _global)) return;
   // 节流，默认0s
   const clickThrottle = throttle(triggerHandlers, options.throttleDelayTime);
   on(
     _global.document,
     'click',
-    function () {
+    function (): void {
       clickThrottle(EVENTTYPES.CLICK, {
         category: 'click',
         data: this,
@@ -247,13 +248,13 @@ function domReplace() {
     true
   );
 }
-function listenPerformance() {
+function listenPerformance(): void {
   triggerHandlers(EVENTTYPES.PERFORMANCE);
 }
 
-function recordScreen() {
+function recordScreen(): void {
   triggerHandlers(EVENTTYPES.RECORDSCREEN);
 }
-function whiteScreen() {
+function whiteScreen(): void {
   triggerHandlers(EVENTTYPES.WHITESCREEN);
 }

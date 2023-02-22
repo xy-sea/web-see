@@ -4,7 +4,7 @@ import { BreadcrumbData, InitOptions } from '../types';
 
 export class Breadcrumb {
   maxBreadcrumbs = 20; // 用户行为存放的最大长度
-  beforePushBreadcrumb: (data: BreadcrumbData) => object = null;
+  beforePushBreadcrumb = null;
   stack: BreadcrumbData[];
   constructor() {
     this.stack = [];
@@ -36,7 +36,7 @@ export class Breadcrumb {
   clear(): void {
     this.stack = [];
   }
-  getStack() {
+  getStack(): BreadcrumbData[] {
     return this.stack;
   }
   getCategory(type: EVENTTYPES): BREADCRUMBTYPES {
