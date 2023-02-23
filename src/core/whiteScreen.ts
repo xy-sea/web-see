@@ -1,5 +1,5 @@
 import { STATUS_CODE } from '../common';
-import { _global, _support } from './index';
+import { _global, _support } from '../utils';
 import { Callback, InitOptions } from '../types';
 
 /**

@@ -1,3 +1,6 @@
+/**
+ * 接口错误状态
+ */
 export enum SpanStatus {
   Ok = 'ok',
   DeadlineExceeded = 'deadline_exceeded',
@@ -16,22 +19,6 @@ export enum SpanStatus {
   Aborted = 'aborted',
   OutOfRange = 'out_of_range',
   DataLoss = 'data_loss',
-}
-
-/**
- * 错误类型
- */
-export enum ERRORTYPES {
-  UNKNOWN = 'UNKNOWN',
-  UNKNOWN_FUNCTION = 'UNKNOWN_FUNCTION',
-  JAVASCRIPT_ERROR = 'JAVASCRIPT_ERROR',
-  LOG_ERROR = 'LOG_ERROR',
-  FETCH_ERROR = 'HTTP_ERROR',
-  VUE_ERROR = 'VUE_ERROR',
-  REACT_ERROR = 'REACT_ERROR',
-  RESOURCE_ERROR = 'Resource_Error',
-  PROMISE_ERROR = 'PROMISE_ERROR',
-  ROUTE_ERROR = 'ROUTE_ERROR',
 }
 
 /**

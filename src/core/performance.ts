@@ -1,4 +1,4 @@
-import { on, _global } from './index';
+import { on, _global } from '../utils';
 import { onLCP, onFID, onCLS, onFCP, onTTFB } from 'web-vitals';
 import { Callback } from '../types';
 
@@ -6,8 +6,8 @@ import { Callback } from '../types';
 let firstScreenPaint = 0;
 // 页面是否渲染完成
 let isOnLoaded = false;
-let timer;
-let observer;
+let timer: number;
+let observer: MutationObserver;
 
 // 定时器循环监听dom的变化，当document.readyState === 'complete'时，停止监听
 function checkDOMChange(callback: Callback) {

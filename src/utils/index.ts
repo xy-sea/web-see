@@ -5,5 +5,3 @@ export * from './is';
 export * from './global';
 export * from './queue';
 export * from './httpStatus';
-export * from './performance';
-export * from './whiteScreen';

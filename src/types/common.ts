@@ -1,12 +1,5 @@
 import { EVENTTYPES, STATUS_CODE, BREADCRUMBTYPES } from '../common';
 import { TransportData, Options } from '../core';
-
-export interface IAnyObject {
-  [key: string]: any;
-}
-
-export type voidFun = () => void;
-
 /**
  * http请求
  */
@@ -133,6 +126,11 @@ export interface ReportData
 export interface Callback {
   (...args: any[]): any;
 }
+export interface IAnyObject {
+  [key: string]: any;
+}
+
+export type voidFun = () => void;
 
 export interface ReplaceHandler {
   type: EVENTTYPES;

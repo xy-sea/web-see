@@ -6,15 +6,13 @@ import {
   getTimestamp,
   parseUrlToObj,
   unknownToString,
-  getResource,
   on,
   _global,
   _support,
   zip,
   generateUUID,
-  getWebVitals,
-  openWhiteScreen,
 } from '../utils';
+import { openWhiteScreen, getResource, getWebVitals } from './index';
 import { ErrorTarget, RouteHistory, HttpData } from '../types';
 
 const HandleEvents = {
