@@ -21,6 +21,8 @@ let performanceList = [];
 let errorList = [];
 // 存储录屏数据
 let recordScreenList = [];
+// 存储白屏检测数据
+let whiteScreenList = [];
 
 // 获取js.map源码文件
 app.get('/getmap', (req, res) => {
@@ -74,6 +76,8 @@ app.post('/reportData', (req, res) => {
       performanceList.push(data);
     } else if (data.type == 'recordScreen') {
       recordScreenList.push(data);
+    } else if (data.type == 'whiteScreen') {
+      whiteScreenList.push(data);
     } else {
       errorList.push(data);
     }

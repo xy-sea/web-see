@@ -1,16 +1,32 @@
 <template>
   <div id="app">
-    <div class="header">
-      <img class="logo" src="./assets/logo.png" alt="logo" />
-      <span class="title">前端监控 test</span>
-    </div>
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view />
+    <template v-if="showPage">
+      <div class="header">
+        <img class="logo" src="./assets/logo.png" alt="logo" />
+        <span class="title">前端监控 test</span>
+      </div>
+      <nav>
+        <router-link to="/">Home</router-link> |
+        <router-link to="/about">About</router-link>
+      </nav>
+      <router-view />
+    </template>
   </div>
 </template>
+<script>
+export default {
+  data() {
+    return {
+      showPage: false
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.showPage = true
+    }, 3000)
+  }
+}
+</script>
 
 <style lang="scss">
 #app {
