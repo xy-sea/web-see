@@ -1,4 +1,4 @@
-import { validateOption, _support, setSilentFlag } from '../utils';
+import { validateOption, _support, setSilentFlag, generateUUID } from '../utils';
 import { EVENTTYPES } from '../common';
 import { breadcrumb } from './breadcrumb';
 import { transportData } from './reportData';
@@ -45,8 +45,10 @@ export class Options {
     validateOption(overTime, 'overTime', 'number') && (this.overTime = overTime);
     validateOption(recordScreentime, 'recordScreentime', 'number') &&
       (this.recordScreentime = recordScreentime);
-    validateOption(silentRecordScreen, 'silentRecordScreen', 'boolean') &&
-      (this.silentRecordScreen = silentRecordScreen);
+    if (validateOption(silentRecordScreen, 'silentRecordScreen', 'boolean')) {
+      this.silentRecordScreen = silentRecordScreen;
+      _support.recordScreenId = generateUUID(); // 添加初始的recordScreenId
+    }
     validateOption(recordScreenTypeList, 'recordScreenTypeList', 'array') &&
       (this.recordScreenTypeList = recordScreenTypeList);
     validateOption(filterXhrUrlRegExp, 'filterXhrUrlRegExp', 'regexp') &&
