@@ -50,7 +50,7 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
       isStart = false;
     result = {
       source,
-      line: line - 1, // 具体的报错行数
+      line: line + 1, // 具体的报错行数
       column, // 具体的报错列数
       name: null,
     };
@@ -69,13 +69,15 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
       line: Number(line),
       column: Number(column),
     });
-    // result结果
-    // {
-    //   "source": "webpack://myapp/src/views/HomeView.vue",
-    //   "line": 24,  // 具体的报错行数
-    //   "column": 0, // 具体的报错列数
-    //   "name": null
-    // }
+    /**
+     * result结果
+     * {
+     *   "source": "webpack://myapp/src/views/HomeView.vue",
+     *   "line": 24,  // 具体的报错行数
+     *   "column": 0, // 具体的报错列数
+     *   "name": null
+     * }
+     * */
     if (result.source && result.source.includes('node_modules')) {
       // 三方报错解析不了，因为缺少三方的map文件，比如echart报错 webpack://web-see/node_modules/.pnpm/echarts@5.4.1/node_modules/echarts/lib/util/model.js
       return Message({
@@ -84,7 +86,26 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
         message: `源码解析失败: 因为报错来自三方依赖，报错文件为 ${result.source}`,
       });
     }
-    let code = sourcesContent[sources.indexOf(result.source)];
+
+    let index = sources.indexOf(result.source);
+
+    // 未找到，将sources路径格式化后重新匹配 /./ 替换成 /
+    // 测试中发现会有路径中带/./的情况，如 webpack://jy-monitor-demo/./src/main.js
+    if (index === -1) {
+      let copySources = JSON.parse(JSON.stringify(sources)).map(item =>
+        item.replace(/\/.\//g, '/')
+      );
+      index = copySources.indexOf(result.source);
+    }
+    console.log('index', index);
+    if (index === -1) {
+      return Message({
+        type: 'error',
+        duration: 5000,
+        message: `源码解析失败`,
+      });
+    }
+    let code = sourcesContent[index];
     codeList = code.split('\n');
   }
 
