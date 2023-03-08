@@ -1,5 +1,4 @@
 module.exports = {
-  publicPath: './',
   devServer: {
     proxy: {
       '/getErrorList': {

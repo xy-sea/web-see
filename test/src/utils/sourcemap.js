@@ -1,4 +1,5 @@
 import sourceMap from 'source-map-js';
+import { Message } from 'element-ui';
 
 // 找到以.js结尾的fileName
 function matchStr(str) {
@@ -68,16 +69,25 @@ export const findCodeBySourceMap = async ({ fileName, line, column }, callback) 
       line: Number(line),
       column: Number(column),
     });
+    // result结果
+    // {
+    //   "source": "webpack://myapp/src/views/HomeView.vue",
+    //   "line": 24,  // 具体的报错行数
+    //   "column": 0, // 具体的报错列数
+    //   "name": null
+    // }
+    if (result.source && result.source.includes('node_modules')) {
+      // 三方报错解析不了，因为缺少三方的map文件，比如echart报错 webpack://web-see/node_modules/.pnpm/echarts@5.4.1/node_modules/echarts/lib/util/model.js
+      return Message({
+        type: 'error',
+        duration: 5000,
+        message: `源码解析失败: 因为报错来自三方依赖，报错文件为 ${result.source}`,
+      });
+    }
     let code = sourcesContent[sources.indexOf(result.source)];
     codeList = code.split('\n');
   }
-  // result结果
-  // {
-  //   "source": "webpack://myapp/src/views/HomeView.vue",
-  //   "line": 24,  // 具体的报错行数
-  //   "column": 0, // 具体的报错列数
-  //   "name": null
-  // }
+
   let row = result.line,
     len = codeList.length - 1;
   let start = row - 5 >= 0 ? row - 5 : 0, // 将报错代码显示在中间位置
