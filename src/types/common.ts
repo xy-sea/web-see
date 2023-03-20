@@ -1,15 +1,22 @@
 import { EVENTTYPES, STATUS_CODE, BREADCRUMBTYPES } from '../common';
 import { TransportData, Options } from '../core';
+
+// Without将T中不包含U的属性 设置为可选属性
+export type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+
+// 将T U 变成互斥的，至少有其中一个
+export type XOR<T, U> = (Without<T, U> & U) | (Without<U, T> & T);
+
 /**
  * http请求
  */
 export interface HttpData {
   type?: string;
   method?: string;
-  time?: number;
-  url?: string; // 接口地址
-  elapsedTime?: number; // 接口时长
-  message?: string; // 接口信息
+  time: number;
+  url: string; // 接口地址
+  elapsedTime: number; // 接口时长
+  message: string; // 接口信息
   status?: number | string; // 接口状态编码
   requestData?: {
     httpType: string; // 请求类型 xhr fetch
@@ -25,35 +32,35 @@ export interface HttpData {
  * 资源加载失败
  */
 export interface ResouceError {
-  time?: number;
-  message?: string; // 加载失败的信息
-  name?: string; // 脚本类型：js脚本
+  time: number;
+  message: string; // 加载失败的信息
+  name: string; // 脚本类型：js脚本
 }
 
 /**
  * 长任务列表
  */
 export interface LongTask {
-  time?: number;
-  name?: string; // longTask
-  longTask?: any; // 长任务详情
+  time: number;
+  name: string; // longTask
+  longTask: any; // 长任务详情
 }
 
 /**
  * 性能指标
  */
 export interface PerformanceData {
-  name?: string; // FCP
-  value?: number; // 数值
-  rating?: string; // 等级
+  name: string; // FCP
+  value: number; // 数值
+  rating: string; // 等级
 }
 
 /**
  * 内存信息
  */
 export interface MemoryData {
-  name?: string; // memory
-  memory?: {
+  name: string; // memory
+  memory: {
     jsHeapSizeLimit: number;
     totalJSHeapSize: number;
     usedJSHeapSize: number;
@@ -64,10 +71,10 @@ export interface MemoryData {
  * 代码错误
  */
 export interface CodeError {
-  column?: number;
-  line?: number;
-  message?: string;
-  fileName?: string; // 发出错误的文件
+  column: number;
+  line: number;
+  message: string;
+  fileName: string; // 发出错误的文件
 }
 
 /**
@@ -78,8 +85,9 @@ export interface Behavior {
   category: any;
   status: STATUS_CODE;
   time: number;
-  data?: HttpData | CodeError | RouteHistory;
-  message?: string;
+  // data: HttpData | CodeError | RouteHistory;
+  data: XOR<HttpData, XOR<CodeError, RouteHistory>>;
+  message: string;
   name?: string;
 }
 

@@ -1,9 +1,9 @@
 import { _global } from './global';
-import { voidFun } from '../types'
+import { voidFun } from '../types';
 
 export class Queue {
   private stack: any[] = [];
-  private isFlushing: boolean = false;
+  private isFlushing = false;
   constructor() {}
   addFn(fn: voidFun): void {
     if (typeof fn !== 'function') return;
