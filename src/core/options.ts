@@ -14,7 +14,8 @@ export class Options {
   whiteBoxElements: string[]; // // 白屏检测的容器列表
   silentWhiteScreen = false; // 是否开启白屏检测
   skeletonProject = false; // 项目是否有骨架屏
-  filterXhrUrlRegExp: RegExp; // // 过滤的接口请求正则
+  filterXhrUrlRegExp: RegExp; // 过滤的接口请求正则
+  handleHttpStatus = null; // 处理接口返回的 response
   constructor() {
     this.recordScreenTypeList = [
       // 录屏事件集合
@@ -38,6 +39,7 @@ export class Options {
       silentWhiteScreen,
       whiteBoxElements,
       skeletonProject,
+      handleHttpStatus,
     } = options;
     validateOption(dsn, 'dsn', 'string') && (this.dsn = dsn);
     validateOption(throttleDelayTime, 'throttleDelayTime', 'number') &&
@@ -59,6 +61,8 @@ export class Options {
       (this.skeletonProject = skeletonProject);
     validateOption(whiteBoxElements, 'whiteBoxElements', 'array') &&
       (this.whiteBoxElements = whiteBoxElements);
+    validateOption(handleHttpStatus, 'handleHttpStatus', 'function') &&
+      (this.handleHttpStatus = handleHttpStatus);
   }
 }
 const options = _support.options || (_support.options = new Options());

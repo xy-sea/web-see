@@ -27,4 +27,5 @@ export interface InitOptions {
   beforePushBreadcrumb?(data: BreadcrumbData): BreadcrumbData; // 添加到行为列表前的 hook
   beforeDataReport?(data: ReportData): Promise<ReportData | boolean>; // 数据上报前的 hook
   getUserId?: () => void; // 用户定义的
+  handleHttpStatus?: () => boolean; // 处理接口返回的 response
 }

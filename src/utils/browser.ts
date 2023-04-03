@@ -1,7 +1,7 @@
 import pako from 'pako';
 import { Base64 } from 'js-base64';
 import { EVENTTYPES } from '../common';
-import { setFlag } from './global';
+import { setFlag, _support } from './global';
 import { InitOptions } from '../types';
 
 /**
@@ -77,4 +77,18 @@ export function setSilentFlag(paramOptions: InitOptions): void {
   setFlag(EVENTTYPES.PERFORMANCE, !!paramOptions.silentPerformance);
   setFlag(EVENTTYPES.RECORDSCREEN, !paramOptions.silentRecordScreen);
   setFlag(EVENTTYPES.WHITESCREEN, !paramOptions.silentWhiteScreen);
+}
+
+// 对每一个错误详情，生成唯一的编码
+export function getErrorUid(input: string): string {
+  return window.btoa(encodeURIComponent(input));
+}
+
+export function hashMapExist(hash: string): boolean {
+  const exist = _support.errorMap.has(hash);
+  if (!exist) {
+    _support.errorMap.set(hash, true);
+  }
+  console.log(hash, exist, 'setErrorHashMap');
+  return exist;
 }

@@ -15,6 +15,11 @@ Vue.use(webSee, {
   silentWhiteScreen: true,
   skeletonProject: true,
   userId: '123',
+  handleHttpStatus(response) {
+    let { code } = response;
+    // code为200，接口正常，反之亦然
+    return code === 200 ? true : false;
+  },
 });
 
 Vue.use(ElementUI, { size: 'mini' });

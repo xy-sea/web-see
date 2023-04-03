@@ -1,8 +1,10 @@
 import ErrorStackParser from 'error-stack-parser';
 import { record } from 'rrweb';
-import { EVENTTYPES, HTTP_CODE, STATUS_CODE } from '../common';
+import { EVENTTYPES, STATUS_CODE } from '../common';
 import { transportData, breadcrumb, resourceTransform, httpTransform, options } from './index';
 import {
+  getErrorUid,
+  hashMapExist,
   getTimestamp,
   parseUrlToObj,
   unknownToString,
@@ -18,24 +20,19 @@ import { ErrorTarget, RouteHistory, HttpData } from '../types';
 const HandleEvents = {
   // 处理xhr、fetch回调
   handleHttp(data: HttpData, type: EVENTTYPES): void {
-    const isError =
-      data.status === 0 ||
-      data.status === HTTP_CODE.BAD_REQUEST ||
-      data.status > HTTP_CODE.UNAUTHORIZED;
     const result = httpTransform(data);
-
     // 添加用户行为，去掉自身上报的接口行为
     if (!data.url.includes(options.dsn)) {
       breadcrumb.push({
         type,
         category: breadcrumb.getCategory(type),
         data: result,
-        status: isError ? STATUS_CODE.ERROR : STATUS_CODE.OK,
+        status: result.status,
         time: data.time,
       });
     }
 
-    if (isError) {
+    if (result.status === 'error') {
       // 上报接口错误
       transportData.send({ ...result, type, status: STATUS_CODE.ERROR });
     }
@@ -63,7 +60,13 @@ const HandleEvents = {
           time: getTimestamp(),
           status: STATUS_CODE.ERROR,
         });
-        return transportData.send(errorData);
+        const hash: string = getErrorUid(
+          `${EVENTTYPES.ERROR}-${ev.message}-${fileName}-${columnNumber}`
+        );
+        // 判断当前错误是否已存在，第一次发生才上报
+        if (!hashMapExist(hash)) {
+          return transportData.send(errorData);
+        }
       }
 
       // 资源加载报错
@@ -122,11 +125,12 @@ const HandleEvents = {
     try {
       const stackFrame = ErrorStackParser.parse(ev.reason)[0];
       const { fileName, columnNumber, lineNumber } = stackFrame;
+      const message = unknownToString(ev.reason.message || ev.reason.stack);
       const data = {
         type: EVENTTYPES.UNHANDLEDREJECTION,
         status: STATUS_CODE.ERROR,
         time: getTimestamp(),
-        message: unknownToString(ev.reason.message || ev.reason.stack),
+        message,
         fileName,
         line: lineNumber,
         column: columnNumber,
@@ -135,11 +139,17 @@ const HandleEvents = {
       breadcrumb.push({
         type: EVENTTYPES.UNHANDLEDREJECTION,
         category: breadcrumb.getCategory(EVENTTYPES.UNHANDLEDREJECTION),
-        data: Object.assign({}, data),
         time: getTimestamp(),
         status: STATUS_CODE.ERROR,
+        data,
       });
-      transportData.send(data);
+      const hash: string = getErrorUid(
+        `${EVENTTYPES.UNHANDLEDREJECTION}-${message}-${fileName}-${columnNumber}`
+      );
+      // 判断当前错误是否已存在，第一次发生才上报
+      if (!hashMapExist(hash)) {
+        transportData.send(data);
+      }
     } catch (er) {
       // console.error('web-see: handleUnhandleRejection错误解析异常:', er);
     }

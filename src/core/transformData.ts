@@ -1,33 +1,48 @@
 import { fromHttpStatus, interceptStr, getTimestamp } from '../utils';
 import { options } from './options';
+import { HTTP_CODE, STATUS_CODE } from '../common';
 import { HttpData, ResouceError, ResourceTarget } from '../types';
 
 // 处理接口的状态
 export function httpTransform(data: HttpData): HttpData {
-  let message = '';
-  const { elapsedTime, time, method, type, status } = data;
-  if (status === 0) {
+  let message: any = '';
+  const { elapsedTime, time, method, type, Status, response, requestData } = data;
+  let status: STATUS_CODE;
+  if (Status === 0) {
+    status = STATUS_CODE.ERROR;
     message =
       elapsedTime <= options.overTime * 1000
-        ? 'http请求失败，失败原因：跨域限制或接口不存在'
-        : 'http请求失败，失败原因：接口超时';
+        ? `请求失败，Status值为:${Status}`
+        : '请求失败，接口超时';
+  } else if ((Status as number) < HTTP_CODE.BAD_REQUEST) {
+    status = STATUS_CODE.OK;
+    if (options.handleHttpStatus && typeof options.handleHttpStatus == 'function') {
+      if (options.handleHttpStatus(response)) {
+        status = STATUS_CODE.OK;
+      } else {
+        status = STATUS_CODE.ERROR;
+        message = '接口报错，详情见response';
+      }
+    }
   } else {
-    message = fromHttpStatus(status as number);
+    status = STATUS_CODE.ERROR;
+    message = fromHttpStatus(Status as number);
   }
   message = `${data.url}; ${message}`;
   return {
     url: data.url,
     time,
+    status,
     elapsedTime,
     message,
     requestData: {
       httpType: type,
       method,
-      data: data.requestData || '',
+      data: requestData || '',
     },
     response: {
-      status,
-      // data: data.responseText,
+      Status,
+      data: status == STATUS_CODE.ERROR ? response : null,
     },
   };
 }

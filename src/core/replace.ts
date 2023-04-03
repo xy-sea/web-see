@@ -85,17 +85,18 @@ function xhrReplace(): void {
           isFilterHttpUrl(url)
         )
           return;
-        // const { responseType, response, status } = this;
-        const { status } = this;
+        const { responseType, response, status } = this;
         this.websee_xhr.requestData = args[0];
         const eTime = getTimestamp();
         // 设置该接口的time，用户用户行为按时间排序
         this.websee_xhr.time = this.websee_xhr.sTime;
-        this.websee_xhr.status = status;
-        // if (['', 'json', 'text'].indexOf(responseType) !== -1) {
-        //   this.websee_xhr.responseText =
-        //     typeof response === 'object' ? JSON.stringify(response) : response;
-        // }
+        this.websee_xhr.Status = status;
+        if (['', 'json', 'text'].indexOf(responseType) !== -1) {
+          // 用户设置handleHttpStatus函数来判断接口是否正确，只有接口报错时才保留response
+          if (options.handleHttpStatus && typeof options.handleHttpStatus == 'function') {
+            this.websee_xhr.response = response && JSON.parse(response);
+          }
+        }
         // 接口的执行时长
         this.websee_xhr.elapsedTime = eTime - this.websee_xhr.sTime;
         // 执行之前注册的xhr回调函数
@@ -118,6 +119,7 @@ function fetchReplace(): void {
         method,
         requestData: config && config.body,
         url,
+        response: '',
       };
       // 获取配置的headers
       const headers = new Headers(config.headers || {});
@@ -132,19 +134,20 @@ function fetchReplace(): void {
           const eTime = getTimestamp();
           handlerData = Object.assign({}, handlerData, {
             elapsedTime: eTime - sTime,
-            status: tempRes.status,
+            Status: tempRes.status,
             time: sTime,
           });
-          // tempRes.text().then(data => {
-          tempRes.text().then(() => {
+          tempRes.text().then(data => {
             // 同理，进接口进行过滤
             if (
               (method === EMethods.Post && transportData.isSdkTransportUrl(url)) ||
               isFilterHttpUrl(url)
             )
               return;
-            // 接口返回的数据量可能很大，舍弃保留返回信息
-            // handlerData.responseText = tempRes.status > HTTP_CODE.UNAUTHORIZED && data;
+            // 用户设置handleHttpStatus函数来判断接口是否正确，只有接口报错时才保留response
+            if (options.handleHttpStatus && typeof options.handleHttpStatus == 'function') {
+              handlerData.response = data && JSON.parse(data);
+            }
             triggerHandlers(EVENTTYPES.FETCH, handlerData);
           });
           return res;

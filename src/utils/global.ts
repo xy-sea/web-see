@@ -24,6 +24,8 @@ _support.deviceInfo = {
   device_type: uaResult.device.type ? uaResult.device.type : 'Pc',
 };
 
+_support.errorMap = new Map();
+
 _support.replaceFlag = _support.replaceFlag || {};
 const replaceFlag = _support.replaceFlag;
 export function setFlag(replaceType, isSet) {
