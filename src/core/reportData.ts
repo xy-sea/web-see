@@ -27,6 +27,9 @@ export class TransportData {
   constructor() {
     this.uuid = generateUUID(); // 每次页面加载的唯一标识
   }
+  beacon(url: string, data: any): boolean {
+    return navigator.sendBeacon(url, JSON.stringify(data));
+  }
   imgRequest(data: ReportData, url: string): void {
     const requestFun = () => {
       const img = new Image();
@@ -135,8 +138,11 @@ export class TransportData {
     }
     const result = (await this.beforePost(data)) as ReportData;
     if (isBrowserEnv && result) {
-      // 支持图片打点上报和fetch上报
-      return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
+      // 优先使用sendBeacon 上报，若数据量大，再使用图片打点上报和fetch上报
+      const value = this.beacon(dsn, result);
+      if (!value) {
+        return this.useImgUpload ? this.imgRequest(result, dsn) : this.xhrPost(result, dsn);
+      }
     }
   }
 }

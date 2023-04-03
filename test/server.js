@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const coBody = require('co-body');
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(bodyParser.urlencoded({ limit: '100mb', extended: true, parameterLimit: 50000 }));
@@ -68,18 +69,25 @@ app.get('/getRecordScreenId', (req, res) => {
   });
 });
 
-app.post('/reportData', (req, res) => {
+app.post('/reportData', async (req, res) => {
   try {
-    let data = req.body;
-    if (!data) return;
-    if (data.type == 'performance') {
-      performanceList.push(data);
-    } else if (data.type == 'recordScreen') {
-      recordScreenList.push(data);
-    } else if (data.type == 'whiteScreen') {
-      whiteScreenList.push(data);
+    // req.body 不为空时为正常请求，如录屏信息
+    let length = Object.keys(req.body).length;
+    if (length) {
+      recordScreenList.push(req.body);
     } else {
-      errorList.push(data);
+      // 使用 web beacon 上报数据
+      let data = await coBody.json(req);
+      if (!data) return;
+      if (data.type == 'performance') {
+        performanceList.push(data);
+      } else if (data.type == 'recordScreen') {
+        recordScreenList.push(data);
+      } else if (data.type == 'whiteScreen') {
+        whiteScreenList.push(data);
+      } else {
+        errorList.push(data);
+      }
     }
     res.send({
       code: 200,

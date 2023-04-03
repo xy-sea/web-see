@@ -9,7 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import webSee from '../../src/index.ts';
 
 Vue.use(webSee, {
-  dsn: 'http://localhost:8083/reportData',
+  dsn: 'http://localhost:8080/reportData',
   apikey: 'abcd',
   silentRecordScreen: true, // 开启录屏
   silentWhiteScreen: true,
