@@ -2,9 +2,11 @@
     <a href="#" target="_blank">
     <img src="https://i.postimg.cc/bN7f4YY3/logo.png" alt="websee-logo" height="80">
     </a>
-    <p>一款自研的前端监控SDK，可用来收集并上报：代码报错、性能数据、用户行为、加载资源、个性化指标、白屏检测等数据</p>
+    <p>前端监控SDK，可用来收集并上报：代码报错、性能数据、页面录屏、用户行为、白屏检测等个性化指标数据</p>
     <p>亮点1：支持多种错误还原方式：定位源码、播放录屏、记录用户行为</p>
     <p>亮点2：支持项目的白屏检测，兼容有骨架屏、无骨架屏这两种情况</p>
+    <p>亮点3：支持错误上报去重，错误生成唯一的id，重复的错误只上报一次</p>
+    <p>亮点4：支持多种上报方式，默认使用web beacon，也支持图片打点、http 上报</p>
 </div>
 
 ## 功能
@@ -14,6 +16,7 @@
 - [√] ✈️ 用户行为：页面点击、路由跳转、接口调用、资源加载
 - [√] ✈️ 个性化指标：Long Task、Memory 页面内存、首屏加载时间
 - [√] ✈️ 白屏检测：检测页面打开后是否一直白屏
+- [√] ✈️ 错误去重：开启缓存队列，存储报错信息，重复的错误只上报一次
 - [√] 🚀 手动上报错误
 - [√] 🚀 支持多种配置：自定义 hook 与选项
 - [√] 🚀 支持的 Web 框架：vue2、vue3、React
@@ -109,6 +112,28 @@ webSee.init({
 [前端录屏+定位源码，帮你快速定位线上 bug](https://github.com/xy-sea/blog/blob/main/markdown/%E5%89%8D%E7%AB%AF%E5%BD%95%E5%B1%8F%2B%E5%AE%9A%E4%BD%8D%E6%BA%90%E7%A0%81%EF%BC%8C%E5%B8%AE%E4%BD%A0%E5%BF%AB%E9%80%9F%E5%AE%9A%E4%BD%8D%E7%BA%BF%E4%B8%8Abug.md)  
 [前端白屏的检测方案，让你知道自己的页面白了](https://github.com/xy-sea/blog/blob/main/markdown/%E5%89%8D%E7%AB%AF%E7%99%BD%E5%B1%8F%E7%9A%84%E6%A3%80%E6%B5%8B%E6%96%B9%E6%A1%88%EF%BC%8C%E8%AE%A9%E4%BD%A0%E7%9F%A5%E9%81%93%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A1%B5%E9%9D%A2%E7%99%BD%E4%BA%86.md)
 
+## 错误去重
+
+repeatCodeError 设置为 true 时，将开启一个缓存 map，存入已发生错误的 hash，上报错误时先判断该错误是否已存在，不存在则上报
+
+在用户的一次会话中，如果产生了同一个错误，那么将这同一个错误上报多次是没有意义的；
+在用户的不同会话中，如果产生了同一个错误，那么将不同会话中产生的错误进行上报是有意义的；
+
+为什么有上面的结论呢？
+
+在用户的同一次会话中，如果点击一个按钮出现了错误，那么再次点击同一个按钮，必定会出现同一个错误，而这出现的多次错误，影响的是同一个用户、同一次访问；所以将其全部上报是没有意义的；
+而在同一个用户的不同会话中，如果出现了同一个错误，那么这不同会话里的错误进行上报就显得有意义了
+
+web-see 根据错误堆栈信息，将`错误信息、错误文件、错误行号`聚合生成一个 hash 值，这个值是这个错误唯一性的 ID
+
+```javascript
+// 对每一个错误详情，生成唯一的编码
+export function getErrorUid(hash: string): string {
+  return window.btoa(encodeURIComponent(hash));
+}
+const hash: string = getErrorUid(`${EVENTTYPES.ERROR}-${ev.message}-${fileName}-${columnNumber}`);
+```
+
 ## 白屏检测功能说明
 
 该功能用来检测页面打开后，是否一直处于白屏状态，通过 silentWhiteScreen 设为 true 来开启
@@ -178,28 +203,6 @@ async beforePost(data) {
   }
   return transportData;
 }
-```
-
-## 错误去重
-
-repeatCodeError 设置为 true 时，将开启一个缓存 map，存入已发生错误的 hash，上报错误时先判断该错误是否已存在，不存在则上报
-
-在用户的一次会话中，如果产生了同一个错误，那么将这同一个错误上报多次是没有意义的；
-在用户的不同会话中，如果产生了同一个错误，那么将不同会话中产生的错误进行上报是有意义的；
-
-为什么有上面的结论呢？
-
-在用户的同一次会话中，如果点击一个按钮出现了错误，那么再次点击同一个按钮，必定会出现同一个错误，而这出现的多次错误，影响的是同一个用户、同一次访问；所以将其全部上报是没有意义的；
-而在同一个用户的不同会话中，如果出现了同一个错误，那么这不同会话里的错误进行上报就显得有意义了
-
-web-see 根据错误堆栈信息，将`错误信息、错误文件、错误行号`聚合生成一个 hash 值，这个值是这个错误唯一性的 ID
-
-```javascript
-// 对每一个错误详情，生成唯一的编码
-export function getErrorUid(hash: string): string {
-  return window.btoa(encodeURIComponent(hash));
-}
-const hash: string = getErrorUid(`${EVENTTYPES.ERROR}-${ev.message}-${fileName}-${columnNumber}`);
 ```
 
 ## 手动上报错误示例
