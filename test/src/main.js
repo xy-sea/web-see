@@ -14,11 +14,18 @@ Vue.use(webSee, {
   silentRecordScreen: true, // 开启录屏
   silentWhiteScreen: true,
   skeletonProject: true,
+  repeatCodeError: true,
+  silentXhr: false,
   userId: '123',
-  handleHttpStatus(response) {
-    let { code } = response;
+  handleHttpStatus(data) {
+    let { url, response } = data;
     // code为200，接口正常，反之亦然
-    return code === 200 ? true : false;
+    let { code } = typeof response === 'string' ? JSON.parse(response) : response;
+    if (url.includes('/getErrorList')) {
+      return code === 200 ? true : false;
+    } else {
+      return true;
+    }
   },
 });
 

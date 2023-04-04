@@ -66,15 +66,14 @@ export function zip(data: any): string {
 }
 
 export function setSilentFlag(paramOptions: InitOptions): void {
-  // 默认会监控xhr，为true时，当silentXhr为true时将不再监控
-  setFlag(EVENTTYPES.XHR, !!paramOptions.silentXhr);
-  setFlag(EVENTTYPES.FETCH, !!paramOptions.silentFetch);
-  setFlag(EVENTTYPES.CLICK, !!paramOptions.silentClick);
-  setFlag(EVENTTYPES.HISTORY, !!paramOptions.silentHistory);
-  setFlag(EVENTTYPES.ERROR, !!paramOptions.silentError);
-  setFlag(EVENTTYPES.HASHCHANGE, !!paramOptions.silentHashchange);
-  setFlag(EVENTTYPES.UNHANDLEDREJECTION, !!paramOptions.silentUnhandledrejection);
-  setFlag(EVENTTYPES.PERFORMANCE, !!paramOptions.silentPerformance);
+  setFlag(EVENTTYPES.XHR, paramOptions.silentXhr);
+  setFlag(EVENTTYPES.FETCH, paramOptions.silentFetch);
+  setFlag(EVENTTYPES.CLICK, paramOptions.silentClick);
+  setFlag(EVENTTYPES.HISTORY, paramOptions.silentHistory);
+  setFlag(EVENTTYPES.ERROR, paramOptions.silentError);
+  setFlag(EVENTTYPES.HASHCHANGE, paramOptions.silentHashchange);
+  setFlag(EVENTTYPES.UNHANDLEDREJECTION, paramOptions.silentUnhandledrejection);
+  setFlag(EVENTTYPES.PERFORMANCE, paramOptions.silentPerformance);
   setFlag(EVENTTYPES.RECORDSCREEN, !paramOptions.silentRecordScreen);
   setFlag(EVENTTYPES.WHITESCREEN, !paramOptions.silentWhiteScreen);
 }
@@ -89,6 +88,5 @@ export function hashMapExist(hash: string): boolean {
   if (!exist) {
     _support.errorMap.set(hash, true);
   }
-  console.log(hash, exist, 'setErrorHashMap');
   return exist;
 }

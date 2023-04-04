@@ -28,4 +28,5 @@ export interface InitOptions {
   beforeDataReport?(data: ReportData): Promise<ReportData | boolean>; // 数据上报前的 hook
   getUserId?: () => void; // 用户定义的
   handleHttpStatus?: () => boolean; // 处理接口返回的 response
+  repeatCodeError?: boolean; // 是否去除重复的代码错误，重复的错误只上报一次
 }

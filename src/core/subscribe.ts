@@ -10,7 +10,7 @@ export function subscribeEvent(handler: ReplaceHandler): boolean {
   handlers[handler.type].push(handler.callback);
   return true;
 }
-export function triggerHandlers(type, data?): void {
+export function triggerHandlers(type, data?: any): void {
   if (!type || !handlers[type]) return;
   // 获取对应事件的回调函数并执行，回调函数为addReplaceHandler事件中定义的事件
   handlers[type].forEach(callback => {

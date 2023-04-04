@@ -114,7 +114,7 @@ function fetchReplace(): void {
     return function (url, config: Partial<Request> = {}): void {
       const sTime = getTimestamp();
       const method = (config && config.method) || 'GET';
-      let handlerData = {
+      let fetchData = {
         type: HTTPTYPE.FETCH,
         method,
         requestData: config && config.body,
@@ -132,7 +132,7 @@ function fetchReplace(): void {
           // 克隆一份，防止被标记已消费
           const tempRes = res.clone();
           const eTime = getTimestamp();
-          handlerData = Object.assign({}, handlerData, {
+          fetchData = Object.assign({}, fetchData, {
             elapsedTime: eTime - sTime,
             Status: tempRes.status,
             time: sTime,
@@ -146,9 +146,9 @@ function fetchReplace(): void {
               return;
             // 用户设置handleHttpStatus函数来判断接口是否正确，只有接口报错时才保留response
             if (options.handleHttpStatus && typeof options.handleHttpStatus == 'function') {
-              handlerData.response = data && JSON.parse(data);
+              fetchData.response = data;
             }
-            triggerHandlers(EVENTTYPES.FETCH, handlerData);
+            triggerHandlers(EVENTTYPES.FETCH, fetchData);
           });
           return res;
         },
@@ -160,12 +160,12 @@ function fetchReplace(): void {
             isFilterHttpUrl(url)
           )
             return;
-          handlerData = Object.assign({}, handlerData, {
+          fetchData = Object.assign({}, fetchData, {
             elapsedTime: eTime - sTime,
             status: 0,
             time: sTime,
           });
-          triggerHandlers(EVENTTYPES.FETCH, handlerData);
+          triggerHandlers(EVENTTYPES.FETCH, fetchData);
           throw err;
         }
       );

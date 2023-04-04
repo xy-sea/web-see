@@ -16,6 +16,7 @@ export class Options {
   skeletonProject = false; // 项目是否有骨架屏
   filterXhrUrlRegExp: RegExp; // 过滤的接口请求正则
   handleHttpStatus = null; // 处理接口返回的 response
+  repeatCodeError = false; // 是否去除重复的代码错误，重复的错误只上报一次
   constructor() {
     this.recordScreenTypeList = [
       // 录屏事件集合
@@ -40,6 +41,7 @@ export class Options {
       whiteBoxElements,
       skeletonProject,
       handleHttpStatus,
+      repeatCodeError,
     } = options;
     validateOption(dsn, 'dsn', 'string') && (this.dsn = dsn);
     validateOption(throttleDelayTime, 'throttleDelayTime', 'number') &&
@@ -63,6 +65,8 @@ export class Options {
       (this.whiteBoxElements = whiteBoxElements);
     validateOption(handleHttpStatus, 'handleHttpStatus', 'function') &&
       (this.handleHttpStatus = handleHttpStatus);
+    validateOption(repeatCodeError, 'repeatCodeError', 'boolean') &&
+      (this.repeatCodeError = repeatCodeError);
   }
 }
 const options = _support.options || (_support.options = new Options());

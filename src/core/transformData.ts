@@ -17,16 +17,18 @@ export function httpTransform(data: HttpData): HttpData {
   } else if ((Status as number) < HTTP_CODE.BAD_REQUEST) {
     status = STATUS_CODE.OK;
     if (options.handleHttpStatus && typeof options.handleHttpStatus == 'function') {
-      if (options.handleHttpStatus(response)) {
+      if (options.handleHttpStatus(data)) {
         status = STATUS_CODE.OK;
       } else {
         status = STATUS_CODE.ERROR;
-        message = '接口报错，详情见response';
+        message = `接口报错，报错信息为：${
+          typeof response == 'object' ? JSON.stringify(response) : response
+        }`;
       }
     }
   } else {
     status = STATUS_CODE.ERROR;
-    message = fromHttpStatus(Status as number);
+    message = `请求失败，Status值为:${Status}，${fromHttpStatus(Status as number)}`;
   }
   message = `${data.url}; ${message}`;
   return {

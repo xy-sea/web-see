@@ -63,8 +63,8 @@ const HandleEvents = {
         const hash: string = getErrorUid(
           `${EVENTTYPES.ERROR}-${ev.message}-${fileName}-${columnNumber}`
         );
-        // 判断当前错误是否已存在，第一次发生才上报
-        if (!hashMapExist(hash)) {
+        // 开启repeatCodeError第一次报错才上报
+        if (!options.repeatCodeError || (options.repeatCodeError && !hashMapExist(hash))) {
           return transportData.send(errorData);
         }
       }
@@ -146,8 +146,8 @@ const HandleEvents = {
       const hash: string = getErrorUid(
         `${EVENTTYPES.UNHANDLEDREJECTION}-${message}-${fileName}-${columnNumber}`
       );
-      // 判断当前错误是否已存在，第一次发生才上报
-      if (!hashMapExist(hash)) {
+      // 开启repeatCodeError第一次报错才上报
+      if (!options.repeatCodeError || (options.repeatCodeError && !hashMapExist(hash))) {
         transportData.send(data);
       }
     } catch (er) {
