@@ -1,7 +1,7 @@
 # @websee/core
 
-## 3.2.2
+## 1.0.1
 
 ### Patch Changes
 
-- 3.2.2
+- 1.0.1

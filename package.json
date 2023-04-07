@@ -13,7 +13,6 @@
     "version-packages": "changeset version",
     "release": "pnpm build && pnpm publish",
     "publish": "changeset publish --registry=https://registry.npmjs.com/",
-    "changeset-minor": "changeset minor",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "workspaces": [
