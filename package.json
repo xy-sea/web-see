@@ -9,6 +9,9 @@
     "prepare": "husky install",
     "commit": "git-cz"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "files": [
     "dist"
   ],

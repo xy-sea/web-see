@@ -7,26 +7,26 @@ import dts from 'rollup-plugin-dts';
 
 export default [
   {
-    input: './src/index.ts',
+    input: ['./packages/pk1/src/index.ts'],
     output: [
       {
-        file: 'dist/index.cjs.js',
+        file: './packages/pk1/dist/index.cjs.js',
         format: 'cjs',
         sourcemap: true,
       },
       {
-        file: 'dist/index.esm.js',
+        file: './packages/pk1/dist/index.esm.js',
         format: 'esm',
         sourcemap: true,
       },
       {
-        file: 'dist/index.js',
+        file: './packages/pk1/dist/index.js',
         format: 'umd',
         name: 'web-see',
         sourcemap: true,
       },
       {
-        file: 'dist/index.min.js',
+        file: './packages/pk1/dist/index.min.js',
         format: 'umd',
         name: 'web-see',
         sourcemap: true,
@@ -48,12 +48,63 @@ export default [
     ],
   },
   {
-    input: './src/index.ts',
+    input: ['./packages/pk2/src/index.ts'],
     output: [
-      { file: 'dist/index.cjs.d.ts', format: 'cjs' },
-      { file: 'dist/index.esm.d.ts', format: 'esm' },
-      { file: 'dist/index.d.ts', format: 'umd' },
-      { file: 'dist/index.min.d.ts', format: 'umd' },
+      {
+        file: './packages/pk2/dist/index.cjs.js',
+        format: 'cjs',
+        sourcemap: true,
+      },
+      {
+        file: './packages/pk2/dist/index.esm.js',
+        format: 'esm',
+        sourcemap: true,
+      },
+      {
+        file: './packages/pk2/dist/index.js',
+        format: 'umd',
+        name: 'web-see',
+        sourcemap: true,
+      },
+      {
+        file: './packages/pk2/dist/index.min.js',
+        format: 'umd',
+        name: 'web-see',
+        sourcemap: true,
+        plugins: [uglify()],
+      },
+    ],
+    plugins: [
+      typescript({
+        tsconfigOverride: {
+          compilerOptions: {
+            module: 'ESNext',
+          },
+        },
+        useTsconfigDeclarationDir: true,
+      }),
+      resolve(),
+      commonjs(),
+      json(),
+    ],
+  },
+  {
+    input: './packages/pk1/src/index.ts',
+    output: [
+      { file: './packages/pk1/dist/index.cjs.d.ts', format: 'cjs' },
+      { file: './packages/pk1/dist/index.esm.d.ts', format: 'esm' },
+      { file: './packages/pk1/dist/index.d.ts', format: 'umd' },
+      { file: './packages/pk1/dist/index.min.d.ts', format: 'umd' },
+    ],
+    plugins: [dts()],
+  },
+  {
+    input: './packages/pk2/src/index.ts',
+    output: [
+      { file: './packages/pk2/dist/index.cjs.d.ts', format: 'cjs' },
+      { file: './packages/pk2/dist/index.esm.d.ts', format: 'esm' },
+      { file: './packages/pk2/dist/index.d.ts', format: 'umd' },
+      { file: './packages/pk2/dist/index.min.d.ts', format: 'umd' },
     ],
     plugins: [dts()],
   },
