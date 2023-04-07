@@ -16,6 +16,7 @@ Vue.use(webSee, {
   skeletonProject: true,
   repeatCodeError: true,
   silentXhr: false,
+  recordScreentime: 20,
   userId: '123',
   handleHttpStatus(data) {
     let { url, response } = data;
