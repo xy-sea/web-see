@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sources":["../src/index.ts"],"sourcesContent":["export function fun12(): any {\n  console.log('I am package 1');\n}\n"],"names":[],"mappings":";;;;;;WAAgB,KAAK,GAAA;EACnB,IAAA,OAAO,CAAC,GAAG,CAAC,gBAAgB,CAAC,CAAC;EAChC;;;;;;;;;;"}
