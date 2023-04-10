@@ -6,7 +6,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 // import webSee from '../../dist';
-import webSee from '../../src/index.ts';
+import webSee from '../../packages/core/src';
 
 Vue.use(webSee, {
   dsn: 'http://localhost:8080/reportData',

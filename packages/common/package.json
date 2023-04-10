@@ -1,0 +1,16 @@
+{
+  "name": "@websee/common",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "module": "dist/index.esm.js",
+  "publishConfig": {
+    "main": "dist/index.js"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "author": "海阔天空",
+  "license": "ISC"
+}
