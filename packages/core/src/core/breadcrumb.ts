@@ -72,9 +72,9 @@ export class Breadcrumb {
   bindOptions(options: InitOptions): void {
     // maxBreadcrumbs 用户行为存放的最大容量
     // beforePushBreadcrumb 添加用户行为前的处理函数
-    const { maxBreadcrumbs = 20, beforePushBreadcrumb } = options;
+    const { maxBreadcrumbs, beforePushBreadcrumb } = options;
     validateOption(maxBreadcrumbs, 'maxBreadcrumbs', 'number') &&
-      (this.maxBreadcrumbs = maxBreadcrumbs);
+      (this.maxBreadcrumbs = maxBreadcrumbs || 20);
     validateOption(beforePushBreadcrumb, 'beforePushBreadcrumb', 'function') &&
       (this.beforePushBreadcrumb = beforePushBreadcrumb);
   }

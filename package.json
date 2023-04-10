@@ -1,10 +1,7 @@
 {
-  "name": "test",
-  "version": "1.0.0",
+  "name": "web-see",
   "private": true,
   "description": "前端监控SDK，可用来收集并上报：代码报错、性能数据、用户行为、加载资源、个性化指标等数据",
-  "main": "dist/index.min.js",
-  "module": "dist/index.esm.js",
   "scripts": {
     "build": "rollup -c",
     "prepare": "husky install",

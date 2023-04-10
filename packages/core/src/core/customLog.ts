@@ -1,8 +1,8 @@
 import ErrorStackParser from 'error-stack-parser';
-import { isError, getTimestamp, unknownToString } from '@websee/utils';
 import { transportData } from './reportData';
 import { breadcrumb } from './breadcrumb';
 import { EVENTTYPES, STATUS_CODE } from '@websee/common';
+import { isError, getTimestamp, unknownToString } from '@websee/utils';
 
 // 自定义上报事件
 export function log({ message = 'customMsg', error = '', type = EVENTTYPES.CUSTOM }: any): void {

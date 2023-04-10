@@ -1,7 +1,15 @@
 import ErrorStackParser from 'error-stack-parser';
 import { record } from 'rrweb';
-import { openWhiteScreen, getResource, getWebVitals } from './index';
-import { transportData, breadcrumb, resourceTransform, httpTransform, options } from './index';
+import {
+  openWhiteScreen,
+  getResource,
+  getWebVitals,
+  transportData,
+  breadcrumb,
+  resourceTransform,
+  httpTransform,
+  options,
+} from './index';
 import { EVENTTYPES, STATUS_CODE } from '@websee/common';
 import {
   getErrorUid,

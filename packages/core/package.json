@@ -1,6 +1,6 @@
 {
   "name": "@websee/core",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "src/index.ts",
   "module": "dist/index.esm.js",
@@ -14,8 +14,8 @@
   "author": "海阔天空",
   "license": "ISC",
   "dependencies": {
-    "@websee/common": "workspace:^1.0.0",
-    "@websee/types": "workspace:^1.0.0",
-    "@websee/utils": "workspace:^1.0.0"
+    "@websee/common": "workspace:*",
+    "@websee/types": "workspace:*",
+    "@websee/utils": "workspace:*"
   }
 }
