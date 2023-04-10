@@ -25,6 +25,12 @@ function output(path) {
           sourcemap: true,
         },
         {
+          file: `./packages/${path}/dist/index.js`,
+          format: 'umd',
+          name: 'web-see',
+          sourcemap: true,
+        },
+        {
           file: `./packages/${path}/dist/index.min.js`,
           format: 'umd',
           name: 'web-see',
@@ -51,6 +57,7 @@ function output(path) {
       output: [
         { file: `./packages/${path}/dist/index.cjs.d.ts`, format: 'cjs' },
         { file: `./packages/${path}/dist/index.esm.d.ts`, format: 'esm' },
+        { file: `./packages/${path}/dist/index.d.ts`, format: 'umd' },
         { file: `./packages/${path}/dist/index.min.d.ts`, format: 'umd' },
       ],
       plugins: [dts()],
