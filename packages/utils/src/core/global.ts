@@ -6,23 +6,6 @@ export const isBrowserEnv = variableTypeDetection.isWindow(
   typeof window !== 'undefined' ? window : 0
 );
 
-interface Window {
-  chrome?: {
-    app: {
-      [key: string]: any;
-    };
-  };
-  history: any;
-  onpopstate: any;
-  addEventListener: any;
-  performance: any;
-  __webSee__: {
-    [key: string]: any;
-  };
-  innerWidth: number;
-  innerHeight: number;
-}
-
 // 获取全局变量
 export function getGlobal(): Window {
   return window as unknown as Window;

@@ -200,7 +200,7 @@ function historyReplace(): void {
   if (!supportsHistory()) return;
   const oldOnpopstate = _global.onpopstate;
   // 添加 onpopstate事件
-  _global.onpopstate = function (...args: any[]): void {
+  _global.onpopstate = function (this: any, ...args): void {
     const to = getLocationHref();
     const from = lastHref;
     lastHref = to;

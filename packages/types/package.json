@@ -16,5 +16,9 @@
   "dependencies": {
     "@websee/common": "workspace:*",
     "@websee/core": "workspace:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:xy-sea/web-see.git"
   }
 }

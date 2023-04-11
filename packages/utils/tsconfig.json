@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*"],
+  "include": ["global.d.ts", "src/**/*"],
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",

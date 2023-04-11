@@ -20,5 +20,9 @@
     "@websee/types": "workspace:*",
     "pako": "^2.1.0",
     "ua-parser-js": "1.0.32"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:xy-sea/web-see.git"
   }
 }
