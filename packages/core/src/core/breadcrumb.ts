@@ -4,7 +4,7 @@ import { BreadcrumbData, InitOptions } from '@websee/types';
 
 export class Breadcrumb {
   maxBreadcrumbs = 20; // 用户行为存放的最大长度
-  beforePushBreadcrumb: any;
+  beforePushBreadcrumb: unknown = null;
   stack: BreadcrumbData[];
   constructor() {
     this.stack = [];
