@@ -62,7 +62,7 @@ function xhrReplace(): void {
     return;
   }
   const originalXhrProto = XMLHttpRequest.prototype;
-  replaceAop(originalXhrProto, 'open', originalOpen => {
+  replaceAop(originalXhrProto, 'open', (originalOpen: voidFun) => {
     return function (this: any, ...args: any[]): void {
       this.websee_xhr = {
         method: variableTypeDetection.isString(args[0]) ? args[0].toUpperCase() : args[0],
@@ -73,7 +73,7 @@ function xhrReplace(): void {
       originalOpen.apply(this, args);
     };
   });
-  replaceAop(originalXhrProto, 'send', originalSend => {
+  replaceAop(originalXhrProto, 'send', (originalSend: voidFun) => {
     return function (this: any, ...args: any[]): void {
       const { method, url } = this.websee_xhr;
       // 监听loadend事件，接口成功或失败都会执行
@@ -210,7 +210,7 @@ function historyReplace(): void {
     });
     oldOnpopstate && oldOnpopstate.apply(this, args);
   };
-  function historyReplaceFn(originalHistoryFn: any): voidFun {
+  function historyReplaceFn(originalHistoryFn: voidFun): voidFun {
     return function (this: any, ...args: any[]): void {
       const url = args.length > 2 ? args[2] : undefined;
       if (url) {

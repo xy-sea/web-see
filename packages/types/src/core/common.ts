@@ -139,7 +139,7 @@ export interface IAnyObject {
   [key: string]: any;
 }
 
-export type voidFun = () => void;
+export type voidFun = (...args: any[]) => void;
 
 export interface ReplaceHandler {
   type: EVENTTYPES;
