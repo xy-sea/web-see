@@ -15,7 +15,7 @@ class XhrPlugin {
     xhrReplace.call(this, publish);
   }
   core(data) {
-    xhrReplace.call(this, data);
+    handleHttp.call(this, data);
   }
 }
 
@@ -92,8 +92,8 @@ function handleHttp(data: HttpData, type: EVENTTYPES): void {
     });
   }
 
+  // 上报接口错误
   if (result.status === 'error') {
-    // 上报接口错误
     transportData.send({ ...result, type, status: STATUS_CODE.ERROR });
   }
 }
@@ -101,7 +101,7 @@ function handleHttp(data: HttpData, type: EVENTTYPES): void {
 // 处理接口的状态
 function httpTransform(data: HttpData, options): HttpData {
   let message: any = '';
-  const { elapsedTime, time, method, type, Status, response, requestData } = data;
+  const { elapsedTime, time, method = '', type, Status = 200, response, requestData } = data;
   let status: STATUS_CODE;
   if (Status === 0) {
     status = STATUS_CODE.ERROR;
@@ -133,7 +133,7 @@ function httpTransform(data: HttpData, options): HttpData {
     elapsedTime,
     message,
     requestData: {
-      httpType: type,
+      httpType: type as string,
       method,
       data: requestData || '',
     },
