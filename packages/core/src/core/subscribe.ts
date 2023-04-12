@@ -1,8 +1,6 @@
 import { getFlag, nativeTryCatch, setFlag } from '@websee/utils';
-import { ReplaceHandler } from '@websee/types';
+import { ReplaceHandler, ReplaceCallback } from '@websee/types';
 import { EVENTTYPES } from '@websee/common';
-
-type ReplaceCallback = (data: any) => void;
 
 const handlers: { [key in EVENTTYPES]?: ReplaceCallback[] } = {};
 

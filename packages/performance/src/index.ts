@@ -1,11 +1,14 @@
 import { getWebVitals, getResource } from './core/performance';
-import { SdkBase } from '@websee/types';
+import { SdkBase, BasePlugin } from '@websee/types';
 import { EVENTTYPES, STATUS_CODE } from '@websee/common';
 import { getTimestamp, _global, on } from '@websee/utils';
 
-export default class Performance {
-  type = EVENTTYPES.PERFORMANCE;
-  constructor() {}
+export default class Performance extends BasePlugin {
+  type: string;
+  constructor() {
+    super(EVENTTYPES.PERFORMANCE);
+    this.type = EVENTTYPES.PERFORMANCE;
+  }
   bindOptions() {}
   core({ transportData }: SdkBase) {
     // 获取FCP、LCP、TTFB、FID等指标

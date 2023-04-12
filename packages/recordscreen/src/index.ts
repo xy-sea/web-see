@@ -1,10 +1,10 @@
 import { handleScreen } from './core/recordscreen';
-import { SdkBase } from '@websee/types';
+import { SdkBase, RecordScreenOption, BasePlugin } from '@websee/types';
 import { EVENTTYPES } from '@websee/common';
 import { validateOption, generateUUID, _support } from '@websee/utils';
 
-export default class RecordScreen {
-  type = EVENTTYPES.RECORDSCREEN;
+export default class RecordScreen extends BasePlugin {
+  type: string;
   recordScreentime = 10; // 默认录屏时长
   recordScreenTypeList: string[] = [
     EVENTTYPES.ERROR,
@@ -13,12 +13,13 @@ export default class RecordScreen {
     EVENTTYPES.FETCH,
     EVENTTYPES.XHR,
   ]; // 录屏事件集合
-  constructor(params = {}) {
-    console.log(params, 'params');
+  constructor(params = {} as RecordScreenOption) {
+    super(EVENTTYPES.RECORDSCREEN);
+    this.type = EVENTTYPES.RECORDSCREEN;
     this.bindOptions(params);
   }
-  bindOptions(params: any) {
-    const { recordScreenTypeList = this.recordScreenTypeList, recordScreentime = 10 } = params;
+  bindOptions(params: RecordScreenOption) {
+    const { recordScreenTypeList, recordScreentime } = params;
     validateOption(recordScreentime, 'recordScreentime', 'number') &&
       (this.recordScreentime = recordScreentime);
     validateOption(recordScreenTypeList, 'recordScreenTypeList', 'array') &&

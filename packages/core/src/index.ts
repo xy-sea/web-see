@@ -9,7 +9,7 @@ import {
   setupReplace,
   HandleEvents,
 } from './core/index';
-import { _global, getFlag, setFlag } from '@websee/utils';
+import { _global, getFlag, setFlag, nativeTryCatch } from '@websee/utils';
 import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '@websee/common';
 import { InitOptions, VueInstance, ViewModel } from '@websee/types';
 
@@ -54,7 +54,10 @@ function use(plugin: any, option: any) {
     })
   )
     return;
-  instance.core({ transportData, breadcrumb, options, notify });
+
+  nativeTryCatch(() => {
+    instance.core({ transportData, breadcrumb, options, notify });
+  });
 }
 
 export default {

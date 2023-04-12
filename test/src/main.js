@@ -13,12 +13,9 @@ import recordscreen from '../../packages/recordscreen/src';
 Vue.use(webSee, {
   dsn: 'http://localhost:8080/reportData',
   apikey: 'abcd',
-  silentRecordScreen: true, // 开启录屏
   silentWhiteScreen: true,
   skeletonProject: true,
   repeatCodeError: true,
-  silentXhr: false,
-  recordScreentime: 20,
   userId: '123',
   handleHttpStatus(data) {
     let { url, response } = data;

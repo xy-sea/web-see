@@ -245,13 +245,6 @@ function domReplace(): void {
     true
   );
 }
-// function listenPerformance(): void {
-//   notify(EVENTTYPES.PERFORMANCE);
-// }
-
-// function recordScreen(): void {
-//   notify(EVENTTYPES.RECORDSCREEN);
-// }
 function whiteScreen(): void {
   notify(EVENTTYPES.WHITESCREEN);
 }
