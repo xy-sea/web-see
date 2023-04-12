@@ -1,6 +1,6 @@
 import { UAParser } from 'ua-parser-js';
-import { variableTypeDetection } from './is';
-import { WebSee } from '@websee/types';
+import { variableTypeDetection } from './verifyType';
+import { WebSee, Window } from '@websee/types';
 
 export const isBrowserEnv = variableTypeDetection.isWindow(
   typeof window !== 'undefined' ? window : 0

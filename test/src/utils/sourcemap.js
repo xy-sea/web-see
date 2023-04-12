@@ -15,7 +15,7 @@ function repalceAll(str) {
 function getFileLink(str) {
   const reg = /vue-loader-options!\.(.*)\?/;
   const res = str.match(reg);
-  console.log(res);
+  console.log(res, 'getFileLink');
   if (res && Array.isArray(res)) {
     return res[1];
   }

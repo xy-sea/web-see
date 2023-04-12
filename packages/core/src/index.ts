@@ -1,4 +1,14 @@
-import { handleOptions, log, setupReplace, HandleEvents } from './core';
+import {
+  subscribeEvent,
+  notify,
+  transportData,
+  breadcrumb,
+  options,
+  handleOptions,
+  log,
+  setupReplace,
+  HandleEvents,
+} from './core/index';
 import { _global, getFlag, setFlag } from '@websee/utils';
 import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '@websee/common';
 import { InitOptions, VueInstance, ViewModel } from '@websee/types';
@@ -33,11 +43,26 @@ function errorBoundary(err: Error): void {
   HandleEvents.handleError(err);
 }
 
+function use(plugin: any, option: any) {
+  const instance = new plugin(option);
+  if (
+    !subscribeEvent({
+      callback: data => {
+        instance.transform(data);
+      },
+      type: instance.type,
+    })
+  )
+    return;
+  instance.core({ transportData, breadcrumb, options, notify });
+}
+
 export default {
   SDK_VERSION,
   SDK_NAME,
   init,
   install,
   errorBoundary,
+  use,
   log,
 };

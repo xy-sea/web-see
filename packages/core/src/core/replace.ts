@@ -1,4 +1,4 @@
-import { transportData, options, triggerHandlers, subscribeEvent } from './index';
+import { transportData, options, notify, subscribeEvent } from './index';
 import {
   _global,
   on,
@@ -42,12 +42,6 @@ function replace(type: EVENTTYPES): void {
       break;
     case EVENTTYPES.HASHCHANGE:
       listenHashchange();
-      break;
-    case EVENTTYPES.PERFORMANCE:
-      listenPerformance();
-      break;
-    case EVENTTYPES.RECORDSCREEN:
-      recordScreen();
       break;
     default:
       break;
@@ -100,7 +94,7 @@ function xhrReplace(): void {
         // 接口的执行时长
         this.websee_xhr.elapsedTime = eTime - this.websee_xhr.sTime;
         // 执行之前注册的xhr回调函数
-        triggerHandlers(EVENTTYPES.XHR, this.websee_xhr);
+        notify(EVENTTYPES.XHR, this.websee_xhr);
       });
       originalSend.apply(this, args);
     };
@@ -148,7 +142,7 @@ function fetchReplace(): void {
             if (options.handleHttpStatus && typeof options.handleHttpStatus == 'function') {
               fetchData.response = data;
             }
-            triggerHandlers(EVENTTYPES.FETCH, fetchData);
+            notify(EVENTTYPES.FETCH, fetchData);
           });
           return res;
         },
@@ -165,7 +159,7 @@ function fetchReplace(): void {
             status: 0,
             time: sTime,
           });
-          triggerHandlers(EVENTTYPES.FETCH, fetchData);
+          notify(EVENTTYPES.FETCH, fetchData);
           throw err;
         }
       );
@@ -176,7 +170,7 @@ function listenHashchange(): void {
   // 通过onpopstate事件，来监听hash模式下路由的变化
   if (isExistProperty(_global, 'onhashchange')) {
     on(_global, EVENTTYPES.HASHCHANGE, function (e: HashChangeEvent) {
-      triggerHandlers(EVENTTYPES.HASHCHANGE, e);
+      notify(EVENTTYPES.HASHCHANGE, e);
     });
   }
 }
@@ -187,7 +181,7 @@ function listenError(): void {
     'error',
     function (e: ErrorEvent) {
       console.log(e);
-      triggerHandlers(EVENTTYPES.ERROR, e);
+      notify(EVENTTYPES.ERROR, e);
     },
     true
   );
@@ -200,11 +194,11 @@ function historyReplace(): void {
   if (!supportsHistory()) return;
   const oldOnpopstate = _global.onpopstate;
   // 添加 onpopstate事件
-  _global.onpopstate = function (this: any, ...args): void {
+  _global.onpopstate = function (this: any, ...args: any): void {
     const to = getLocationHref();
     const from = lastHref;
     lastHref = to;
-    triggerHandlers(EVENTTYPES.HISTORY, {
+    notify(EVENTTYPES.HISTORY, {
       from,
       to,
     });
@@ -217,7 +211,7 @@ function historyReplace(): void {
         const from = lastHref;
         const to = String(url);
         lastHref = to;
-        triggerHandlers(EVENTTYPES.HISTORY, {
+        notify(EVENTTYPES.HISTORY, {
           from,
           to,
         });
@@ -232,13 +226,13 @@ function historyReplace(): void {
 function unhandledrejectionReplace(): void {
   on(_global, EVENTTYPES.UNHANDLEDREJECTION, function (ev: PromiseRejectionEvent) {
     // ev.preventDefault() 阻止默认行为后，控制台就不会再报红色错误
-    triggerHandlers(EVENTTYPES.UNHANDLEDREJECTION, ev);
+    notify(EVENTTYPES.UNHANDLEDREJECTION, ev);
   });
 }
 function domReplace(): void {
   if (!('document' in _global)) return;
   // 节流，默认0s
-  const clickThrottle = throttle(triggerHandlers, options.throttleDelayTime);
+  const clickThrottle = throttle(notify, options.throttleDelayTime);
   on(
     _global.document,
     'click',
@@ -251,13 +245,13 @@ function domReplace(): void {
     true
   );
 }
-function listenPerformance(): void {
-  triggerHandlers(EVENTTYPES.PERFORMANCE);
-}
+// function listenPerformance(): void {
+//   notify(EVENTTYPES.PERFORMANCE);
+// }
 
-function recordScreen(): void {
-  triggerHandlers(EVENTTYPES.RECORDSCREEN);
-}
+// function recordScreen(): void {
+//   notify(EVENTTYPES.RECORDSCREEN);
+// }
 function whiteScreen(): void {
-  triggerHandlers(EVENTTYPES.WHITESCREEN);
+  notify(EVENTTYPES.WHITESCREEN);
 }

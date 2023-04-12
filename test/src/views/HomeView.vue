@@ -119,7 +119,13 @@ export default {
       }, 500);
     },
     fetchError() {
-      fetch('https://jsonplaceholder.typicode.com/posts/a')
+      fetch('https://jsonplaceholder.typicode.com/posts/a', {
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: { id: 1 },
+      })
         .then(res => {
           if (res.status == 404) {
             this.getTableData();

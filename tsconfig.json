@@ -1,5 +1,5 @@
 {
-  "include": ["global.d.ts", "src", "types", "test"],
+  "include": ["global.d.ts", "packages", "src", "types", "test"],
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
@@ -7,7 +7,6 @@
     "importHelpers": true,
     "declaration": true,
     "sourceMap": true,
-    "rootDir": "./",
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

@@ -1,4 +1,4 @@
-import { ReportData, BreadcrumbData } from './common';
+import { ReportData, BreadcrumbData } from './base';
 
 export interface InitOptions {
   dsn: string; // 上报的地址

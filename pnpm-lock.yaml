@@ -18,7 +18,6 @@ importers:
       eslint: ^8.29.0
       eslint-plugin-prettier: ^4.2.1
       husky: ^8.0.2
-      js-base64: ^3.7.3
       lint-staged: ^13.1.0
       path-to-regexp: ^6.2.0
       prettier: ^2.8.0
@@ -26,7 +25,6 @@ importers:
       rollup-plugin-dts: ^5.0.0
       rollup-plugin-typescript2: ^0.34.1
       rollup-plugin-uglify: ^6.0.4
-      rrweb: ^1.1.3
       ts-loader: ^9.4.2
       tslib: ^2.4.1
       typescript: ^4.9.4
@@ -36,9 +34,7 @@ importers:
       '@changesets/cli': 2.26.1
       core-js: 3.28.0
       error-stack-parser: 2.1.4
-      js-base64: 3.7.5
       path-to-regexp: 6.2.1
-      rrweb: 1.1.3
       tslib: 2.5.0
       ua-parser-js: 1.0.33
       web-vitals: 3.1.1
@@ -64,6 +60,24 @@ importers:
       ts-loader: 9.4.2_typescript@4.9.5
       typescript: 4.9.5
 
+  packages/common:
+    specifiers: {}
+
+  packages/core:
+    specifiers: {}
+
+  packages/performance:
+    specifiers:
+      '@websee/common': workspace:*
+      '@websee/types': workspace:*
+      '@websee/utils': workspace:*
+      web-vitals: ^3.1.0
+    dependencies:
+      '@websee/common': link:../common
+      '@websee/types': link:../types
+      '@websee/utils': link:../utils
+      web-vitals: 3.1.1
+
   packages/pk1:
     specifiers:
       '@websee/core': workspace:*
@@ -80,6 +94,24 @@ importers:
       '@websee/browser': link:../pk1
       axios: 1.3.5
 
+  packages/recordscreen:
+    specifiers:
+      '@types/pako': ^2.0.0
+      '@websee/common': workspace:*
+      '@websee/types': workspace:*
+      '@websee/utils': workspace:*
+      js-base64: 3.7.3
+      pako: 2.1.0
+      rrweb: 1.1.3
+    dependencies:
+      '@types/pako': 2.0.0
+      '@websee/common': link:../common
+      '@websee/types': link:../types
+      '@websee/utils': link:../utils
+      js-base64: 3.7.3
+      pako: 2.1.0
+      rrweb: 1.1.3
+
   packages/types:
     specifiers:
       '@websee/common': workspace:*
@@ -90,18 +122,16 @@ importers:
 
   packages/utils:
     specifiers:
-      '@types/pako': ^2.0.0
       '@types/ua-parser-js': ^0.7.36
       '@websee/common': workspace:*
+      '@websee/core': workspace:*
       '@websee/types': workspace:*
-      pako: ^2.1.0
       ua-parser-js: 1.0.32
     dependencies:
-      '@types/pako': 2.0.0
       '@types/ua-parser-js': 0.7.36
       '@websee/common': link:../common
+      '@websee/core': link:../core
       '@websee/types': link:../types
-      pako: 2.1.0
       ua-parser-js: 1.0.32
 
   packages/web:
@@ -3511,10 +3541,10 @@ packages:
       supports-color: 6.1.0
     dev: true
 
-  /js-base64/3.7.5:
+  /js-base64/3.7.3:
     resolution:
       {
-        integrity: sha512-3MEt5DTINKqfScXKfJFrRbxkrnk2AxPWGBL/ycjz4dK8iqiSJ06UxD8jh8xuh6p10TX4t2+7FsBYVxxQbMg+qA==,
+        integrity: sha512-PAr6Xg2jvd7MCR6Ld9Jg3BmTcjYsHEBx1VlwEwULb/qowPf5VD9kEMagj23Gm7JRnSvE/Da/57nChZjnvL8v6A==,
       }
     dev: false
 

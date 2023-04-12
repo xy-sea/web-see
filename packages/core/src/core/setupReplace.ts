@@ -70,18 +70,4 @@ export function setupReplace(): void {
     },
     type: EVENTTYPES.HASHCHANGE,
   });
-  // 获取性能指标
-  addReplaceHandler({
-    callback: () => {
-      HandleEvents.handlePerformance();
-    },
-    type: EVENTTYPES.PERFORMANCE,
-  });
-  // 前端录屏
-  addReplaceHandler({
-    callback: () => {
-      HandleEvents.handleScreen();
-    },
-    type: EVENTTYPES.RECORDSCREEN,
-  });
 }

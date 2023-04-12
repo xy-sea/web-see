@@ -57,8 +57,6 @@ export class TransportData {
           'Content-Type': 'application/json',
         },
       });
-      // .then(response => response.json());
-      // .then((res) => console.log(res));
     };
     this.queue.addFn(requestFun);
   }
@@ -93,11 +91,12 @@ export class TransportData {
     };
 
     // 性能数据、录屏、白屏检测等不需要附带用户行为
-    if (
-      data.type != EVENTTYPES.PERFORMANCE &&
-      data.type != EVENTTYPES.RECORDSCREEN &&
-      data.type != EVENTTYPES.WHITESCREEN
-    ) {
+    const excludeRreadcrumb = [
+      EVENTTYPES.PERFORMANCE,
+      EVENTTYPES.RECORDSCREEN,
+      EVENTTYPES.WHITESCREEN,
+    ];
+    if (!excludeRreadcrumb.includes(data.type)) {
       info.breadcrumb = breadcrumb.getStack(); // 获取用户行为栈
     }
     return info;
@@ -129,7 +128,7 @@ export class TransportData {
       console.error('web-see: dsn为空，没有传入监控错误上报的dsn地址，请在init中传入');
       return;
     }
-    // 开启录屏
+    // 开启录屏，由@websee/recordScreen 插件控制
     if (_support.options.silentRecordScreen) {
       if (options.recordScreenTypeList.includes(data.type)) {
         // 修改hasError

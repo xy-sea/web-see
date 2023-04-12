@@ -1,4 +1,4 @@
-import { IAnyObject } from './common';
+import { IAnyObject } from './base';
 
 export interface VueInstance {
   config: VueConfiguration;

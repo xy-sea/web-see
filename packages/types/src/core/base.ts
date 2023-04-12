@@ -196,3 +196,27 @@ export interface WebSee {
     [key: string]: any;
   };
 }
+
+export interface SdkBase {
+  transportData: any; // 数据上报
+  breadcrumb: any; // 用户行为
+  options: any; // 公共配置
+  notify: any; // 发布消息
+}
+
+export interface Window {
+  chrome: {
+    app: {
+      [key: string]: any;
+    };
+  };
+  history: any;
+  addEventListener: any;
+  innerWidth: any;
+  innerHeight: any;
+  onpopstate: any;
+  performance: any;
+  __webSee__: {
+    [key: string]: any;
+  };
+}

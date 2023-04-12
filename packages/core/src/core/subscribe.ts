@@ -14,7 +14,7 @@ export function subscribeEvent(handler: ReplaceHandler): boolean {
   handlers[handler.type]?.push(handler.callback);
   return true;
 }
-export function triggerHandlers(type: EVENTTYPES, data?: any): void {
+export function notify(type: EVENTTYPES, data?: any): void {
   if (!type || !handlers[type]) return;
   // 获取对应事件的回调函数并执行，回调函数为addReplaceHandler事件中定义的事件
   handlers[type]?.forEach(callback => {
@@ -24,7 +24,7 @@ export function triggerHandlers(type: EVENTTYPES, data?: any): void {
       },
       () => {
         // console.error(
-        //   `web-see 重写事件triggerHandlers的回调函数发生错误\nType:${type}\nName: ${getFunctionName(
+        //   `web-see 重写事件notify的回调函数发生错误\nType:${type}\nName: ${getFunctionName(
         //     callback
         //   )}\nError: ${e}`
         // );

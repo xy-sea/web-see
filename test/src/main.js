@@ -7,6 +7,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 
 // import webSee from '../../dist';
 import webSee from '../../packages/core/src';
+import performance from '../../packages/performance/src';
+import recordscreen from '../../packages/recordscreen/src';
 
 Vue.use(webSee, {
   dsn: 'http://localhost:8080/reportData',
@@ -29,6 +31,8 @@ Vue.use(webSee, {
     }
   },
 });
+webSee.use(performance);
+webSee.use(recordscreen, { recordScreentime: 20 });
 
 Vue.use(ElementUI, { size: 'mini' });
 Vue.config.productionTip = false;
