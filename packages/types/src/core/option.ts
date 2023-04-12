@@ -15,7 +15,7 @@ export interface InitOptions {
   silentPerformance?: boolean; // 是否获取页面性能指标
   silentRecordScreen?: boolean; // 是否开启录屏
   recordScreentime?: number; // 单次录屏时长
-  recordScreenTypeList: string[]; // 上报录屏的错误列表
+  recordScreenTypeList?: string[]; // 上报录屏的错误列表
   silentWhiteScreen?: boolean; // 是否开启白屏检测
   skeletonProject?: boolean; // 白屏检测的项目是否有骨架屏
   whiteBoxElements?: string[]; // 白屏检测的容器列表
@@ -26,8 +26,8 @@ export interface InitOptions {
   maxBreadcrumbs?: number; //  用户行为存放的最大长度
   beforePushBreadcrumb?(data: BreadcrumbData): BreadcrumbData; // 添加到行为列表前的 hook
   beforeDataReport?(data: ReportData): Promise<ReportData | boolean>; // 数据上报前的 hook
-  getUserId?: () => void; // 用户定义的
-  handleHttpStatus?: () => boolean; // 处理接口返回的 response
+  getUserId?: () => string | number; // 用户定义的
+  handleHttpStatus?: (data: any) => boolean; // 处理接口返回的 response
   repeatCodeError?: boolean; // 是否去除重复的代码错误，重复的错误只上报一次
 }
 

@@ -1,28 +1,22 @@
 import { IAnyObject } from './base';
 
 export interface VueInstance {
-  config: VueConfiguration;
-  mixin(hooks: { [key: string]: () => void }): void;
-  util: {
-    warn(...input: any): void;
-  };
-  version: string;
+  [key: string]: any;
+  // config: VueConfiguration;
+  // version?: string;
 }
 
-interface VueConfiguration {
-  silent: boolean;
-  optionMergeStrategies: { [key: string]: any };
-  errorHandler(err: Error, vm: ViewModel, info: string): void;
-  warnHandler(msg: string, vm: ViewModel, trace: string): void;
-  ignoreElements: (string | RegExp)[];
-  keyCodes: { [key: string]: number | Array<number> };
-  productionTip: boolean;
+export interface VueConfiguration {
+  silent?: boolean;
+  errorHandler?(err: Error, vm: ViewModel, info: string): void;
+  warnHandler?(msg: string, vm: ViewModel, trace: string): void;
+  keyCodes?: { [key: string]: number | Array<number> };
 }
 
 export interface ViewModel {
   [key: string]: any;
-  $root: Record<string, unknown>;
-  $options: {
+  $root?: Record<string, unknown>;
+  $options?: {
     [key: string]: any;
     name?: string;
     propsData?: IAnyObject;
@@ -30,5 +24,5 @@ export interface ViewModel {
     __file?: string;
     props?: IAnyObject;
   };
-  $props: Record<string, unknown>;
+  $props?: Record<string, unknown>;
 }

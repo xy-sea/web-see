@@ -1,11 +1,14 @@
 # @websee/recordscreen
 
-## 1.1.1
+## 1.2.0
+
+### Minor Changes
+
+- 1.2.0
 
 ### Patch Changes
 
-- 1.1.1
 - Updated dependencies
-  - @websee/common@1.1.1
-  - @websee/types@1.1.1
-  - @websee/utils@1.1.1
+  - @websee/common@1.2.0
+  - @websee/types@1.2.0
+  - @websee/utils@1.2.0

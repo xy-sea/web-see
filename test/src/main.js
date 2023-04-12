@@ -29,7 +29,7 @@ Vue.use(webSee, {
   },
 });
 webSee.use(performance);
-webSee.use(recordscreen, { recordScreentime: 20 });
+webSee.use(recordscreen, { recordScreentime: 8 });
 
 Vue.use(ElementUI, { size: 'mini' });
 Vue.config.productionTip = false;
