@@ -3,7 +3,7 @@ import { SdkBase, BasePlugin } from '@websee/types';
 import { EVENTTYPES, STATUS_CODE } from '@websee/common';
 import { getTimestamp, _global, on } from '@websee/utils';
 
-export default class Performance extends BasePlugin {
+export default class WebPerformance extends BasePlugin {
   type: string;
   constructor() {
     super(EVENTTYPES.PERFORMANCE);
@@ -43,7 +43,7 @@ export default class Performance extends BasePlugin {
       // 上报资源列表
       transportData.send({
         type: EVENTTYPES.PERFORMANCE,
-        name: 'resource_list',
+        name: 'resourceList',
         time: getTimestamp(),
         status: STATUS_CODE.OK,
         resourceList: getResource(),
@@ -57,9 +57,9 @@ export default class Performance extends BasePlugin {
           time: getTimestamp(),
           status: STATUS_CODE.OK,
           memory: {
-            jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
-            totalJSHeapSize: performance.memory.totalJSHeapSize,
-            usedJSHeapSize: performance.memory.usedJSHeapSize,
+            jsHeapSizeLimit: performance.memory && performance.memory.jsHeapSizeLimit,
+            totalJSHeapSize: performance.memory && performance.memory.totalJSHeapSize,
+            usedJSHeapSize: performance.memory && performance.memory.usedJSHeapSize,
           },
         });
       }

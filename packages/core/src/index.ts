@@ -13,7 +13,7 @@ import { _global, getFlag, setFlag, nativeTryCatch } from '@websee/utils';
 import { SDK_VERSION, SDK_NAME, EVENTTYPES } from '@websee/common';
 import { InitOptions, VueInstance, ViewModel } from '@websee/types';
 
-function init(options: InitOptions): void {
+function init(options: InitOptions) {
   if (!options.dsn || !options.apikey) {
     return console.error(`web-see 缺少必须配置项：${!options.dsn ? 'dsn' : 'apikey'} `);
   }
@@ -23,7 +23,7 @@ function init(options: InitOptions): void {
   setupReplace();
 }
 
-function install(Vue: VueInstance, options: InitOptions): void {
+function install(Vue: VueInstance, options: InitOptions) {
   if (getFlag(EVENTTYPES.VUE)) return;
   setFlag(EVENTTYPES.VUE, true);
   const handler = Vue.config.errorHandler;

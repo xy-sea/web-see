@@ -25,6 +25,9 @@ _support.deviceInfo = {
   device_type: uaResult.device.type ? uaResult.device.type : 'Pc',
 };
 
+_support.hasError = false;
+
+// errorMap 存储代码错误的集合
 _support.errorMap = new Map();
 
 _support.replaceFlag = _support.replaceFlag || {};
