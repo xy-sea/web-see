@@ -1,6 +1,6 @@
 {
   "name": "@websee/common",
-  "version": "1.2.0",
+  "version": "3.0.0",
   "description": "",
   "main": "src/index.ts",
   "module": "dist/index.esm.js",
