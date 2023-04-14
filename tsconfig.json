@@ -1,5 +1,5 @@
 {
-  "include": ["global.d.ts", "packages", "src", "types", "test"],
+  "include": ["global.d.ts", "packages", "types", "test"],
   "compilerOptions": {
     "resolveJsonModule": true,
     "target": "es5",
