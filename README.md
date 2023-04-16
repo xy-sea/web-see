@@ -26,27 +26,33 @@
 ## 安装
 
 ```javascript
-$ npm i -S web-see
+// 安装核心模块
+$ npm i @websee/core
+
+// 安装性能检测插件
+$ npm i @websee/performance
+
+// 安装页面录屏插件
+$ npm i @websee/recordscreen
 ```
 
-## Vue
+## Vue2 安装说明
 
 ```javascript
-import webSee from 'web-see';
+import webSee from '@websee/core';
+import performance from '@websee/performance';
+import recordscreen from '@websee/recordscreen';
 
 Vue.use(webSee, {
   dsn: 'http://text.com/reportData', // 上报的地址
   apikey: 'project1', // 项目唯一的id
   userId: '89757', // 用户id
   repeatCodeError: true, // 开启错误上报去重，重复的代码错误只上报一次
-  silentRecordScreen: true, // 开启录屏
   silentWhiteScreen: true, // 开启白屏检测
   skeletonProject: true, // 项目是否有骨架屏
-  whiteBoxElements: ['html', 'body', '#app', '#root'], // 白屏检测的容器列表
   handleHttpStatus(data) {
     // 自定义hook, 根据接口返回的 response 判断请求是否正确
     let { url, response } = data;
-    // code为200，接口正常，反之亦然
     let { code } = typeof response === 'string' ? JSON.parse(response) : response;
     if (url.includes('/getErrorList')) {
       return code === 200 ? true : false;
@@ -55,18 +61,73 @@ Vue.use(webSee, {
     }
   },
 });
+
+// 注册性能检测插件
+webSee.use(performance);
+// 注册页面录屏插件，设置单次录屏时长为20s，默认是10s
+webSee.use(recordscreen, { recordScreentime: 20 });
 ```
 
-## React
+## Vue3 安装说明
 
 ```javascript
-import webSee from 'web-see';
+import webSee from '@websee/core';
+import performance from '@websee/performance';
+import recordscreen from '@websee/recordscreen';
 
-webSee.init({
-  dsn: 'http://localhost:8083/reportData',
+const app = createApp(App);
+app.use(webSee, {
+  dsn: 'http://text.com/reportData',
   apikey: 'project1',
   userId: '89757',
 });
+
+webSee.use(performance);
+webSee.use(recordscreen);
+```
+
+## React 安装说明
+
+```javascript
+import webSee from '@websee/core';
+import performance from '@websee/performance';
+import recordscreen from '@websee/recordscreen';
+
+webSee.init({
+  dsn: 'http://text.com/reportData',
+  apikey: 'project1',
+  userId: '89757',
+});
+
+webSee.use(performance);
+webSee.use(recordscreen);
+```
+
+如果在 React 项目中使用了 ErrorBoundary，要在 componentDidCatch 中将报错上报给服务器
+
+```javascript
+import webSee from '@websee/core';
+import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+  componentDidCatch(error, errorInfo) {
+    // 在componentDidCatch中将报错上报给服务器
+    webSee.errorBoundary(err);
+  }
+  render() {
+    if (this.state.hasError) {
+      return <h1>Something went wrong.</h1>;
+    }
+    return this.props.children;
+  }
+}
 ```
 
 如果在 React 项目中使用了`ErrorBoundary`，要在`componentDidCatch` 中将报错上报给服务器
@@ -104,27 +165,24 @@ class ErrorBoundary extends React.Component {
 
 ## 常规配置项
 
-|          Name          | Type       | Default                                                       | Description                                                                                                                                                                                                             |
-| :--------------------: | ---------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|         `dsn`          | `string`   | `""`                                                          | (必传项) 上报接口的地址，post 方法                                                                                                                                                                                      |
-|        `apikey`        | `string`   | `""`                                                          | (必传项) 每个项目对应一个 apikey，唯一标识                                                                                                                                                                              |
-|        `userId`        | `string`   | `""`                                                          | 用户 id                                                                                                                                                                                                                 |
-|       `disabled`       | `boolean`  | `false`                                                       | 默认是开启 SDK，为 true 时，会将 sdk 禁用                                                                                                                                                                               |
-|  `silentRecordScreen`  | `boolean`  | `false`                                                       | 注意：默认不会开启录屏，为 true 时，开启录屏                                                                                                                                                                            |
-|  `silentWhiteScreen`   | `boolean`  | `false`                                                       | 注意：默认不会开启白屏检测，为 true 时，开启检测                                                                                                                                                                        |
-|   `skeletonProject`    | `boolean`  | `false`                                                       | 有骨架屏的项目建议设为 true，提高白屏检测准确性                                                                                                                                                                         |
-|   `whiteBoxElements`   | `array`    | `['html', 'body', '#app', '#root']`                           | 白屏检测的容器列表，开启白屏检测后该设置才生效                                                                                                                                                                          |
-|  `filterXhrUrlRegExp`  | `regExp`   | `null`                                                        | 默认为空，所有的接口请求都会被监听，不为空时，filterXhrUrlRegExp.test(xhr.url)为 true 时过滤指定的接口                                                                                                                  |
-|     `useImgUpload`     | `boolean`  | `false`                                                       | 为 true 时，使用图片打点上报的方式，参数通过 data=encodeURIComponent(reportData) 拼接到 url 上，默认为 false                                                                                                            |
-|  `throttleDelayTime`   | `number`   | `0`                                                           | 设置全局 click 点击事件的节流时间                                                                                                                                                                                       |
-|       `overTime`       | `number`   | `10`                                                          | 设置接口超时时长，默认 10s                                                                                                                                                                                              |
-|    `maxBreadcrumbs`    | `number`   | `20`                                                          | 用户行为存放的最大容量，超过 20 条，最早的一条记录会被覆盖掉                                                                                                                                                            |
-|   `recordScreentime`   | `number`   | `10`                                                          | 单次录屏时长，silentRecordScreen 设为 true， 开启录屏后该设置才有效                                                                                                                                                     |
-| `recordScreenTypeList` | `array`    | `['error', 'unhandledrejection', 'resource', 'fetch', 'xhr']` | 上报录屏的错误列表，默认会上报所有错误发生时的录屏信息，如设置 ['error', 'unhandledrejection'] 则只会上报代码报错时的录屏                                                                                               |
-|   `repeatCodeError`    | `boolean`  | `false`                                                       | 是否开启去除重复的代码报错，开启的话重复的代码错误只上报一次                                                                                                                                                            |
-| `beforePushBreadcrumb` | `function` | `null`                                                        | (自定义 hook) 添加到行为列表前的 hook，有值时，所有的用户行为都要经过该 hook 处理，若返回 false，该行为不会添加到列表中                                                                                                 |
-|   `beforeDataReport`   | `function` | `null`                                                        | (自定义 hook) 数据上报前的 hook，有值时，所有的上报数据都要经过该 hook 处理，若返回 false，该条数据不会上报                                                                                                             |
-|   `handleHttpStatus`   | `function` | `null`                                                        | (自定义 hook) 根据接口返回的 response 判断请求是否正确，返回 true 表示接口正常，反之表示接口报错(只有接口报错时才保留 response), 该函数的参数为 { url, response, requestData, elapsedTime, time, method, type, Status } |
+|          Name          | Type       | Default                             | Description                                                                                                                                                                                                             |
+| :--------------------: | ---------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|         `dsn`          | `string`   | `""`                                | (必传项) 上报接口的地址，post 方法                                                                                                                                                                                      |
+|        `apikey`        | `string`   | `""`                                | (必传项) 每个项目对应一个 apikey，唯一标识                                                                                                                                                                              |
+|        `userId`        | `string`   | `""`                                | 用户 id                                                                                                                                                                                                                 |
+|       `disabled`       | `boolean`  | `false`                             | 默认是开启 SDK，为 true 时，会将 sdk 禁用                                                                                                                                                                               |
+|  `silentWhiteScreen`   | `boolean`  | `false`                             | 注意：默认不会开启白屏检测，为 true 时，开启检测                                                                                                                                                                        |
+|   `skeletonProject`    | `boolean`  | `false`                             | 有骨架屏的项目建议设为 true，提高白屏检测准确性                                                                                                                                                                         |
+|   `whiteBoxElements`   | `array`    | `['html', 'body', '#app', '#root']` | 白屏检测的容器列表，开启白屏检测后该设置才生效                                                                                                                                                                          |
+|  `filterXhrUrlRegExp`  | `regExp`   | `null`                              | 默认为空，所有的接口请求都会被监听，不为空时，filterXhrUrlRegExp.test(xhr.url)为 true 时过滤指定的接口                                                                                                                  |
+|     `useImgUpload`     | `boolean`  | `false`                             | 为 true 时，使用图片打点上报的方式，参数通过 data=encodeURIComponent(reportData) 拼接到 url 上，默认为 false                                                                                                            |
+|  `throttleDelayTime`   | `number`   | `0`                                 | 设置全局 click 点击事件的节流时间                                                                                                                                                                                       |
+|       `overTime`       | `number`   | `10`                                | 设置接口超时时长，默认 10s                                                                                                                                                                                              |
+|    `maxBreadcrumbs`    | `number`   | `20`                                | 用户行为存放的最大容量，超过 20 条，最早的一条记录会被覆盖掉                                                                                                                                                            |
+|   `repeatCodeError`    | `boolean`  | `false`                             | 是否开启去除重复的代码报错，开启的话重复的代码错误只上报一次                                                                                                                                                            |
+| `beforePushBreadcrumb` | `function` | `null`                              | (自定义 hook) 添加到行为列表前的 hook，有值时，所有的用户行为都要经过该 hook 处理，若返回 false，该行为不会添加到列表中                                                                                                 |
+|   `beforeDataReport`   | `function` | `null`                              | (自定义 hook) 数据上报前的 hook，有值时，所有的上报数据都要经过该 hook 处理，若返回 false，该条数据不会上报                                                                                                             |
+|   `handleHttpStatus`   | `function` | `null`                              | (自定义 hook) 根据接口返回的 response 判断请求是否正确，返回 true 表示接口正常，反之表示接口报错(只有接口报错时才保留 response), 该函数的参数为 { url, response, requestData, elapsedTime, time, method, type, Status } |
 
 ## 默认监控配置项
 
@@ -137,7 +195,13 @@ class ErrorBoundary extends React.Component {
 | `silentUnhandledrejection` | `boolean` | `true`  | 默认会监控 unhandledrejection，为 false 时，将不再监控                |
 |      `silentHistory`       | `boolean` | `true`  | 默认会监控 popstate、pushState、replaceState，为 false 时，将不再监控 |
 |     `silentHashchange`     | `boolean` | `true`  | 默认会监控 hashchange，为 false 时，将不再监控                        |
-|    `silentPerformance`     | `boolean` | `true`  | 默认会上报性能指标，为 false 时，将不再监控                           |
+
+## @websee/recordscreen 录屏插件的配置项
+
+|          Name          | Type     | Default                                                       | Description                                                                                                               |
+| :--------------------: | -------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+|   `recordScreentime`   | `number` | `10`                                                          | 单次录屏时长，默认值为 10s                                                                                                |
+| `recordScreenTypeList` | `array`  | `['error', 'unhandledrejection', 'resource', 'fetch', 'xhr']` | 上报录屏的错误列表，默认会上报所有错误发生时的录屏信息，如设置 ['error', 'unhandledrejection'] 则只会上报代码报错时的录屏 |
 
 ## web-see 前端监控文章
 

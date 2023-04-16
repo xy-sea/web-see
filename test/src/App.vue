@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <template v-if="showPage">
+    <template>
       <div class="header">
         <img class="logo" src="./assets/logo.png" alt="logo" />
         <span class="title">前端监控 test</span>
@@ -13,20 +13,6 @@
     </template>
   </div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      showPage: false
-    }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.showPage = true
-    }, 3000)
-  }
-}
-</script>
 
 <style lang="scss">
 #app {

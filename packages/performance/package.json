@@ -1,0 +1,26 @@
+{
+  "name": "@websee/performance",
+  "version": "3.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "module": "dist/index.esm.js",
+  "publishConfig": {
+    "main": "dist/index.js"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "author": "海阔天空",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:xy-sea/web-see.git"
+  },
+  "dependencies": {
+    "@websee/common": "workspace:*",
+    "@websee/types": "workspace:*",
+    "@websee/utils": "workspace:*",
+    "web-vitals": "^3.1.0"
+  }
+}

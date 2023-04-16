@@ -1,21 +1,30 @@
 {
+  "include": ["global.d.ts", "packages", "types", "test"],
   "compilerOptions": {
+    "resolveJsonModule": true,
     "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "esnext",
+    "lib": ["dom", "esnext"],
+    "importHelpers": true,
     "declaration": true,
-    "pretty": true,
-    "rootDir": "src",
     "sourceMap": true,
-    "strict": false,
-    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitAny": false,
+    "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "outDir": "dist",
-    "lib": ["es2019", "dom"],
-    "importHelpers": true
-  },
-  "exclude": ["node_modules", "test", "dist"]
+    "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "*": ["src/*", "node_modules/*"]
+    },
+    "jsx": "react",
+    "esModuleInterop": true
+  }
 }

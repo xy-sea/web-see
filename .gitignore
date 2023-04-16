@@ -1,9 +1,10 @@
 .DS_Store
 node_modules
 vue.config
+
 packages/*/dist
 packages/*/node_modules
-/dist
+
 /testtemplate.txt
 .jsbeautifyrc
 # local env files
@@ -15,10 +16,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-
-# lock
-*-lock.json
-*-lock.yaml
 
 # Editor directories and files
 .idea

@@ -6,17 +6,16 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 // import webSee from '../../dist';
-import webSee from '../../src/index.ts';
+import webSee from '../../packages/core/src';
+import performance from '../../packages/performance/src';
+import recordscreen from '../../packages/recordscreen/src';
 
 Vue.use(webSee, {
   dsn: 'http://localhost:8080/reportData',
   apikey: 'abcd',
-  silentRecordScreen: true, // 开启录屏
   silentWhiteScreen: true,
   skeletonProject: true,
   repeatCodeError: true,
-  silentXhr: false,
-  recordScreentime: 20,
   userId: '123',
   handleHttpStatus(data) {
     let { url, response } = data;
@@ -29,6 +28,8 @@ Vue.use(webSee, {
     }
   },
 });
+webSee.use(performance);
+webSee.use(recordscreen, { recordScreentime: 15 });
 
 Vue.use(ElementUI, { size: 'mini' });
 Vue.config.productionTip = false;
