@@ -6,7 +6,7 @@
     <div align="left">
     <p>亮点1：支持多种错误还原方式：定位源码、播放录屏、记录用户行为</p>
     <p>亮点2：支持项目的白屏检测，兼容有骨架屏、无骨架屏这两种情况</p>
-    <p>亮点3：支持错误上报去重，错误生成唯一的id，重复的错误只上报一次</p>
+    <p>亮点3：支持错误上报去重，错误生成唯一的id，重复的代码错误只上报一次</p>
     <p>亮点4：支持多种上报方式，默认使用web beacon，也支持图片打点、http 上报</p>
     <div
 </div>
@@ -121,36 +121,6 @@ class ErrorBoundary extends React.Component {
     // 在componentDidCatch中将报错上报给服务器
     webSee.errorBoundary(err);
   }
-  render() {
-    if (this.state.hasError) {
-      return <h1>Something went wrong.</h1>;
-    }
-    return this.props.children;
-  }
-}
-```
-
-如果在 React 项目中使用了`ErrorBoundary`，要在`componentDidCatch` 中将报错上报给服务器
-
-```javascript
-import webSee from 'web-see';
-import React from 'react';
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    // 在componentDidCatch中将报错上报给服务器
-    webSee.errorBoundary(err);
-  }
-
   render() {
     if (this.state.hasError) {
       return <h1>Something went wrong.</h1>;
