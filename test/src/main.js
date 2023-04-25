@@ -18,6 +18,7 @@ Vue.use(webSee, {
   repeatCodeError: true,
   userId: '123',
   handleHttpStatus(data) {
+    console.log('data', data);
     let { url, response } = data;
     // code为200，接口正常，反之亦然
     let { code } = typeof response === 'string' ? JSON.parse(response) : response;
