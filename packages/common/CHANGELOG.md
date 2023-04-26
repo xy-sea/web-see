@@ -1,5 +1,11 @@
 # @websee/common
 
+## 4.0.0
+
+### Major Changes
+
+- 4.0.0
+
 ## 3.0.0
 
 ### Major Changes

@@ -1,5 +1,18 @@
 # @websee/recordscreen
 
+## 4.0.0
+
+### Major Changes
+
+- 4.0.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @websee/common@4.0.0
+  - @websee/types@4.0.0
+  - @websee/utils@4.0.0
+
 ## 3.0.0
 
 ### Major Changes
