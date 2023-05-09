@@ -1,5 +1,4 @@
 import { setFlag, _support } from './global';
-import { InitOptions } from '@websee/types';
 import { EVENTTYPES } from '@websee/common';
 
 /**
@@ -46,15 +45,24 @@ export function parseUrlToObj(url: string) {
   };
 }
 
-export function setSilentFlag(paramOptions: InitOptions): void {
-  setFlag(EVENTTYPES.XHR, !!paramOptions.silentXhr);
-  setFlag(EVENTTYPES.FETCH, !!paramOptions.silentFetch);
-  setFlag(EVENTTYPES.CLICK, !!paramOptions.silentClick);
-  setFlag(EVENTTYPES.HISTORY, !!paramOptions.silentHistory);
-  setFlag(EVENTTYPES.ERROR, !!paramOptions.silentError);
-  setFlag(EVENTTYPES.HASHCHANGE, !!paramOptions.silentHashchange);
-  setFlag(EVENTTYPES.UNHANDLEDREJECTION, !!paramOptions.silentUnhandledrejection);
-  setFlag(EVENTTYPES.WHITESCREEN, !paramOptions.silentWhiteScreen);
+export function setSilentFlag({
+  silentXhr = true,
+  silentFetch = true,
+  silentClick = true,
+  silentHistory = true,
+  silentError = true,
+  silentHashchange = true,
+  silentUnhandledrejection = true,
+  silentWhiteScreen = false,
+}): void {
+  setFlag(EVENTTYPES.XHR, !silentXhr);
+  setFlag(EVENTTYPES.FETCH, !silentFetch);
+  setFlag(EVENTTYPES.CLICK, !silentClick);
+  setFlag(EVENTTYPES.HISTORY, !silentHistory);
+  setFlag(EVENTTYPES.ERROR, !silentError);
+  setFlag(EVENTTYPES.HASHCHANGE, !silentHashchange);
+  setFlag(EVENTTYPES.UNHANDLEDREJECTION, !silentUnhandledrejection);
+  setFlag(EVENTTYPES.WHITESCREEN, !silentWhiteScreen);
 }
 
 // 对每一个错误详情，生成唯一的编码

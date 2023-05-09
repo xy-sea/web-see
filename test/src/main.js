@@ -38,8 +38,10 @@ webSee.use(recordscreen, { recordScreentime: 15 });
 Vue.use(ElementUI, { size: 'mini' });
 Vue.config.productionTip = false;
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app');
+setTimeout(() => {
+  new Vue({
+    router,
+    store,
+    render: h => h(App),
+  }).$mount('#app');
+}, 2000);
