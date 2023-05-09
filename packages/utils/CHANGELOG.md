@@ -1,5 +1,15 @@
 # @websee/utils
 
+## 4.0.2
+
+### Patch Changes
+
+- 4.0.2
+- Updated dependencies
+  - @websee/common@4.0.2
+  - @websee/core@4.0.2
+  - @websee/types@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes

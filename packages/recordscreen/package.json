@@ -1,6 +1,6 @@
 {
   "name": "@websee/recordscreen",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "",
   "main": "src/index.ts",
   "module": "dist/index.esm.js",
