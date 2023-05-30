@@ -20,14 +20,14 @@ export function openWhiteScreen(
   // 项目有骨架屏
   if (skeletonProject) {
     if (document.readyState != 'complete') {
-      sampling();
+      idleCallback();
     }
   } else {
     // 页面加载完毕
     if (document.readyState === 'complete') {
-      sampling();
+      idleCallback();
     } else {
-      _global.addEventListener('load', sampling);
+      _global.addEventListener('load', idleCallback);
     }
   }
 
@@ -74,8 +74,7 @@ export function openWhiteScreen(
         if (isContainer(yElements[0] as HTMLElement)) emptyPoints++;
       }
     }
-    // console.log('_skeletonInitList', _skeletonInitList);
-    // console.log('_skeletonNowList', _skeletonNowList);
+    // console.log('_skeletonInitList', _skeletonInitList, _skeletonNowList);
 
     // 页面正常渲染，停止轮训
     if (emptyPoints != 17) {
@@ -111,7 +110,19 @@ export function openWhiteScreen(
         _whiteLoopNum++;
         _skeletonNowList = [];
       }
-      sampling();
+      idleCallback();
     }, 1000);
+  }
+  function idleCallback() {
+    if ('requestIdleCallback' in _global) {
+      requestIdleCallback(deadline => {
+        // timeRemaining：表示当前空闲时间的剩余时间
+        if (deadline.timeRemaining() > 0) {
+          sampling();
+        }
+      });
+    } else {
+      sampling();
+    }
   }
 }
