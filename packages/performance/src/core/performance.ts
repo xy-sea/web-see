@@ -50,6 +50,18 @@ function isInScreen(dom: HTMLElement): boolean {
   return false;
 }
 
+function getFirstScreenPaint(callback: Callback) {
+  if ('requestIdleCallback' in _global) {
+    requestIdleCallback(deadline => {
+      // timeRemaining：表示当前空闲时间的剩余时间
+      if (deadline.timeRemaining() > 0) {
+        observeFirstScreenPaint(callback);
+      }
+    });
+  } else {
+    observeFirstScreenPaint(callback);
+  }
+}
 // 外部通过callback 拿到首屏加载时间
 export function observeFirstScreenPaint(callback: Callback): void {
   const ignoreDOMList = ['STYLE', 'SCRIPT', 'LINK'];
@@ -61,9 +73,7 @@ export function observeFirstScreenPaint(callback: Callback): void {
         for (const node of mutation.addedNodes) {
           // 忽略掉以上标签的变化
           if (node.nodeType === 1 && !ignoreDOMList.includes(node.tagName) && isInScreen(node)) {
-            // eslint-disable-next-line
-            //@ts-ignore
-            entry.children.push(node);
+            entry.children.push(node as never);
           }
         }
       }
@@ -253,7 +263,7 @@ export function getWebVitals(callback: Callback): void {
   }
 
   // 首屏加载时间
-  observeFirstScreenPaint(res => {
+  getFirstScreenPaint(res => {
     const data = {
       name: 'FSP',
       value: res,
