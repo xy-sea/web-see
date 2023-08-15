@@ -2,6 +2,6 @@ dist
 errorJson.js
 browser.js
 node_modules
-test
+packages/example
 .gitignore
 .prettierignore

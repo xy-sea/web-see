@@ -1,5 +1,5 @@
 {
-  "include": ["global.d.ts", "packages", "types", "test"],
+  "include": ["global.d.ts", "packages", "types"],
   "compilerOptions": {
     "resolveJsonModule": true,
     "target": "es5",
@@ -23,7 +23,7 @@
     "baseUrl": "./",
     "paths": {
       "*": ["src/*", "node_modules/*"],
-      "@websee/*":["packages/*/src"],
+      "@websee/*": ["packages/*/src"]
     },
     "jsx": "react",
     "esModuleInterop": true
