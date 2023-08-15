@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+  </noscript>
+  <style>
+    :root {
+      --loading-grey: #ededed;
+    }
+
+    body {
+      background-color: #f6f6f6;
+      font-family: Helvetica;
+      font-size: 15px;
+      height: 100vh;
+      padding: 0 6px;
+    }
+
+    .skeleton {
+      background-color: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, .12);
+    }
+
+    .header {
+      height: 200px;
+    }
+
+    .content {
+      padding: 2rem 1.8rem;
+    }
+
+    h4 {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+      line-height: 1.5rem;
+    }
+
+    .place {
+      font-size: 1rem;
+      line-height: 1.4rem;
+    }
+
+    .loading .header,
+    .loading h4,
+    .loading .place {
+      background-color: var(--loading-grey);
+      background: linear-gradient(100deg,
+          rgba(255, 255, 255, 0) 40%,
+          rgba(255, 255, 255, .5) 50%,
+          rgba(255, 255, 255, 0) 60%) var(--loading-grey);
+      background-size: 200% 100%;
+      background-position-x: 180%;
+      animation: 1.2s loading ease-in-out infinite;
+    }
+
+    @keyframes loading {
+      to {
+        background-position-x: -20%;
+      }
+    }
+
+    .loading h4 {
+      min-height: 1.6rem;
+      border-radius: 4px;
+      animation-delay: .05s;
+    }
+
+    .loading .place {
+      min-height: 4rem;
+      border-radius: 4px;
+      animation-delay: .06s;
+    }
+  </style>
+  </script>
+  <div id="app">
+    <div class="skeleton loading">
+      <div class="header"></div>
+      <div class="content">
+        <h4></h4>
+        <div class="place"></div>
+      </div>
+      <div class="content">
+        <h4></h4>
+        <div class="place"></div>
+      </div>
+      <div class="content">
+        <h4></h4>
+        <div class="place"></div>
+      </div>
+    </div>
+</body>
+
+</html>
